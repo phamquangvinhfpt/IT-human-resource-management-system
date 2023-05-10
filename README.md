@@ -6,5 +6,5 @@ This is a project for SE1735 - Human Resource Management system at FPT Universit
 
 ### Prerequisites
 - [Tomcat](https://tomcat.apache.org/)
-- [MSSQL]([https://www.mysql.com/](https://www.microsoft.com/en-us/sql-server/sql-server-downloads))
+- [MSSQL](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 - [Git](https://git-scm.com/)
