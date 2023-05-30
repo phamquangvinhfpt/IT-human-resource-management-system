@@ -22,13 +22,15 @@ public class User {
     private String Address;
     private Date Birthday;
     private int ExperienceId;
-    private boolean Status;
+    private int Status;
+    private int Team_ID;
+    private int Role;
     private String token;
 
     public User() {
     }
 
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, boolean Status) {
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, int Role) {
         this.UserID = UserID;
         this.Name = Name;
         this.Image = Image;
@@ -40,11 +42,13 @@ public class User {
         this.Birthday = Birthday;
         this.ExperienceId = ExperienceId;
         this.Status = Status;
+        this.Team_ID = Team_ID;
+        this.Role = Role;
     }
     
     
 
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, boolean Status, String token) {
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, String token) {
         this.UserID = UserID;
         this.Name = Name;
         this.Image = Image;
@@ -56,6 +60,7 @@ public class User {
         this.Birthday = Birthday;
         this.ExperienceId = ExperienceId;
         this.Status = Status;
+        this.Team_ID = Team_ID;
         this.token = token;
     }
 
@@ -137,6 +142,22 @@ public class User {
 
     public void setExperienceId(int ExperienceId) {
         this.ExperienceId = ExperienceId;
+    }
+
+    public int getTeam_ID() {
+        return Team_ID;
+    }
+
+    public void setTeam_ID(int Team_ID) {
+        this.Team_ID = Team_ID;
+    }
+
+    public int getRole() {
+        return Role;
+    }
+
+    public void setRole(int Role) {
+        this.Role = Role;
     }
     
 }

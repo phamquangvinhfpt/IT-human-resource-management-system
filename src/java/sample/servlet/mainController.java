@@ -34,7 +34,7 @@ public class mainController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String action=request.getParameter("btAction");
-            if(action.equals("Login")){
+            if(action.equals("Sign in")){
                 url="loginServlet";
             }
             RequestDispatcher rd=request.getRequestDispatcher(url);

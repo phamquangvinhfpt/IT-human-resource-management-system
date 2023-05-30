@@ -81,7 +81,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                        </span>\n");
       out.write("                    </div>\n");
       out.write("\n");
-      out.write("                    <form class=\"login100-form validate-form\" method=\"GET\" action=\"mainController?btAction=Login\">\n");
+      out.write("                    <form class=\"login100-form validate-form\" method=\"GET\" action=\"mainController\">\n");
       out.write("                        <div class=\"wrap-input100 validate-input m-b-26\" data-validate=\"Username is required\">\n");
       out.write("                            <span class=\"label-input100\">Username</span>\n");
       out.write("                            <input class=\"input100\" type=\"text\" name=\"username\" placeholder=\"Enter username or Email\">\n");
@@ -110,9 +110,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                        </div>\n");
       out.write("\n");
       out.write("                        <div class=\"container-login100-form-btn\">\n");
-      out.write("                            <button class=\"login100-form-btn\" >\n");
-      out.write("                                Login\n");
-      out.write("                            </button>\n");
+      out.write("                            <input type=\"submit\" class=\"login100-form-btn\" name=\"btAction\" value=\"Sign in\" />\n");
       out.write("                        </div>\n");
       out.write("                    </form>\n");
       out.write("                </div>\n");

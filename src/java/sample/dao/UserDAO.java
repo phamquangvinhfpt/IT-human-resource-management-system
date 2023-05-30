@@ -16,40 +16,77 @@ import sample.utils.DBUtils;
  * @author Admin
  */
 public class UserDAO {
+
     //check login by username
-    public boolean checkLogin(String username, String password) throws Exception{
+    public static boolean checkLogin(String username, String password) throws Exception {
         Connection cn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         User user = null;
         try {
             cn = DBUtils.makeConnection();
-            if(cn!=null){
-                String sql = "select [UserID], [Name], [Image], [Phone], [Email], [Username], [Password], [Address], [Birthday], [ExperienceId], [Status] "
-                        + "from [dbo].[User]"
-                        + " where [Username] = ? and [Password] = ?";
+            if (cn != null) {
+                String sql = "select * from [dbo].[User] where [Status] = 1 and [Username] = ? and [Password] = ?";
                 pst = cn.prepareStatement(sql);
                 pst.setString(1, username);
                 pst.setString(2, password);
                 rs = pst.executeQuery();
-                if(rs.next()){
-                    user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), rs.getString("Phone"), rs.getString("Email"), rs.getString("Username"), rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), rs.getInt("ExperienceId"), rs.getBoolean("Status"));
+                if (rs.next()) {
                     return true;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally{
-            if(rs!=null){
+        } finally {
+            if (rs != null) {
                 rs.close();
             }
-            if(pst!=null){
+            if (pst != null) {
                 pst.close();
             }
-            if(cn!=null){
+            if (cn != null) {
                 cn.close();
             }
         }
         return false;
+    }
+
+    //GetUser by username
+    public static User getUser(String username, String password) throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        User user = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "select us.[UserID], [Name], [Image], [Phone], [Email],[Username], [Password], "
+                        + "[Address], [Birthday], [ExperienceId], [Team_ID],[Status], [Role_id] "
+                        + "from [dbo].[User] AS us, [dbo].[Role]\n"
+                        + "where [Status] = 1 and [Username] = ? and [Password] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setString(1, username);
+                pst.setString(2, password);
+                rs = pst.executeQuery();
+                if (rs.next()) {
+                    user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), rs.getString("Phone"), rs.getString("Email"),
+                            rs.getString("Username"), rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), rs.getInt("ExperienceId"),
+                            rs.getInt("Team_ID"), rs.getInt("Status"), rs.getInt("Role_id"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return user;
     }
 }
