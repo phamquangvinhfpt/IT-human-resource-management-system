@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import sample.dao.ExperienceDAO;
+import sample.dto.ExperienceDTO;
 
 /**
  *
@@ -40,11 +41,11 @@ public class ExperieceServlet extends HttpServlet {
         String Result = "errorPage.html";
         try {
             /* TODO output your page here. You may use following sample code. */
-            sample.dao.ExperienceDAO dao = new ExperienceDAO();
+            ExperienceDAO dao = new ExperienceDAO();
             dao.GetProject();
-            List<sample.dto.ExperienceDTO> listProject = dao.getListProject();
+            List<ExperienceDTO> listProject = dao.getListProject();
             if(listProject != null){
-                Result = "experencePage.jsp";
+                Result = "experiencePage.jsp";
             }
             request.setAttribute("projectList", listProject);
         } catch (SQLException ex) {

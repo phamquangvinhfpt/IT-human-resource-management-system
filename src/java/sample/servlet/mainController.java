@@ -36,6 +36,8 @@ public class mainController extends HttpServlet {
             String action=request.getParameter("btAction");
             if(action.equals("Login")){
                 url="loginServlet";
+            }else{
+                url = "ExperieceServlet";
             }
             RequestDispatcher rd=request.getRequestDispatcher(url);
             rd.forward(request, response);

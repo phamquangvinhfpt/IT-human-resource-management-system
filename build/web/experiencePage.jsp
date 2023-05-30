@@ -13,8 +13,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form action="ExperienceServlet" method="POST">
-            <input type="submit" value="getProject" />
+        <form action="mainController" method="POST">
+            <input type="submit" name="btAction" value="getProject" />
         </form>
 
         <c:set var="result" value="${requestScope.projectList}"/>
