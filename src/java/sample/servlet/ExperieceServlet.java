@@ -7,21 +7,24 @@ package sample.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sample.dto.User;
+import sample.dao.ExperienceDAO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-@WebServlet(name = "loginServlet", urlPatterns = {"/loginServlet"})
-public class loginServlet extends HttpServlet {
-
+@WebServlet(name = "ExperieceServlet", urlPatterns = {"/ExperieceServlet"})
+public class ExperieceServlet extends HttpServlet {
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,26 +37,21 @@ public class loginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        String Result = "errorPage.html";
+        try {
             /* TODO output your page here. You may use following sample code. */
-            String username =request.getParameter("username");
-            String password =request.getParameter("password");
-            String save = request.getParameter("remember-me");
-            User user = null;
-            try {
-                if(username==null || username.equals("") || password == null || password.equals("")) {
-                    Cookie[] c = request.getCookies();
-                    String token = "";
-                    for (Cookie cookie : c) {
-                        if(cookie.getName().equals("token")) {
-                            token = cookie.getValue();
-                            break;
-                        }
-                    }
-                    
-                }
-            } catch (Exception e) {
+            sample.dao.ExperienceDAO dao = new ExperienceDAO();
+            dao.GetProject();
+            List<sample.dto.ExperienceDTO> listProject = dao.getListProject();
+            if(listProject != null){
+                Result = "experencePage.jsp";
             }
+            request.setAttribute("projectList", listProject);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExperieceServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            RequestDispatcher rd = request.getRequestDispatcher(Result);
+            rd.forward(request, response);
         }
     }
 
