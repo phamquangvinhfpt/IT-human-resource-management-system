@@ -51,7 +51,7 @@ public class loginServlet extends HttpServlet {
                 user = UserDAO.getUser(username, password);
                 HttpSession session = request.getSession(true);
                 session.setAttribute("user", user);
-
+                response.sendRedirect("login.jsp");
                 if (save != null && save.equals("on")) {
                     // Set cookie to remember user
                     Cookie cookie = new Cookie("userId", String.valueOf(user.getUserID()));

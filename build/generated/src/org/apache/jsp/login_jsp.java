@@ -3,6 +3,7 @@ package org.apache.jsp;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import sample.dto.User;
 
 public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
     implements org.apache.jasper.runtime.JspSourceDependent {
@@ -44,6 +45,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("\n");
       out.write("\n");
+      out.write("\n");
       out.write("<!DOCTYPE html>\n");
       out.write("<html>\n");
       out.write("    <head>\n");
@@ -72,6 +74,18 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("        <link rel=\"stylesheet\" type=\"text/css\" href=\"assets/css/main.css\">\n");
       out.write("    </head>\n");
       out.write("    <body>\n");
+      out.write("        ");
+
+            User user = (User) session.getAttribute("user");
+            if (user != null && user.getRole() == 1) {
+                response.sendRedirect("admin.jsp");
+            } else if (user != null && user.getRole() == 2) {
+                response.sendRedirect("login.jsp");
+            } else {
+                // handle the case where the user is not logged in or has an invalid role
+            }
+        
+      out.write("\n");
       out.write("        <div class=\"limiter\">\n");
       out.write("            <div class=\"container-login100\">\n");
       out.write("                <div class=\"wrap-login100\">\n");

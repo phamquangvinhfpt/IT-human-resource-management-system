@@ -4,6 +4,7 @@
     Author     : Admin
 --%>
 
+<%@page import="sample.dto.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -33,6 +34,16 @@
         <link rel="stylesheet" type="text/css" href="assets/css/main.css">
     </head>
     <body>
+        <%
+            User user = (User) session.getAttribute("user");
+            if (user != null && user.getRole() == 1) {
+                response.sendRedirect("admin.jsp");
+            } else if (user != null && user.getRole() == 2) {
+                response.sendRedirect("login.jsp");
+            } else {
+                // handle the case where the user is not logged in or has an invalid role
+            }
+        %>
         <div class="limiter">
             <div class="container-login100">
                 <div class="wrap-login100">
