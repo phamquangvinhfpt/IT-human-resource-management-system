@@ -7,17 +7,25 @@ package sample.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sample.dao.ExperienceDAO;
+import sample.dto.ExperienceDTO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class mainController extends HttpServlet {
+@WebServlet(name = "ExperieceServlet", urlPatterns = {"/ExperieceServlet"})
+public class ExperieceServlet extends HttpServlet {
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -30,24 +38,25 @@ public class mainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = "errorPage.html";
-        try{
+        String Result = "errorPage.html";
+        try {
             /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-<<<<<<< HEAD
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-=======
-            }else if(action.equals("getProject")){
-                url = "ExperieceServlet";
->>>>>>> 51da2b2659a02f98ae050d80e50a443599ed9634
+            ExperienceDAO dao = new ExperienceDAO();
+            dao.GetProject();
+            List<ExperienceDTO> listProject = dao.getListProject();
+            if(listProject != null){
+                Result = "experiencePage.jsp";
             }
+            request.setAttribute("projectList", listProject);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExperieceServlet.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
-            RequestDispatcher rd=request.getRequestDispatcher(url);
+            RequestDispatcher rd = request.getRequestDispatcher(Result);
             rd.forward(request, response);
         }
+        //oke be bae
+        //oke nha
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
