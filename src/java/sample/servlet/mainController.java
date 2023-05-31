@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Admin
  */
 public class mainController extends HttpServlet {
+    private String url = "";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -30,21 +31,14 @@ public class mainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = "errorPage.html";
-        try{
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String action=request.getParameter("btAction");
             if(action.equals("Sign in")){
                 url="loginServlet";
-<<<<<<< HEAD
             } else if(action.equals("Logout")) {
                 url="logoutServlet";
-=======
-            }else if(action.equals("getProject")){
-                url = "ExperieceServlet";
->>>>>>> 51da2b2659a02f98ae050d80e50a443599ed9634
             }
-        }finally{
             RequestDispatcher rd=request.getRequestDispatcher(url);
             rd.forward(request, response);
         }

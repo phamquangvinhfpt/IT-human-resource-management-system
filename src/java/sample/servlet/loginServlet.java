@@ -16,11 +16,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-<<<<<<< HEAD
 import javax.servlet.http.HttpSession;
 import sample.dao.UserDAO;
-=======
->>>>>>> 51da2b2659a02f98ae050d80e50a443599ed9634
 import sample.dto.User;
 
 /**
