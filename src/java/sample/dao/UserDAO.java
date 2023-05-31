@@ -60,9 +60,10 @@ public class UserDAO {
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "select us.[UserID], [Name], [Image], [Phone], [Email],[Username], [Password], "
-                        + "[Address], [Birthday], [ExperienceId], [Team_ID],[Status], [Role_id] "
-                        + "from [dbo].[User] AS us, [dbo].[Role]\n"
+                String sql = "SELECT [dbo].[User].[UserID], [Name], [Image], [Phone], [Email], [Username], [Password], "
+                        + "[Address], [Birthday], [ExperienceId], [Team_ID], [Status], [Role_id] "
+                        + "FROM [dbo].[User]\n"
+                        + "INNER JOIN [dbo].[Role] ON [dbo].[User].[UserID] = [dbo].[Role].[UserID]\n"
                         + "where [Status] = 1 and [Username] = ? and [Password] = ?";
                 pst = cn.prepareStatement(sql);
                 pst.setString(1, username);

@@ -68,9 +68,11 @@
                                 </li>
                             </ul>
                             <ul class="logout">
+                            <form method="POST" action="mainController">
                                 <li>
-                                    <a href="profile.html"><img src="assets/img/logout.svg" alt="sidebar_img"><span>Log out</span></a>
+                                    <button type="submit" name="btAction" value="Logout"><span>Log out</span></button>
                                 </li>
+                            </form>
                             </ul>
                         </div>
                     </div>

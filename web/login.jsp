@@ -39,9 +39,13 @@
             if (user != null && user.getRole() == 1) {
                 response.sendRedirect("admin.jsp");
             } else if (user != null && user.getRole() == 2) {
-                response.sendRedirect("login.jsp");
-            } else {
-                // handle the case where the user is not logged in or has an invalid role
+                response.sendRedirect("employee.jsp");
+            }
+        %>
+        <%
+            String error_message = (String) request.getAttribute("error");
+            if (error_message == null) {
+                error_message = "";
             }
         %>
         <div class="limiter">
@@ -84,6 +88,7 @@
                         <div class="container-login100-form-btn">
                             <input type="submit" class="login100-form-btn" name="btAction" value="Sign in" />
                         </div>
+                        <div style="color:red;"><%= error_message%></div>
                     </form>
                 </div>
             </div>

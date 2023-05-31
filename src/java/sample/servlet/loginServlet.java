@@ -65,13 +65,19 @@ public class loginServlet extends HttpServlet {
                     // User is authorized to access adminresources, show the admin page
                     RequestDispatcher dispatcher = request.getRequestDispatcher("admin.jsp");
                     dispatcher.forward(request, response);
-                } else {
+                } else if(role == 2) {
                     // User is not authorized, show an error message or redirect to a different page
-                    out.println("You do not have permission to access this page.");
+                    request.setAttribute("error", "You are not authorized to access this page");
+                    //sent request to login.jsp
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("employee.jsp");
+                    dispatcher.forward(request, response);
                 }
             } else {
-                // Invalid login, show an error message or redirect to a different page
-                out.println("Invalid username or password.");
+                // Invalid login, show an error message in login page
+                request.setAttribute("error", "Invalid username or password");
+                //sent request to login.jsp
+                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                dispatcher.forward(request, response);
             }
         }
     }

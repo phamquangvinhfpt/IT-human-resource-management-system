@@ -7,18 +7,19 @@ package sample.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Admin
+ * @author Vinh
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+public class logoutServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,14 +34,22 @@ public class mainController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
             }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            // Delete the cookie that remembers the user
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("userId")) {
+                        cookie.setMaxAge(0);
+                        response.addCookie(cookie);
+                    }
+                }
+            }
+            // Redirect the user to the login page
+            response.sendRedirect("login.jsp");
         }
     }
 

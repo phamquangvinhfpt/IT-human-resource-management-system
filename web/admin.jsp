@@ -4,6 +4,7 @@
     Author     : Admin
 --%>
 
+<%@page import="sample.dto.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -19,6 +20,12 @@
         <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
         <link rel="stylesheet" href="assets/css/style.css">
     </head>
+    <%
+            User user = (User) session.getAttribute("user");
+            if (user == null) {
+                response.sendRedirect("login.jsp");
+            }
+        %>
     <body>
         <div class="main-wrapper">
 
