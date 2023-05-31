@@ -8,6 +8,8 @@ package sample.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import sample.dto.User;
 import sample.utils.DBUtils;
 
@@ -89,5 +91,42 @@ public class UserDAO {
             }
         }
         return user;
+    }
+
+    public static List<User> getUserList() throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List<User> list = new ArrayList<>();
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT [dbo].[User].[UserID], [Name], [Image], [Phone], [Email], [Username], [Password], "
+                        + "[Address], [Birthday], [ExperienceId], [Team_ID], [Status], [Role_id] "
+                        + "FROM [dbo].[User]\n"
+                        + "INNER JOIN [dbo].[Role] ON [dbo].[User].[UserID] = [dbo].[Role].[UserID]\n"
+                        + "where [Status] = 1";
+                pst = cn.prepareStatement(sql);
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    list.add(new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), rs.getString("Phone"), rs.getString("Email"),
+                            rs.getString("Username"), rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), rs.getInt("ExperienceId"),
+                            rs.getInt("Team_ID"), rs.getInt("Status"), rs.getInt("Role_id")));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return list;
     }
 }

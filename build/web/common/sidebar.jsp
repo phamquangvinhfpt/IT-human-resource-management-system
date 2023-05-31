@@ -40,7 +40,7 @@
                                     <a href="admin.jsp"><img src="assets/img/home.svg" alt="sidebar_img"> <span>Dashboard</span></a>
                                 </li>
                                 <li>
-                                    <a href="employee.jsp"><img src="assets/img/employee.svg" alt="sidebar_img"><span> Employees</span></a>
+                                    <a href="employee"><img src="assets/img/employee.svg" alt="sidebar_img"><span> Employees</span></a>
                                 </li>
                                 <li>
                                     <a href="company.html"><img src="assets/img/group.png" alt="sidebar_img"> <span> Team</span></a>
