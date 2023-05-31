@@ -69,4 +69,37 @@ public class ExperienceDAO {
     public List<ExperienceDTO> getListProject() {
         return listProject;
     }
+    
+    public boolean addProject(ExperienceDTO project) throws SQLException, Exception{
+        Connection con = null;
+        PreparedStatement pst = null;
+        boolean result = false;
+        try{
+            con = DBUtils.makeConnection();
+            if(con != null){
+                String sql = "Insert into [dbo].[Experience]("
+                        + "[NameProject], [StartDate], [EndDate], [TechStack]"
+                        + ") Values("
+                        + "?, ?, ?, ?"
+                        + ")";
+                pst = con.prepareStatement(sql);
+                pst.setString(2, project.getNameProject());
+                pst.setDate(3, project.getStartDate());
+                pst.setDate(4, project.getEndDate());
+                pst.setString(5, project.getTechStack());
+                int effectRow = pst.executeUpdate();
+                if(effectRow > 0 ){
+                    result = true;
+                }
+            }
+        }finally{
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
 }

@@ -37,19 +37,19 @@
                                 ${counter.count}
                             </td>
                             <td>
-                                ${dto.ExperienceID}
+                                ${dto.getExperienceID()}
                             </td>
                             <td>
-                                ${dto.NameProject}
+                                ${dto.getNameProject()}
                             </td>
                             <td>
-                                ${dto.startDate}
+                                ${dto.getStartDate()}
                             </td>
                             <td>
-                                ${dto.endDate}
+                                ${dto.getEndDate()}
                             </td>
                             <td>
-                                ${dto.techStack}
+                                ${dto.getTechStack()}
                             </td>
                         </tr>
                     </c:forEach>
