@@ -21,11 +21,17 @@
         <link rel="stylesheet" href="assets/css/style.css">
     </head>
     <%
-            User user = (User) session.getAttribute("user");
-            if (user == null) {
-                response.sendRedirect("login.jsp");
-            }
-        %>
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+        } else if (user.getRole() != 1) {
+            // If user is not an admin, display an error message
+            String errorMessage = "You don't have the necessary privileges to perform this action";
+            request.setAttribute("errorMessage", errorMessage);
+            // Forward the request to an error page to display the message
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+        }
+    %>
     <body>
         <div class="main-wrapper">
 

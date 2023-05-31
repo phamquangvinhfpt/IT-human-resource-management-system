@@ -80,9 +80,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
             if (user != null && user.getRole() == 1) {
                 response.sendRedirect("admin.jsp");
             } else if (user != null && user.getRole() == 2) {
-                response.sendRedirect("login.jsp");
-            } else {
-                // handle the case where the user is not logged in or has an invalid role
+                response.sendRedirect("employee.jsp");
             }
         
       out.write("\r\n");

@@ -5,8 +5,12 @@
         <group>
             <file>file:/E:/SWP/HRManagement/web/login.jsp</file>
             <file>file:/E:/SWP/HRManagement/src/java/sample/dao/UserDAO.java</file>
+            <file>file:/E:/SWP/HRManagement/web/WEB-INF/web.xml</file>
             <file>file:/E:/SWP/HRManagement/src/java/sample/servlet/mainController.java</file>
             <file>file:/E:/SWP/HRManagement/src/java/sample/servlet/loginServlet.java</file>
+            <file>file:/E:/SWP/HRManagement/web/admin.jsp</file>
+            <file>file:/E:/SWP/HRManagement/web/employee.jsp</file>
+            <file>file:/E:/SWP/HRManagement/web/META-INF/context.xml</file>
         </group>
     </open-files>
 </project-private>

@@ -67,8 +67,6 @@ public class loginServlet extends HttpServlet {
                     dispatcher.forward(request, response);
                 } else if(role == 2) {
                     // User is not authorized, show an error message or redirect to a different page
-                    request.setAttribute("error", "You are not authorized to access this page");
-                    //sent request to login.jsp
                     RequestDispatcher dispatcher = request.getRequestDispatcher("employee.jsp");
                     dispatcher.forward(request, response);
                 }
