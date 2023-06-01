@@ -8,6 +8,10 @@
         <servlet-name>logoutServlet</servlet-name>
         <servlet-class>sample.servlet.logoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>addEmployee</servlet-name>
+        <servlet-class>sample.servlet.addEmployee</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>mainController</servlet-name>
         <url-pattern>/mainController</url-pattern>
@@ -16,9 +20,16 @@
         <servlet-name>logoutServlet</servlet-name>
         <url-pattern>/logoutServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addEmployee</servlet-name>
+        <url-pattern>/addEmployee</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

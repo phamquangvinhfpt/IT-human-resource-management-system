@@ -14,7 +14,10 @@
     <body>
         <%
             String errorMessage = (String)request.getAttribute("errorMessage");
+            //get error message from parse response.sendRedirect("error.jsp?message=Invalid input parameters");
+            String message = request.getParameter("message");
         %>
         <p><span><%=errorMessage%></span></p>
+        <p><span><%=message%></span></p>
     </body>
 </html>

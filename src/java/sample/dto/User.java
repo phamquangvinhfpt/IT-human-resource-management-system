@@ -64,6 +64,23 @@ public class User {
         this.token = token;
     }
 
+    public User(String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, int Role) {
+        this.Name = Name;
+        this.Image = Image;
+        this.Phone = Phone;
+        this.Email = Email;
+        this.Username = Username;
+        this.Password = Password;
+        this.Address = Address;
+        this.Birthday = Birthday;
+        this.ExperienceId = ExperienceId;
+        this.Status = Status;
+        this.Team_ID = Team_ID;
+        this.Role = Role;
+    }
+    
+    
+
     public int getUserID() {
         return UserID;
     }
@@ -158,6 +175,14 @@ public class User {
 
     public void setRole(int Role) {
         this.Role = Role;
+    }
+
+    public int getStatus() {
+        return Status;
+    }
+
+    public void setStatus(int Status) {
+        this.Status = Status;
     }
     
 }

@@ -7,15 +7,12 @@ package sample.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import sample.dao.UserDAO;
 import sample.dto.User;
 
@@ -23,8 +20,8 @@ import sample.dto.User;
  *
  * @author Admin
  */
-@WebServlet(name = "employee", urlPatterns = {"/employee"})
-public class employeePage extends HttpServlet {
+public class addEmployee extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -39,10 +36,46 @@ public class employeePage extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            List<User> list = UserDAO.getUserList();
-            //sent list to jsp
-            request.setAttribute("list", list);            
-            request.getRequestDispatcher("employee.jsp").forward(request, response);
+            // Get form data from request parameters
+            String userID = request.getParameter("userID");
+            String name = request.getParameter("name");
+            String phone = request.getParameter("phone");
+            String email = request.getParameter("email");
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            String address = request.getParameter("address");
+            String birthday = request.getParameter("birthday");
+            String experienceId = request.getParameter("experienceId");
+            String teamID = request.getParameter("teamID");
+            // Parse integer values
+            int userIDInt = 0;
+            int experienceIdInt = 0;
+            int teamIDInt = 0;
+            try {
+                userIDInt = Integer.parseInt(userID);
+                experienceIdInt = Integer.parseInt(experienceId);
+                teamIDInt = Integer.parseInt(teamID);
+            } catch (NumberFormatException e) {
+                // Redirect to error page with error message
+                response.sendRedirect("error.jsp?message=Invalid input parameters");
+                return;
+            }
+            //parse to date
+            java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
+            // Create a new User object
+            User user = new User(userIDInt, name, "test",phone, email, username, password, address, birthdayDate, experienceIdInt, 1, teamIDInt, 1);
+            // Call DAO to insert new user
+            UserDAO dao = new UserDAO();
+            boolean checkresult = dao.createUser(user);
+            if (checkresult) {
+                out.println("Insert success");
+                //redirect to view
+                response.sendRedirect("employee");
+            } else {
+                out.println("Insert failed");
+                //redirect to view
+                response.sendRedirect("employee");
+            }
         }
     }
 
@@ -61,7 +94,7 @@ public class employeePage extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(employeePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(addEmployee.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -79,7 +112,7 @@ public class employeePage extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(employeePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(addEmployee.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
