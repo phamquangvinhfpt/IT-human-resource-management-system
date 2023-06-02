@@ -8,6 +8,7 @@ package sample.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import sample.dto.User;
@@ -133,14 +134,13 @@ public class UserDAO {
     public static boolean createUser(User user) throws Exception {
         Connection cn = null;
         PreparedStatement pst1 = null;
-        PreparedStatement pst2 = null;
         ResultSet rs = null;
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
                 // Insert new user into User table
                 String sql1 = "INSERT INTO [dbo].[User] ([UserID], [Name], [Image], [Phone], [Email], [Username], [Password], [Address], [Birthday], [ExperienceId], [Team_ID], [Status]) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        + "VALUES (?, N'?', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 pst1 = cn.prepareStatement(sql1, PreparedStatement.RETURN_GENERATED_KEYS);
                 pst1.setInt(1, user.getUserID());
                 pst1.setString(2, user.getName());
@@ -154,7 +154,11 @@ public class UserDAO {
                 pst1.setInt(10, user.getExperienceId());
                 pst1.setInt(11, user.getTeam_ID());
                 pst1.setInt(12, user.getStatus());
+                pst1.executeUpdate();
             }
+            // Insert new user into Role table
+            createUserRole(user);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -164,13 +168,38 @@ public class UserDAO {
             if (pst1 != null) {
                 pst1.close();
             }
-            if (pst2 != null) {
-                pst2.close();
-            }
             if (cn != null) {
                 cn.close();
             }
         }
         return false;
+    }
+    //insert new user into Role table
+    public static void createUserRole(User user) throws SQLException {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "INSERT INTO [dbo].[Role] ([UserID], [Role_id], [Description]) VALUES (?, ?, 'user')";
+                pst = cn.prepareStatement(sql);
+                pst.setInt(1, user.getUserID());
+                pst.setInt(2, 2);
+                pst.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@
     Created on : May 18, 2023, 9:42:44 AM
     Author     : Admin
 --%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.List"%>
 <%@page import="sample.dto.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -29,6 +30,9 @@
             List<User> user = (List<User>) request.getAttribute("list");
             //get number of users
             int count = (user == null || user.isEmpty()) ? 0 : user.size();
+            //parse date to DD/MM/YYYY
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            String date = sdf.format(user.get(0).getBirthday());
         %>
         <div class="main-wrapper">
 
@@ -162,7 +166,7 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="show-data">
                                             <% for (User u : user) {%>
                                             <tr>
                                                 <td><%=u.getUserID()%></td>
@@ -172,7 +176,7 @@
                                                 <td><%=u.getUsername()%></td>
                                                 <td><%=u.getPassword()%></td>
                                                 <td><%=u.getAddress()%></td>
-                                                <td><%=u.getBirthday()%></td>
+                                                <td><%=date %></td>
                                                 <td><%=u.getExperienceId()%></td>
                                                 <td><%=u.getTeam_ID()%></td>
                                                 <td>
@@ -222,6 +226,13 @@
                                                     }
                                             });
                                     });
+                                    });
+                                    
+                                    $(document).ready(function(){
+                                       $.ajax({
+                                           method:"GET",
+                                           url:
+                                       }); 
                                     });
         </script>
     </body>

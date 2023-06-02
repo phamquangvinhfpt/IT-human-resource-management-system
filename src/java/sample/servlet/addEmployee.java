@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import sample.dto.User;
  *
  * @author Admin
  */
+@MultipartConfig
 public class addEmployee extends HttpServlet {
 
     /**
@@ -47,19 +49,10 @@ public class addEmployee extends HttpServlet {
             String birthday = request.getParameter("birthday");
             String experienceId = request.getParameter("experienceId");
             String teamID = request.getParameter("teamID");
-            // Parse integer values
-            int userIDInt = 0;
-            int experienceIdInt = 0;
-            int teamIDInt = 0;
-            try {
-                userIDInt = Integer.parseInt(userID);
-                experienceIdInt = Integer.parseInt(experienceId);
-                teamIDInt = Integer.parseInt(teamID);
-            } catch (NumberFormatException e) {
-                // Redirect to error page with error message
-                response.sendRedirect("error.jsp?message=Invalid input parameters");
-                return;
-            }
+//            // Parse integer values
+            int userIDInt = Integer.parseInt(userID);
+            int experienceIdInt = Integer.parseInt(experienceId);
+            int teamIDInt = Integer.parseInt(teamID);
             //parse to date
             java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
             // Create a new User object
@@ -69,12 +62,8 @@ public class addEmployee extends HttpServlet {
             boolean checkresult = dao.createUser(user);
             if (checkresult) {
                 out.println("Insert success");
-                //redirect to view
-                response.sendRedirect("employee");
             } else {
                 out.println("Insert failed");
-                //redirect to view
-                response.sendRedirect("employee");
             }
         }
     }

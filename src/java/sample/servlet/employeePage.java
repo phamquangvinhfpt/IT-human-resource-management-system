@@ -5,6 +5,7 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -25,6 +26,7 @@ import sample.dto.User;
  */
 @WebServlet(name = "employee", urlPatterns = {"/employee"})
 public class employeePage extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -40,9 +42,15 @@ public class employeePage extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             List<User> list = UserDAO.getUserList();
+            response.setContentType("application/json");
+            response.setStatus(200);
+            Gson gson = new Gson();
+            String json = gson.toJson(list);
+            out.println(json);
             //sent list to jsp
-            request.setAttribute("list", list);            
-            request.getRequestDispatcher("employee.jsp").forward(request, response);
+//             request.setAttribute("list", list);
+
+// //            request.getRequestDispatcher("employee.jsp").forward(request, response);
         }
     }
 
