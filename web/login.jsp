@@ -39,7 +39,7 @@
             if (user != null && user.getRole() == 1) {
                 response.sendRedirect("admin.jsp");
             } else if (user != null && user.getRole() == 2) {
-                response.sendRedirect("employee.jsp");
+                response.sendRedirect("datatable.jsp");
             }
         %>
         <%

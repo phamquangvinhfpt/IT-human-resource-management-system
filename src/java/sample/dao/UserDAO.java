@@ -140,8 +140,8 @@ public class UserDAO {
             if (cn != null) {
                 // Insert new user into User table
                 String sql1 = "INSERT INTO [dbo].[User] ([UserID], [Name], [Image], [Phone], [Email], [Username], [Password], [Address], [Birthday], [ExperienceId], [Team_ID], [Status]) "
-                        + "VALUES (?, N'?', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                pst1 = cn.prepareStatement(sql1, PreparedStatement.RETURN_GENERATED_KEYS);
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                pst1 = cn.prepareStatement(sql1);
                 pst1.setInt(1, user.getUserID());
                 pst1.setString(2, user.getName());
                 pst1.setString(3, user.getImage());
@@ -154,13 +154,17 @@ public class UserDAO {
                 pst1.setInt(10, user.getExperienceId());
                 pst1.setInt(11, user.getTeam_ID());
                 pst1.setInt(12, user.getStatus());
-                pst1.executeUpdate();
+                
+                int rows = pst1.executeUpdate();
+                if (rows > 0) {
+                    createUserRole(user);
+                    return true;
+                } 
+
             }
             // Insert new user into Role table
-            createUserRole(user);
-            return true;
+
         } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             if (rs != null) {
                 rs.close();
@@ -174,6 +178,7 @@ public class UserDAO {
         }
         return false;
     }
+
     //insert new user into Role table
     public static void createUserRole(User user) throws SQLException {
         Connection cn = null;

@@ -47,10 +47,6 @@ public class employeePage extends HttpServlet {
             Gson gson = new Gson();
             String json = gson.toJson(list);
             out.println(json);
-            //sent list to jsp
-//             request.setAttribute("list", list);
-
-// //            request.getRequestDispatcher("employee.jsp").forward(request, response);
         }
     }
 

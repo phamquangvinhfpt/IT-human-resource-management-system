@@ -51,7 +51,7 @@ public class loginServlet extends HttpServlet {
                 user = UserDAO.getUser(username, password);
                 HttpSession session = request.getSession(true);
                 session.setAttribute("user", user);
-                response.sendRedirect("login.jsp");
+//                response.sendRedirect("login.jsp");
                 if (save != null && save.equals("on")) {
                     // Set cookie to remember user
                     Cookie cookie = new Cookie("userId", String.valueOf(user.getUserID()));
@@ -67,7 +67,7 @@ public class loginServlet extends HttpServlet {
                     dispatcher.forward(request, response);
                 } else if(role == 2) {
                     // User is not authorized, show an error message or redirect to a different page
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("employee.jsp");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("datatable.jsp");
                     dispatcher.forward(request, response);
                 }
             } else {

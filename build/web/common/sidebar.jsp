@@ -10,6 +10,22 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <script>
+            $(document).ready(function () {
+                $(".sidebar-menu li a").click(function () {
+                    $(".sidebar-menu li a").removeClass("active");
+                    $(this).addClass("active");
+                });
+                $("#mobile_btn").click(function () {
+                    $(".sidebar-menu").toggleClass("open");
+                    $(".sidebar-menu").toggleClass("mobile-show");
+                });
+                $("#mobile_btn_close").click(function () {
+                    $(".sidebar-menu").removeClass("open");
+                    $(".sidebar-menu").removeClass("mobile-show");
+                });
+            });
+        </script>
     </head>
     <body>
         <div class="sidebar-inner slimscroll">
@@ -36,11 +52,11 @@
                                 </div>
                             </div>
                             <ul>
-                                <li class="active">
+                                <li>
                                     <a href="admin.jsp"><img src="assets/img/home.svg" alt="sidebar_img"> <span>Dashboard</span></a>
                                 </li>
                                 <li>
-                                    <a href="employee"><img src="assets/img/employee.svg" alt="sidebar_img"><span> Employees</span></a>
+                                    <a href="employee.jsp"><img src="assets/img/employee.svg" alt="sidebar_img"><span> Employees</span></a>
                                 </li>
                                 <li>
                                     <a href="company.html"><img src="assets/img/group.png" alt="sidebar_img"> <span> Team</span></a>

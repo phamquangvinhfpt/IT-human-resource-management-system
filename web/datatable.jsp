@@ -1,8 +1,3 @@
-<%-- 
-    Document   : datatable
-    Created on : Jun 2, 2023, 12:52:36 PM
-    Author     : Admin
---%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -19,6 +14,9 @@
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
         <!-- Bootstrap JavaScript library -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        <script src="../node_modules/toastify-js/src/toastify.js"></script>
         <title>JSP Page</title>
     </head>
     <script>
@@ -115,7 +113,34 @@
                 });
             });
             //delete employee
+            $(document).ready(function () {
+                var table = $('#example').DataTable();
 
+                $('#example tbody').on('click', 'tr', function () {
+                    $(this).toggleClass('selected');
+                });
+
+                $('#button').click(function () {
+                    alert(table.rows('.selected').data().length + ' row(s) selected');
+                });
+                
+                
+            });
+            //toast
+            function toastSuccess() {
+                Toastify({
+                    text: "Add success",
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: 'right', // `left`, `center` or `right`
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    onClick: function () {
+                    } // Callback after click
+                }).showToast();
+            }
         });
     </script>
     <style>
@@ -184,9 +209,10 @@
                         </div>
 
                         <div class="modal-footer">
-                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <input type="submit" onclick="toastSuccess()" value="Save" class="btn btn-primary" />
                             <input type="reset" value="Reset" class="btn btn-danger" />
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -209,6 +235,7 @@
                 </tr>
             </thead>
             <tbody>
+            
 
             <tfoot>
                 <tr>

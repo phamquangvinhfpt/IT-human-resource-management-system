@@ -5,6 +5,8 @@
  */
 package sample.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 /**
@@ -20,8 +22,7 @@ public class Encrypt {
             byte[] bytesOfMessage = password.getBytes("UTF-8");
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-1");
             result = Base64.getEncoder().encodeToString(md.digest(bytesOfMessage));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
         }
         return result;
     }
