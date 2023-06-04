@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import sample.dao.UserDAO;
 import sample.dto.User;
+import sample.utils.Encrypt;
 
 /**
  *
@@ -44,6 +45,7 @@ public class loginServlet extends HttpServlet {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             String save = request.getParameter("remember-me");
+            password = Encrypt.toSHA1(password);
             User user = null;
             boolean validLogin = UserDAO.checkLogin(username, password);
             if (validLogin) {
@@ -60,12 +62,12 @@ public class loginServlet extends HttpServlet {
                 }
 
                 // Check if user is admin
-                int role = UserDAO.getUser(username, password).getRole();
-                if (role == 1) {
+                String role = UserDAO.getUser(username, password).getRole();
+                if (role.equals("admin")) {
                     // User is authorized to access adminresources, show the admin page
                     RequestDispatcher dispatcher = request.getRequestDispatcher("admin.jsp");
                     dispatcher.forward(request, response);
-                } else if(role == 2) {
+                } else if(!role.equals("admin")) {
                     // User is not authorized, show an error message or redirect to a different page
                     RequestDispatcher dispatcher = request.getRequestDispatcher("datatable.jsp");
                     dispatcher.forward(request, response);

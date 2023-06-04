@@ -29,7 +29,7 @@ public class UserDAO {
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "select * from [dbo].[User] where [Status] = 1 and [Username] = ? and [Password] = ?";
+                String sql = "SELECT * from [dbo].[User] where [Username] = ? and [Password] = ?";
                 pst = cn.prepareStatement(sql);
                 pst.setString(1, username);
                 pst.setString(2, password);
@@ -63,19 +63,20 @@ public class UserDAO {
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "SELECT [dbo].[User].[UserID], [Name], [Image], [Phone], [Email], [Username], [Password], "
-                        + "[Address], [Birthday], [ExperienceId], [Team_ID], [Status], [Role_id] "
-                        + "FROM [dbo].[User]\n"
-                        + "INNER JOIN [dbo].[Role] ON [dbo].[User].[UserID] = [dbo].[Role].[UserID]\n"
-                        + "where [Status] = 1 and [Username] = ? and [Password] = ?";
+                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role] "
+                        + "from [dbo].[User], [dbo].[Projects],[dbo].[Team] "
+                        + "where [Username] = ? and [Password] = ? "
+                        + "and [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] "
+                        + "and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID]";
                 pst = cn.prepareStatement(sql);
                 pst.setString(1, username);
                 pst.setString(2, password);
                 rs = pst.executeQuery();
                 if (rs.next()) {
-                    user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), rs.getString("Phone"), rs.getString("Email"),
-                            rs.getString("Username"), rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), rs.getInt("ExperienceId"),
-                            rs.getInt("Team_ID"), rs.getInt("Status"), rs.getInt("Role_id"));
+                    user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), 
+                    rs.getString("Phone"), rs.getString("Email"), rs.getString("Username"), 
+                    rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), 
+                    rs.getString("NameProject"), rs.getString("Team_Name"), rs.getString("Role"));
                 }
             }
         } catch (Exception e) {
@@ -102,17 +103,17 @@ public class UserDAO {
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "SELECT [dbo].[User].[UserID], [Name], [Image], [Phone], [Email], [Username], [Password], "
-                        + "[Address], [Birthday], [ExperienceId], [Team_ID], [Status], [Role_id] "
-                        + "FROM [dbo].[User]\n"
-                        + "INNER JOIN [dbo].[Role] ON [dbo].[User].[UserID] = [dbo].[Role].[UserID]\n"
-                        + "where [Status] = 1";
+                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role] "
+                        + "from [dbo].[User], [dbo].[Projects],[dbo].[Team] "
+                        + "WHERE [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] "
+                        + "and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID]";
                 pst = cn.prepareStatement(sql);
                 rs = pst.executeQuery();
                 while (rs.next()) {
-                    list.add(new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), rs.getString("Phone"), rs.getString("Email"),
-                            rs.getString("Username"), rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), rs.getInt("ExperienceId"),
-                            rs.getInt("Team_ID"), rs.getInt("Status"), rs.getInt("Role_id")));
+                    list.add(new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), 
+                    rs.getString("Phone"), rs.getString("Email"), rs.getString("Username"), 
+                    rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), 
+                    rs.getString("NameProject"), rs.getString("Team_Name"), rs.getString("Role")));
                 }
             }
         } catch (Exception e) {
@@ -133,68 +134,32 @@ public class UserDAO {
 
     public static boolean createUser(User user) throws Exception {
         Connection cn = null;
-        PreparedStatement pst1 = null;
-        ResultSet rs = null;
-        try {
-            cn = DBUtils.makeConnection();
-            if (cn != null) {
-                // Insert new user into User table
-                String sql1 = "INSERT INTO [dbo].[User] ([UserID], [Name], [Image], [Phone], [Email], [Username], [Password], [Address], [Birthday], [ExperienceId], [Team_ID], [Status]) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                pst1 = cn.prepareStatement(sql1);
-                pst1.setInt(1, user.getUserID());
-                pst1.setString(2, user.getName());
-                pst1.setString(3, user.getImage());
-                pst1.setString(4, user.getPhone());
-                pst1.setString(5, user.getEmail());
-                pst1.setString(6, user.getUsername());
-                pst1.setString(7, user.getPassword());
-                pst1.setString(8, user.getAddress());
-                pst1.setDate(9, new java.sql.Date(user.getBirthday().getTime()));
-                pst1.setInt(10, user.getExperienceId());
-                pst1.setInt(11, user.getTeam_ID());
-                pst1.setInt(12, user.getStatus());
-                
-                int rows = pst1.executeUpdate();
-                if (rows > 0) {
-                    createUserRole(user);
-                    return true;
-                } 
-
-            }
-            // Insert new user into Role table
-
-        } catch (Exception e) {
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (pst1 != null) {
-                pst1.close();
-            }
-            if (cn != null) {
-                cn.close();
-            }
-        }
-        return false;
-    }
-
-    //insert new user into Role table
-    public static void createUserRole(User user) throws SQLException {
-        Connection cn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "INSERT INTO [dbo].[Role] ([UserID], [Role_id], [Description]) VALUES (?, ?, 'user')";
+                // Insert new user into User table
+                String sql = "INSERT INTO [dbo].[User]([Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [ProjectId], [Team_ID], [Role]) "
+                        + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
                 pst = cn.prepareStatement(sql);
-                pst.setInt(1, user.getUserID());
-                pst.setInt(2, 2);
+                pst.setString(1, user.getName());
+                pst.setString(2, user.getImage());
+                pst.setString(3, user.getPhone());
+                pst.setString(4, user.getEmail());
+                pst.setString(5, user.getUsername());
+                pst.setString(6, user.getPassword());
+                pst.setString(7, user.getAddress());
+                pst.setDate(8, user.getBirthday());
+                pst.setInt(9, user.getProjectId());
+                pst.setInt(10, user.getTeam_ID());
+                pst.setString(11, user.getRole());
                 pst.executeUpdate();
+                return true;
             }
+            // Insert new user into Role table
+
         } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             if (rs != null) {
                 rs.close();
@@ -206,5 +171,7 @@ public class UserDAO {
                 cn.close();
             }
         }
+        return false;
     }
+    
 }

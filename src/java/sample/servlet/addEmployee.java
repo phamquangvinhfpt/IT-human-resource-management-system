@@ -5,8 +5,14 @@
  */
 package sample.servlet;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -14,7 +20,12 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import sample.dao.ProjectDAO;
+import sample.dao.TeamDAO;
 import sample.dao.UserDAO;
+import sample.dto.Project;
+import sample.dto.Team;
 import sample.dto.User;
 
 /**
@@ -39,7 +50,6 @@ public class addEmployee extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             // Get form data from request parameters
-            String userID = request.getParameter("userID");
             String name = request.getParameter("name");
             String phone = request.getParameter("phone");
             String email = request.getParameter("email");
@@ -47,16 +57,18 @@ public class addEmployee extends HttpServlet {
             String password = request.getParameter("password");
             String address = request.getParameter("address");
             String birthday = request.getParameter("birthday");
-            String experienceId = request.getParameter("experienceId");
-            String teamID = request.getParameter("teamID");
-//            // Parse integer values
-            int userIDInt = Integer.parseInt(userID);
-            int experienceIdInt = Integer.parseInt(experienceId);
-            int teamIDInt = Integer.parseInt(teamID);
-            //parse to date
-            java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
-            // Create a new User object
-            User user = new User(userIDInt, name, "test",phone, email, username, password, address, birthdayDate, experienceIdInt, 1, teamIDInt, 1);
+            String projectName = request.getParameter("projectName");
+            String teamName = request.getParameter("teamName");
+            //get projectID
+            ProjectDAO projectDAO = new ProjectDAO();
+            int ProjectID = projectDAO.getProjectID(projectName);
+            //get teamID
+            TeamDAO teamDAO = new TeamDAO();
+            int TeamID = teamDAO.getTeamID(teamName);
+           //parse to date
+           java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
+           //create user
+            User user = new User(name, "test", phone, email, username, password, address, birthdayDate, ProjectID, TeamID,"user");
             // Call DAO to insert new user
             UserDAO dao = new UserDAO();
             boolean checkresult = dao.createUser(user);

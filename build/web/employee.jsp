@@ -3,6 +3,10 @@
     Created on : May 18, 2023, 9:42:44 AM
     Author     : Admin
 --%>
+<%@page import="sample.dao.TeamDAO"%>
+<%@page import="sample.dto.Team"%>
+<%@page import="sample.dto.Project"%>
+<%@page import="sample.dao.ProjectDAO"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.List"%>
 <%@page import="sample.dto.User"%>
@@ -22,12 +26,11 @@
 
         <link rel="stylesheet" href="assets/css/style.css">
 
-        <%-- <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script> --%>
         <script src="https://kit.fontawesome.com/b3fa33d056.js" crossorigin="anonymous"></script>
 
         <!--CDN-->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <!-- Bootstrap JavaScript library -->
@@ -35,13 +38,14 @@
         <script>
             $(document).ready(function () {
                 $('#example').DataTable({
+
                     ajax: {
                         url: '/HRManagement/employee',
                         dataSrc: ''
                     },
                     columns: [
                         {
-                            "className": 'details-control',
+                            "className": 'dt-center',
                             "orderable": false,
                             "data": null,
                             "defaultContent": ''
@@ -54,8 +58,9 @@
                         {data: 'Password'},
                         {data: 'Address'},
                         {data: 'Birthday'},
-                        {data: 'ExperienceId'},
-                        {data: 'Team_ID'},
+                        {data: 'NameProject'},
+                        {data: 'Team_Name'},
+                        {data: 'Role'},
                         {
                             data: null,
                             render: function (data, type, row) {
@@ -69,39 +74,7 @@
                     ],
                     "order": [[1, 'asc']]
                 });
-                // Add event listener for opening and closing details
-                $('#example tbody').on('click', 'td.details-control', function () {
-                    var tr = $(this).closest('tr');
-                    var row = $('#example').DataTable().row(tr);
 
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        tr.removeClass('shown');
-                    } else {
-                        // Open this row
-                        row.child(format(row.data())).show();
-                        tr.addClass('shown');
-                    }
-                });
-                //format detail
-                function format(d) {
-                    // `d` is the original data object for the row
-                    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                            '<tr>' +
-                            '<td>Full name:</td>' +
-                            '<td>' + d.Name + '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                            '<td>Phone:</td>' +
-                            '<td>' + d.Phone + '</td>' +
-                            '</tr>' +
-                            '<tr>' +
-                            '<td>Extra info:</td>' +
-                            '<td>And any further details here (images etc)...</td>' +
-                            '</tr>' +
-                            '</table>';
-                }
                 $(document).ready(function () {
                     $(".myform").on("submit", function (e) {
                         e.preventDefault();
@@ -146,7 +119,7 @@
         <%
             //check user login
             User user = (User) session.getAttribute("user");
-            if (user == null || user.getRole() != 1) {
+            if (user == null || !user.getRole().equals("admin")) {
                 response.sendRedirect("login.jsp");
             }
         %>
@@ -197,12 +170,12 @@
 
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label for="userID">UserID:</label>
-                                                <input type="text" class="form-control" id="userID" name="userID">
-                                            </div>
-                                            <div class="form-group">
                                                 <label for="name">Name:</label>
                                                 <input type="text" class="form-control" id="name" name="name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name">Image:</label>
+                                                <input type="file" class="form-control" id="image" name="image">
                                             </div>
                                             <div class="form-group">
                                                 <label for="phone">Phone:</label>
@@ -230,11 +203,31 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="experienceId">ExperienceId:</label>
-                                                <input type="text" class="form-control" id="experienceId" name="experienceId">
+                                                <%-- combo box --%>
+                                                <select class="form-control" id="experienceId" name="experienceId">
+                                                    <%
+                                                        List<Project> list = ProjectDAO.getAll();
+                                                        for (Project project : list) {
+                                                    %>
+                                                    <option value="<%=project.getId()%>"><%=project.getNameProject()%></option>
+                                                    <%
+                                                        }
+                                                    %>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="teamID">Team_ID:</label>
-                                                <input type="text" class="form-control" id="teamID" name="teamID">
+                                                <%-- combo box --%>
+                                                <select class="form-control" id="teamID" name="teamID">
+                                                    <%
+                                                        List<Team> listTeam = TeamDAO.getAll();
+                                                        for (Team team : listTeam) {
+                                                    %>
+                                                    <option value="<%=team.getTeam_ID()%>"><%=team.getTeam_Name()%></option>
+                                                    <%
+                                                        }
+                                                    %>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -270,7 +263,7 @@
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th>UserID</th>
+                                                <th>STT</th>
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
@@ -278,8 +271,9 @@
                                                 <th>Password</th>
                                                 <th>Address</th>
                                                 <th>Birthday</th>
-                                                <th>ExperienceId</th>
-                                                <th>Team_ID</th>
+                                                <th>NameProject</th>
+                                                <th>Team_Name</th>
+                                                <th>Role</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -289,7 +283,7 @@
                                         <tfoot>
                                             <tr>
                                                 <th></th>
-                                                <th>UserID</th>
+                                                <th>STT</th>
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
@@ -297,8 +291,9 @@
                                                 <th>Password</th>
                                                 <th>Address</th>
                                                 <th>Birthday</th>
-                                                <th>ExperienceId</th>
-                                                <th>Team_ID</th>
+                                                <th>NameProject</th>
+                                                <th>Team_Name</th>
+                                                <th>Role</th>
                                                 <th>Action</th>
                                             </tr>
                                         </tfoot>

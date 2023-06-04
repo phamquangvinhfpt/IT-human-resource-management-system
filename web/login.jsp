@@ -36,9 +36,9 @@
     <body>
         <%
             User user = (User) session.getAttribute("user");
-            if (user != null && user.getRole() == 1) {
+            if (user != null && user.getRole().equals("admin")) {
                 response.sendRedirect("admin.jsp");
-            } else if (user != null && user.getRole() == 2) {
+            } else if (user != null && user.getRole().equals("user")) {
                 response.sendRedirect("datatable.jsp");
             }
         %>
