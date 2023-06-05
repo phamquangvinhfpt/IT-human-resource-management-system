@@ -92,6 +92,7 @@ public class UserDAO {
         }
         return user;
     }
+<<<<<<< Updated upstream
 
     public static List<User> getUserList() throws Exception {
         Connection cn = null;
@@ -173,4 +174,7 @@ public class UserDAO {
         }
         return false;
     }
+=======
+    
+>>>>>>> Stashed changes
 }
