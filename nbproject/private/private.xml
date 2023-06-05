@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< Updated upstream
             <file>file:/E:/SWP/HRManagement/web/login.jsp</file>
             <file>file:/E:/SWP/HRManagement/src/java/sample/dao/UserDAO.java</file>
             <file>file:/E:/SWP/HRManagement/web/WEB-INF/web.xml</file>
@@ -11,6 +12,26 @@
             <file>file:/E:/SWP/HRManagement/web/admin.jsp</file>
             <file>file:/E:/SWP/HRManagement/web/employee.jsp</file>
             <file>file:/E:/SWP/HRManagement/web/META-INF/context.xml</file>
+=======
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/servlet/ValidateOtp.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/web/META-INF/context.xml</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/web/EnterOtp.jsp</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/dao/UserDAO.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/servlet/loginServlet.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/servlet/ForgotPassword.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/servlet/mainController.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/servlet/ChangeServlet.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/dto/Reset.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/utils/DBUtils.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/web/forgotPassword.jsp</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/servlet/NewPassword.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/dto/Change.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/web/login.jsp</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/dto/User.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/src/java/sample/dao/SendEmail.java</file>
+            <file>file:/C:/Users/Administrator/Documents/GitHub/IT-human-resource-management-system/web/newPassword.jsp</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>
