@@ -204,12 +204,12 @@
                                             <div class="form-group">
                                                 <label for="experienceId">ExperienceId:</label>
                                                 <%-- combo box --%>
-                                                <select class="form-control" id="experienceId" name="experienceId">
+                                                <select class="form-control" id="experienceId" name="projectName">
                                                     <%
                                                         List<Project> list = ProjectDAO.getAll();
                                                         for (Project project : list) {
                                                     %>
-                                                    <option value="<%=project.getId()%>"><%=project.getNameProject()%></option>
+                                                    <option value="<%=project.getNameProject()%>"><%=project.getNameProject()%></option>
                                                     <%
                                                         }
                                                     %>
@@ -218,12 +218,12 @@
                                             <div class="form-group">
                                                 <label for="teamID">Team_ID:</label>
                                                 <%-- combo box --%>
-                                                <select class="form-control" id="teamID" name="teamID">
+                                                <select class="form-control" id="teamID" name="teamName">
                                                     <%
                                                         List<Team> listTeam = TeamDAO.getAll();
                                                         for (Team team : listTeam) {
                                                     %>
-                                                    <option value="<%=team.getTeam_ID()%>"><%=team.getTeam_Name()%></option>
+                                                    <option value="<%=team.getTeam_Name() %>"><%=team.getTeam_Name()%></option>
                                                     <%
                                                         }
                                                     %>

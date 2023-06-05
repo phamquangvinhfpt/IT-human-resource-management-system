@@ -21,12 +21,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+
+import org.omg.CORBA.Context;
+
 import sample.dao.ProjectDAO;
 import sample.dao.TeamDAO;
 import sample.dao.UserDAO;
 import sample.dto.Project;
 import sample.dto.Team;
 import sample.dto.User;
+import sample.utils.Encrypt;
 
 /**
  *
@@ -59,24 +63,54 @@ public class addEmployee extends HttpServlet {
             String birthday = request.getParameter("birthday");
             String projectName = request.getParameter("projectName");
             String teamName = request.getParameter("teamName");
+            //Encrypt password
+            password = Encrypt.toSHA1(password);
             //get projectID
             ProjectDAO projectDAO = new ProjectDAO();
             int ProjectID = projectDAO.getProjectID(projectName);
             //get teamID
             TeamDAO teamDAO = new TeamDAO();
             int TeamID = teamDAO.getTeamID(teamName);
-           //parse to date
-           java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
-           //create user
-            User user = new User(name, "test", phone, email, username, password, address, birthdayDate, ProjectID, TeamID,"user");
-            // Call DAO to insert new user
-            UserDAO dao = new UserDAO();
-            boolean checkresult = dao.createUser(user);
-            if (checkresult) {
-                out.println("Insert success");
-            } else {
-                out.println("Insert failed");
-            }
+            //Get utf-8 string for vietnamese name and address
+            name = new String(name.getBytes("iso-8859-1"), "UTF-8");
+            address = new String(address.getBytes("iso-8859-1"), "UTF-8");
+            //parse to date
+            java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
+//            //get image
+//            Part filePart = request.getPart("image");
+//            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+//            InputStream fileContent = filePart.getInputStream();
+//            //save image to server
+//            String path = request.getServletContext().getRealPath("");
+//            path = path.substring(0, path.indexOf("build"));
+//            path = path + "web\\images\\" + fileName;
+//            File file = new File(path);
+//            Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            //save image path to database
+//            String imagePath = "images/" + fileName;
+            //create user
+            out.println(name);
+            out.println(phone);
+            out.println(email);
+            out.println(username);
+            out.println(password);
+            out.println(address);
+            out.println(birthday);
+            out.println(ProjectID);
+            out.println(TeamID);
+            out.println(projectName);
+            out.println(teamName);
+            
+
+            // User user = new User(name, "test", phone, email, username, password, address, birthdayDate, ProjectID, TeamID,"user");
+            // // Call DAO to insert new user
+            // UserDAO dao = new UserDAO();
+            // boolean checkresult = dao.createUser(user);
+            // if (checkresult) {
+            //     out.println("Insert success");
+            // } else {
+            //     out.println("Insert failed");
+            // }
         }
     }
 
