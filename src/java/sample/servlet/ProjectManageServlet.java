@@ -5,20 +5,29 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sample.dao.ProjectManageDAO;
+import sample.dto.ProjectManageDTO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+@WebServlet(name = "ProjectManageServlet", urlPatterns = {"/ProjectManageServlet"})
+public class ProjectManageServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,19 +40,22 @@ public class mainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        String Result = "error.jsp";
+        try{
             /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-            }else if(action.equals("getProjects")){
-                url = "ProjectManageServlet";
-            }else if(action.equals("addProject")){
-                url = "AddProjectServlet";
+            ProjectManageDAO dao = new ProjectManageDAO();
+            dao.GetProject();
+            List<ProjectManageDTO> listProject = dao.getListProject();
+            if(listProject != null){
+                int size = listProject.size();
+                request.setAttribute("AmountOfProject", size);
+                request.setAttribute("projectList", listProject);
+                Result = "ProjectManage.jsp";
             }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            RequestDispatcher rd = request.getRequestDispatcher(Result);
             rd.forward(request, response);
         }
     }

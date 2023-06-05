@@ -184,5 +184,6 @@
                 var dt = new Date();
                 document.getElementById('date-time').innerHTML = dt;
             </script>
+        </div>
     </body>
 </html>

@@ -7,18 +7,28 @@ package sample.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sample.dao.ProjectManageDAO;
+import sample.dto.ProjectManageDTO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+@WebServlet(name = "AddProjectServlet", urlPatterns = {"/AddProjectServlet"})
+public class AddProjectServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,19 +41,28 @@ public class mainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        String Result = "error.jsp";
+        try{
             /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-            }else if(action.equals("getProjects")){
-                url = "ProjectManageServlet";
-            }else if(action.equals("addProject")){
-                url = "AddProjectServlet";
+            String name = request.getParameter("ProjectName");
+            String decs = request.getParameter("Description");
+            String SDate = request.getParameter("SDate");
+            String EDate = request.getParameter("EDate");
+            String TechS = request.getParameter("TechS");
+            ProjectManageDAO dao = new ProjectManageDAO();
+            int status = 1;
+            ProjectManageDTO project = new ProjectManageDTO(0, name, SDate, EDate, TechS, decs, status);
+            boolean result = dao.addProject(project);
+            
+            if(result){
+                Result = "mainController?btAction=getProjects";
             }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(AddProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            RequestDispatcher rd = request.getRequestDispatcher(Result);
             rd.forward(request, response);
         }
     }
