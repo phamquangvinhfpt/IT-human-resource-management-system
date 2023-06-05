@@ -22,7 +22,7 @@ public class DBUtils {
         String instanceName="localhost";
         String port="1433";
         String uid="sa";
-        String pwd="12345";
+        String pwd="123456";
         String db="HRMS";
         String driver="com.microsoft.sqlserver.jdbc.SQLServerDriver";
         String url="jdbc:sqlserver://" +IP+"\\"+ instanceName+":"+port
