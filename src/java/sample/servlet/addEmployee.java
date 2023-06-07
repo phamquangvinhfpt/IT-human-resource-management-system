@@ -6,12 +6,14 @@
 package sample.servlet;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,9 +23,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-
 import org.omg.CORBA.Context;
-
 import sample.dao.ProjectDAO;
 import sample.dao.TeamDAO;
 import sample.dao.UserDAO;
@@ -63,6 +63,9 @@ public class addEmployee extends HttpServlet {
             String birthday = request.getParameter("birthday");
             String projectName = request.getParameter("projectName");
             String teamName = request.getParameter("teamName");
+            Part filePart = request.getPart("image");
+            String fileName = filePart.getSubmittedFileName();
+            InputStream fileContent = filePart.getInputStream();
             //Encrypt password
             password = Encrypt.toSHA1(password);
             //get projectID
@@ -76,19 +79,32 @@ public class addEmployee extends HttpServlet {
             address = new String(address.getBytes("iso-8859-1"), "UTF-8");
             //parse to date
             java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
-//            //get image
-//            Part filePart = request.getPart("image");
-//            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-//            InputStream fileContent = filePart.getInputStream();
-//            //save image to server
-//            String path = request.getServletContext().getRealPath("");
-//            path = path.substring(0, path.indexOf("build"));
-//            path = path + "web\\images\\" + fileName;
-//            File file = new File(path);
-//            Files.copy(fileContent, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            //save image path to database
-//            String imagePath = "images/" + fileName;
+            fileName = username + fileName.substring(fileName.lastIndexOf("."));
             //create user
+            //validation value of form
+            if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || address.isEmpty() || birthday.isEmpty() || projectName.isEmpty() || teamName.isEmpty()) {
+                out.println("Please fill all the form");
+                return;
+            }
+            if (filePart.getSize() > 1024 * 1024 * 2) {
+                out.println("File size exceed 2MB");
+                return;
+            }
+            if (!filePart.getContentType().equals("image/jpeg") && !filePart.getContentType().equals("image/png")) {
+                out.println("File type must be jpeg or png");
+                return;
+            }
+            //check username exist
+            UserDAO userDAO = new UserDAO();
+            if (userDAO.checkUsernameExist(username)) {
+                out.println("Username already exist");
+                return;
+            }
+            //check email exist
+            if (userDAO.checkEmailExist(email)) {
+                out.println("Email already exist");
+                return;
+            }
             out.println(name);
             out.println(phone);
             out.println(email);
@@ -100,17 +116,26 @@ public class addEmployee extends HttpServlet {
             out.println(TeamID);
             out.println(projectName);
             out.println(teamName);
-            
-
-            // User user = new User(name, "test", phone, email, username, password, address, birthdayDate, ProjectID, TeamID,"user");
-            // // Call DAO to insert new user
-            // UserDAO dao = new UserDAO();
-            // boolean checkresult = dao.createUser(user);
-            // if (checkresult) {
-            //     out.println("Insert success");
-            // } else {
-            //     out.println("Insert failed");
-            // }
+            out.println(fileName);
+            String filePath = "E:/SWP/HRManagement/web/images/" + fileName;
+            out.print("File uploaded" + filePath);
+//              User user = new User(name, fileName, phone, email, username, password, address, birthdayDate, ProjectID, TeamID,"user");
+//              // Call DAO to insert new user
+//              UserDAO dao = new UserDAO();
+//              boolean checkresult = dao.createUser(user);
+//              if (checkresult) {
+//                  out.println("Insert success");
+//                  FileOutputStream outputStream = new FileOutputStream(filePath);
+//              byte[] buffer = new byte[4096];
+//              int bytesRead = -1;
+//              while ((bytesRead = fileContent.read(buffer)) != -1) {
+//                  outputStream.write(buffer, 0, bytesRead);
+//              }
+//              fileContent.close();
+//              outputStream.close();
+//              } else {
+//                  out.println("Insert failed");
+//              }
         }
     }
 

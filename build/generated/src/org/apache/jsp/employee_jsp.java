@@ -90,14 +90,24 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                        dataSrc: ''\r\n");
       out.write("                    },\r\n");
       out.write("                    columns: [\r\n");
-      out.write("                        {\r\n");
-      out.write("                            \"className\": 'dt-center',\r\n");
-      out.write("                            \"orderable\": false,\r\n");
-      out.write("                            \"data\": null,\r\n");
-      out.write("                            \"defaultContent\": ''\r\n");
+      out.write("                        {data: null,\r\n");
+      out.write("                            //set identity for row\r\n");
+      out.write("                            render: function (data, type, row, meta) {\r\n");
+      out.write("                                return meta.row + meta.settings._iDisplayStart + 1;\r\n");
+      out.write("                            }\r\n");
       out.write("                        },\r\n");
-      out.write("                        {data: 'UserID'},\r\n");
       out.write("                        {data: 'Name'},\r\n");
+      out.write("                        {\r\n");
+      out.write("                            //get images from images folder\r\n");
+      out.write("                            data: 'Image',\r\n");
+      out.write("                            render: function (data) {\r\n");
+      out.write("                                // replace \\ to / for get image\r\n");
+      out.write("                                data = data.replace(/\\\\/g, \"/\");\r\n");
+      out.write("                                var img = '<img src=\"web/images/' + data + '\" width=\"100px\" height=\"100px\"/>';\r\n");
+      out.write("                                console.log(img);\r\n");
+      out.write("                                return img;\r\n");
+      out.write("                            }\r\n");
+      out.write("                        },\r\n");
       out.write("                        {data: 'Phone'},\r\n");
       out.write("                        {data: 'Email'},\r\n");
       out.write("                        {data: 'Username'},\r\n");
@@ -158,6 +168,16 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\r\n");
       out.write("\r\n");
       out.write("                });\r\n");
+      out.write("                $(document).ready(function () {\r\n");
+      out.write("                    $(\"#add\").click(function () {\r\n");
+      out.write("                        //remove class active <li><a class=\"active\" href=\"#\">All</a></li>\r\n");
+      out.write("                        $(\"a\").removeClass(\"active\");\r\n");
+      out.write("                        $(\"#add\").addClass(\"active\");\r\n");
+      out.write("                        $(\".table-responsive\").hide();\r\n");
+      out.write("                        //get content from another jsp\r\n");
+      out.write("                        $(\"#content\").load(\"addEmployee.jsp\");\r\n");
+      out.write("                    });\r\n");
+      out.write("                });\r\n");
       out.write("            });\r\n");
       out.write("        </script>\r\n");
       out.write("    </head>\r\n");
@@ -204,7 +224,7 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                            <div class=\"head-link-set\">\r\n");
       out.write("                                <ul>\r\n");
       out.write("                                    <li><a class=\"active\" href=\"#\">All</a></li>\r\n");
-      out.write("                                    <li><a href=\"#\">Teams</a></li>\r\n");
+      out.write("                                    <li><a id=\"add\" href=\"#\">Teams</a></li>\r\n");
       out.write("                                </ul>\r\n");
       out.write("                                <button class=\"btn-add\" onclick=\"$('#mymodal').modal('show')\"><i data-feather=\"plus\"></i> Add Person</button>\r\n");
       out.write("                            </div>\r\n");
@@ -257,7 +277,7 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                                <label for=\"experienceId\">ExperienceId:</label>\r\n");
       out.write("                                                ");
       out.write("\r\n");
-      out.write("                                                <select class=\"form-control\" id=\"experienceId\" name=\"experienceId\">\r\n");
+      out.write("                                                <select class=\"form-control\" id=\"experienceId\" name=\"projectName\">\r\n");
       out.write("                                                    ");
 
                                                         List<Project> list = ProjectDAO.getAll();
@@ -265,7 +285,7 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
                                                     
       out.write("\r\n");
       out.write("                                                    <option value=\"");
-      out.print(project.getId());
+      out.print(project.getNameProject());
       out.write('"');
       out.write('>');
       out.print(project.getNameProject());
@@ -281,7 +301,7 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                                <label for=\"teamID\">Team_ID:</label>\r\n");
       out.write("                                                ");
       out.write("\r\n");
-      out.write("                                                <select class=\"form-control\" id=\"teamID\" name=\"teamID\">\r\n");
+      out.write("                                                <select class=\"form-control\" id=\"teamID\" name=\"teamName\">\r\n");
       out.write("                                                    ");
 
                                                         List<Team> listTeam = TeamDAO.getAll();
@@ -289,7 +309,7 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
                                                     
       out.write("\r\n");
       out.write("                                                    <option value=\"");
-      out.print(team.getTeam_ID());
+      out.print(team.getTeam_Name());
       out.write('"');
       out.write('>');
       out.print(team.getTeam_Name());
@@ -334,9 +354,9 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                    <table id=\"example\" class=\"display\" style=\"width:100%\">\r\n");
       out.write("                                        <thead>\r\n");
       out.write("                                            <tr>\r\n");
-      out.write("                                                <th></th>\r\n");
       out.write("                                                <th>STT</th>\r\n");
       out.write("                                                <th>Name</th>\r\n");
+      out.write("                                                <th>Image</th>\r\n");
       out.write("                                                <th>Phone</th>\r\n");
       out.write("                                                <th>Email</th>\r\n");
       out.write("                                                <th>Username</th>\r\n");
@@ -354,9 +374,9 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\r\n");
       out.write("                                        <tfoot>\r\n");
       out.write("                                            <tr>\r\n");
-      out.write("                                                <th></th>\r\n");
       out.write("                                                <th>STT</th>\r\n");
       out.write("                                                <th>Name</th>\r\n");
+      out.write("                                                <th>Image</th>\r\n");
       out.write("                                                <th>Phone</th>\r\n");
       out.write("                                                <th>Email</th>\r\n");
       out.write("                                                <th>Username</th>\r\n");

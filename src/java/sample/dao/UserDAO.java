@@ -174,4 +174,85 @@ public class UserDAO {
         return false;
     }
     
+    public static List<String> getImageList() throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List<String> list = new ArrayList<>();
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT [Image] from [dbo].[User]";
+                pst = cn.prepareStatement(sql);
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    list.add(rs.getString("Image"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return list;
+    }
+
+    public static boolean checkUsernameExist(String username) throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT [Username] from [dbo].[User] where [Username] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setString(1, username);
+                rs = pst.executeQuery();
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return false;
+    }
+
+    public static boolean checkEmailExist(String email) throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT [Email] from [dbo].[User] where [Email] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setString(1, email);
+                rs = pst.executeQuery();
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return false;
+    }
 }

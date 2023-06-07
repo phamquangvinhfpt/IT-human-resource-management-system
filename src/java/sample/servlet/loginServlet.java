@@ -56,7 +56,7 @@ public class loginServlet extends HttpServlet {
 //                response.sendRedirect("login.jsp");
                 if (save != null && save.equals("on")) {
                     // Set cookie to remember user
-                    Cookie cookie = new Cookie("userId", String.valueOf(user.getUserID()));
+                    Cookie cookie = new Cookie("user", user.getRole());
                     cookie.setMaxAge(30 * 24 * 60 * 60); // Cookie lasts for 30 days
                     response.addCookie(cookie);
                 }
@@ -65,19 +65,22 @@ public class loginServlet extends HttpServlet {
                 String role = UserDAO.getUser(username, password).getRole();
                 if (role.equals("admin")) {
                     // User is authorized to access adminresources, show the admin page
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("admin.jsp");
-                    dispatcher.forward(request, response);
-                } else if(!role.equals("admin")) {
+//                    RequestDispatcher dispatcher = request.getRequestDispatcher("admin.jsp");
+//                    dispatcher.forward(request, response);
+                    response.getWriter().write("{\"success\": true, \"role\": \"admin\"}");
+                } else if (!role.equals("admin")) {
                     // User is not authorized, show an error message or redirect to a different page
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("datatable.jsp");
-                    dispatcher.forward(request, response);
+//                    RequestDispatcher dispatcher = request.getRequestDispatcher("datatable.jsp");
+//                    dispatcher.forward(request, response);
+                    response.getWriter().write("{\"success\": true, \"role\": \"normal\"}");
                 }
             } else {
                 // Invalid login, show an error message in login page
                 request.setAttribute("error", "Invalid username or password");
                 //sent request to login.jsp
-                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-                dispatcher.forward(request, response);
+//                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+//                dispatcher.forward(request, response);
+                response.getWriter().write("{\"success\": false}");
             }
         }
     }

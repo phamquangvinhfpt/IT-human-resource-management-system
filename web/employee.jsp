@@ -35,6 +35,9 @@
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <!-- Bootstrap JavaScript library -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <%-- import node_modules --%>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
         <script>
             $(document).ready(function () {
                 $('#example').DataTable({
@@ -43,15 +46,29 @@
                         url: '/HRManagement/employee',
                         dataSrc: ''
                     },
+                    //justify content table center
+                    "columnDefs": [
+                        {"className": "dt-center", "targets": "_all"}
+                    ],
                     columns: [
-                        {
-                            "className": 'dt-center',
-                            "orderable": false,
-                            "data": null,
-                            "defaultContent": ''
+                        {data: null,
+                            //set identity for row
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
                         },
-                        {data: 'UserID'},
                         {data: 'Name'},
+                        {
+                            //get images from images folder
+                            data: 'Image',
+                            render: function (data) {
+                                // replace \ to / for get image
+                                data = data.replace(/\\/g, "/");
+                                var img = '<img src="images/' + data + '" width="100px" height="100px"/>';
+                                console.log(img);
+                                return img;
+                            }
+                        },
                         {data: 'Phone'},
                         {data: 'Email'},
                         {data: 'Username'},
@@ -72,7 +89,7 @@
                             }
                         }
                     ],
-                    "order": [[1, 'asc']]
+                    "order": [[0, "asc"]],
                 });
 
                 $(document).ready(function () {
@@ -90,10 +107,11 @@
                                 $('#example').DataTable().ajax.reload();
                                 //close modal and popup alert success
                                 $('#mymodal').modal('hide');
-                                alert("Add success");
+                                toastSuccess();
                             },
                             error: function (error) {
                                 console.log(error);
+                                toastFail();
                             }
                         });
                     });
@@ -112,6 +130,47 @@
 
 
                 });
+                $(document).ready(function () {
+                    $("#add").click(function () {
+                        //remove class active <li><a class="active" href="#">All</a></li>
+                        $("a").removeClass("active");
+                        $("#add").addClass("active");
+                        $(".table-responsive").hide();
+                        //get content from another jsp
+                        $("#content").load("addEmployee.jsp");
+                    });
+                });
+
+                //toastjs
+                function toastSuccess() {
+                    Toastify({
+                        text: "Add success",
+                        duration: 3000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: 'right', // `left`, `center` or `right`
+                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        onClick: function () {
+                        } // Callback after click
+                    }).showToast();
+                }
+                //add fail
+                function toastFail() {
+                    Toastify({
+                        text: "Add fail",
+                        duration: 3000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: 'right', // `left`, `center` or `right`
+                        backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        onClick: function () {
+                        } // Callback after click
+                    }).showToast();
+                }
             });
         </script>
     </head>
@@ -152,7 +211,7 @@
                             <div class="head-link-set">
                                 <ul>
                                     <li><a class="active" href="#">All</a></li>
-                                    <li><a href="#">Teams</a></li>
+                                    <li><a id="add" href="#">Teams</a></li>
                                 </ul>
                                 <button class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Person</button>
                             </div>
@@ -223,7 +282,7 @@
                                                         List<Team> listTeam = TeamDAO.getAll();
                                                         for (Team team : listTeam) {
                                                     %>
-                                                    <option value="<%=team.getTeam_Name() %>"><%=team.getTeam_Name()%></option>
+                                                    <option value="<%=team.getTeam_Name()%>"><%=team.getTeam_Name()%></option>
                                                     <%
                                                         }
                                                     %>
@@ -262,9 +321,9 @@
                                     <table id="example" class="display" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th></th>
                                                 <th>STT</th>
                                                 <th>Name</th>
+                                                <th>Image</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
                                                 <th>Username</th>
@@ -274,7 +333,7 @@
                                                 <th>NameProject</th>
                                                 <th>Team_Name</th>
                                                 <th>Role</th>
-                                                <th>Action</th>
+                                                <th class="col-sm-1">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -282,9 +341,9 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th></th>
                                                 <th>STT</th>
                                                 <th>Name</th>
+                                                <th>Image</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
                                                 <th>Username</th>
@@ -311,7 +370,7 @@
 
             <script src="assets/js/feather.min.js"></script>
 
-            <!--<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>-->
+            <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
             <script src="assets/plugins/select2/js/select2.min.js"></script>
             <script src="assets/js/script.js"></script>

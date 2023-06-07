@@ -5,20 +5,24 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import sample.dao.UserDAO;
+import sample.dto.User;
 
 /**
  *
- * @author Vinh
+ * @author Admin
  */
-public class logoutServlet extends HttpServlet {
+public class images extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,31 +34,17 @@ public class logoutServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-            // Delete the cookie that remembers the user
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("user")) {
-                        cookie.setMaxAge(0);
-                        response.addCookie(cookie);
-                    }
-                }
-            }
-            //Delete the session
-            session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-            // Redirect the user to the login page
-            response.sendRedirect("login.jsp");
+            //list image
+            List<String> list = UserDAO.getImageList();
+            response.setContentType("application/json");
+            response.setStatus(200);
+            Gson gson = new Gson();
+            String json = gson.toJson(list);
+            out.println(json);
         }
     }
 
@@ -70,7 +60,11 @@ public class logoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(images.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -84,7 +78,11 @@ public class logoutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(images.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

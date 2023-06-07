@@ -32,7 +32,69 @@
         <!--===============================================================================================-->
         <link rel="stylesheet" type="text/css" href="assets/css/util.css">
         <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+        <!--===============================================================================================-->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                //add event listener for form submit
+                $("form").submit(function (event) {
+                    //prevent the form from submitting
+                    event.preventDefault();
+                    $.ajax({
+                        url: "/HRManagement/loginServlet",
+                        type: "GET",
+                        data: {
+                            username: $("input[name='username']").val(),
+                            password: $("input[name='password']").val(),
+                            btAction: $("input[name='btAction']").val()
+                        },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                if (response.role === 'admin') {
+                                    
+                                    swal({
+                                        title: "Login Success!",
+                                        text: "Welcome " + response.name + "!",
+                                        icon: "success",
+                                        button: "OK",
+                                    }).then((value) => {
+                                        window.location.href = 'admin.jsp';
+                                    });
+                                } else {
+                                    
+                                    swal({
+                                        title: "Login Success!",
+                                        text: "Welcome " + response.name + "!",
+                                        icon: "success",
+                                        button: "OK",
+                                    }).then((value) => {
+                                        window.location.href = 'datatable.jsp';
+                                    });
+                                }
+                            } else {
+                                swal({
+                                    title: "Login Failed!",
+                                    text: "Username or password is incorrect!",
+                                    icon: "error",
+                                    button: "OK",
+                                }).then((value) => {
+                                    window.location.href = 'login.jsp';
+                                });
+                            }
+                        },
+                        error: function () {
+                            swal('Error!', 'An error occurred while logging in', 'error');
+                        }
+                    });
+                });
+            });
+        </script>
     </head>
+
     <body>
         <%
             User user = (User) session.getAttribute("user");
@@ -57,7 +119,7 @@
                         </span>
                     </div>
 
-                    <form class="login100-form validate-form" method="GET" action="mainController">
+                    <form class="login100-form validate-form">
                         <div class="wrap-input100 validate-input m-b-26" data-validate="Username is required">
                             <span class="label-input100">Username</span>
                             <input class="input100" type="text" name="username" placeholder="Enter username or Email">
