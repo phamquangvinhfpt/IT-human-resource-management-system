@@ -203,7 +203,7 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                        title: \"Success!\",\r\n");
       out.write("                                        text: \"Add employee success!\",\r\n");
       out.write("                                        icon: \"success\",\r\n");
-      out.write("                                        button: \"OK\",\r\n");
+      out.write("                                        button: \"OK\"\r\n");
       out.write("                                    }).then((value) => {\r\n");
       out.write("                                        //click oke will hide modal and reload datatable\r\n");
       out.write("                                        $(\"#mymodal\").modal(\"hide\");\r\n");
@@ -215,7 +215,7 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                        //remove \"\" from string\r\n");
       out.write("                                        text: res.replace(/\"/g, \"\"),\r\n");
       out.write("                                        icon: \"error\",\r\n");
-      out.write("                                        button: \"OK!\",\r\n");
+      out.write("                                        button: \"OK!\"\r\n");
       out.write("                                    });\r\n");
       out.write("                                }\r\n");
       out.write("                            },\r\n");
@@ -252,8 +252,8 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                url: \"/HRManagement/deleteEmployee\",\r\n");
       out.write("                                data: JSON.stringify(selectedRows),\r\n");
       out.write("                                contentType: \"application/json\",\r\n");
-      out.write("                                //convert data to json\r\n");
       out.write("                                dataType: \"json\",\r\n");
+      out.write("                                console: console.log(JSON.stringify(selectedRows)),\r\n");
       out.write("                                success: function (res) {\r\n");
       out.write("                                    console.log(res);\r\n");
       out.write("                                    //remove \"\" from string\r\n");

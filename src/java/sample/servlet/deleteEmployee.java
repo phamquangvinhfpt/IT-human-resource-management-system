@@ -81,8 +81,37 @@ public class deleteEmployee extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            //get JSON.stringify(selectedRows), then parse it to JsonArray then out.println it
-            
+            //get json data from request selectedId array
+            BufferedReader reader = request.getReader();
+            Gson gson = new Gson();
+            JsonParser parser = new JsonParser();
+            JsonArray array = parser.parse(reader).getAsJsonArray();
+            int[] selectedId = gson.fromJson(array, int[].class);
+            //print selectedId array to console for testing
+            out.print(Arrays.toString(selectedId));
+            // System.out.println(Arrays.toString(selectedId));//console browser
+            //delete selectedId array
+            UserDAO dao = new UserDAO();
+            boolean result = false;
+            for (int i = 0; i < selectedId.length; i++) {
+                try {
+                    result = dao.deleteUser(selectedId[i]);
+                } catch (Exception ex) {
+                    Logger.getLogger(deleteEmployee.class.getName()).log(Level.SEVERE, null, ex);
+                }//finally return result
+                finally {
+                    out.print(result);
+                }
+            }
+            if (result) {
+                out.write(gson.toJson("Delete successfully"));
+            } else {
+                out.write(gson.toJson("Delete failed"));
+            }
+            // //response to client
+            // JsonObject json = new JsonObject();
+            // json.addProperty("message", "Delete successfully");
+            // out.print(json.toString());
         }
     }
 

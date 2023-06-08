@@ -104,8 +104,8 @@
 //                        },
                         {data: 'Phone'},
                         {data: 'Email'},
-                        {data: 'Username'},
-                        {data: 'Password'},
+//                        {data: 'Username'},
+//                        {data: 'Password'},
                         {data: 'Birthday'},
                         {data: 'Role'},
                         {
@@ -198,19 +198,25 @@
                     }
                     if (e.key === 'Delete') {
                         var selectedRows = $('#example').DataTable().rows('.selected').data();
+                        //Get id of selected employees
+                        var selectedId = [];
+                        for (var i = 0; i < selectedRows.length; i++) {
+                            selectedId.push(selectedRows[i].UserID);
+                        }
+                        // console.log(selectedId);
                         if (selectedRows.length > 0) {
                             //send DELETE request to server to delete selected employees
                             $.ajax({
                                 method: "DELETE",
                                 url: "/HRManagement/deleteEmployee",
-                                data: JSON.stringify(selectedRows),
+                                data: JSON.stringify(selectedId),
                                 contentType: "application/json",
                                 dataType: "json",
-                                console: console.log(JSON.stringify(selectedRows)),
+                                // console: console.log(JSON.stringify(selectedId)),
                                 success: function (res) {
                                     console.log(res);
                                     //remove "" from string
-                                    if (res === `"Delete success"`) {
+                                    if (res === `"Delete successfully"`) {
                                         swal({
                                             title: "Success!",
                                             text: "Delete employee success!",
@@ -225,7 +231,7 @@
                                         swal({
                                             title: "Error!",
                                             //remove "" from string
-                                            text: res.replace(/"/g, ""),
+                                            // text: res.replace(/"/g, ""),
                                             icon: "error",
                                             button: "OK!",
                                         });
@@ -386,8 +392,8 @@
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
-                                                <th>Username</th>
-                                                <th>Password</th>
+                                                <!--<th>Username</th>-->
+                                                <!--<th>Password</th>-->
                                                 <th>Birthday</th>
                                                 <th>Role</th>
                                                 <th class="col-sm-1">Action</th>
@@ -401,8 +407,8 @@
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
-                                                <th>Username</th>
-                                                <th>Password</th>
+                                                <!--<th>Username</th>-->
+                                                <!--<th>Password</th>-->
                                                 <th>Birthday</th>
                                                 <th>Role</th>
                                                 <th>Action</th>

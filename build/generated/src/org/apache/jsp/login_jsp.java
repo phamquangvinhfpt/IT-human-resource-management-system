@@ -108,7 +108,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                    \r\n");
       out.write("                                    swal({\r\n");
       out.write("                                        title: \"Login Success!\",\r\n");
-      out.write("                                        text: \"Welcome \" + response.name + \"!\",\r\n");
+      out.write("                                        text: \"Welcome!\",\r\n");
       out.write("                                        icon: \"success\",\r\n");
       out.write("                                        button: \"OK\",\r\n");
       out.write("                                    }).then((value) => {\r\n");

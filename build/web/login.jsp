@@ -58,9 +58,9 @@
                                     
                                     swal({
                                         title: "Login Success!",
-                                        text: "Welcome " + response.name + "!",
+                                        text: "Welcome!",
                                         icon: "success",
-                                        button: "OK",
+                                        button: "OK"
                                     }).then((value) => {
                                         window.location.href = 'admin.jsp';
                                     });
@@ -68,9 +68,9 @@
                                     
                                     swal({
                                         title: "Login Success!",
-                                        text: "Welcome " + response.name + "!",
+                                        text: "Welcome!",
                                         icon: "success",
-                                        button: "OK",
+                                        button: "OK"
                                     }).then((value) => {
                                         window.location.href = 'datatable.jsp';
                                     });
@@ -80,7 +80,7 @@
                                     title: "Login Failed!",
                                     text: "Username or password is incorrect!",
                                     icon: "error",
-                                    button: "OK",
+                                    button: "OK"
                                 }).then((value) => {
                                     window.location.href = 'login.jsp';
                                 });
