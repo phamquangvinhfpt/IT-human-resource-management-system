@@ -16,6 +16,10 @@
         <servlet-name>images</servlet-name>
         <servlet-class>sample.servlet.images</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>deleteEmployee</servlet-name>
+        <servlet-class>sample.servlet.deleteEmployee</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>mainController</servlet-name>
         <url-pattern>/mainController</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>images</servlet-name>
         <url-pattern>/images</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteEmployee</servlet-name>
+        <url-pattern>/deleteEmployee</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

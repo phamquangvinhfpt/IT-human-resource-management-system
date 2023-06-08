@@ -36,10 +36,37 @@
         <!-- Bootstrap JavaScript library -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <%-- import node_modules --%>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script>
+            function format(d) {
+                // `d` is the original data object for the row
+                return (
+                        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                        '<tr>' +
+                        '<td>Image:</td>' +
+                        '<td>' +
+                        '<img src="images/' + d.Image + '" width="100px" height="100px"/>' +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Address:</td>' +
+                        '<td>' +
+                        d.Address +
+                        '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Project:</td>' +
+                        '<td>'+d.NameProject+'</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td>Team:</td>' +
+                        '<td>'+d.Team_Name+'</td>' +
+                        '</tr>' +
+                        '</table>'
+                        );
+            }
             $(document).ready(function () {
+                //load data for datatable
                 $('#example').DataTable({
 
                     ajax: {
@@ -51,6 +78,12 @@
                         {"className": "dt-center", "targets": "_all"}
                     ],
                     columns: [
+                        {
+                            className: 'dt-control',
+                            orderable: false,
+                            data: null,
+                            defaultContent: ''
+                        },
                         {data: null,
                             //set identity for row
                             render: function (data, type, row, meta) {
@@ -58,25 +91,22 @@
                             }
                         },
                         {data: 'Name'},
-                        {
-                            //get images from images folder
-                            data: 'Image',
-                            render: function (data) {
-                                // replace \ to / for get image
-                                data = data.replace(/\\/g, "/");
-                                var img = '<img src="images/' + data + '" width="100px" height="100px"/>';
-                                console.log(img);
-                                return img;
-                            }
-                        },
+//                        {
+//                            //get images from images folder
+//                            data: 'Image',
+//                            render: function (data) {
+//                                // replace \ to / for get image
+//                                data = data.replace(/\\/g, "/");
+//                                var img = '<img src="images/' + data + '" width="100px" height="100px"/>';
+//                                console.log(img);
+//                                return img;
+//                            }
+//                        },
                         {data: 'Phone'},
                         {data: 'Email'},
                         {data: 'Username'},
                         {data: 'Password'},
-                        {data: 'Address'},
                         {data: 'Birthday'},
-                        {data: 'NameProject'},
-                        {data: 'Team_Name'},
                         {data: 'Role'},
                         {
                             data: null,
@@ -84,15 +114,32 @@
                                 //set id for button = id of employee
                                 return `
                         <button onclick="deleteEmployee()" style="background-color: white;box-shadow: none" class="btn"><i class="fa-solid fa-trash text-danger"></i></button>
-                        <button onclick="update(this)" style="background-color: white;box-shadow: none" class="btn"><i class="fa-solid fa-pen-to-square text-primary"></i></button>
+                        <button onclick="update()" style="background-color: white;box-shadow: none" class="btn"><i class="fa-solid fa-pen-to-square text-primary"></i></button>
                     `;
                             }
                         }
                     ],
-                    "order": [[0, "asc"]],
+                    "order": [[0, "asc"]]
+                });
+
+                // Add event listener for opening and closing details
+                $('#example tbody').on('click', 'td.dt-control', function () {
+                    var tr = $(this).closest('tr');
+                    var row = $('#example').DataTable().row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
                 });
 
                 $(document).ready(function () {
+                    //add employee
                     $(".myform").on("submit", function (e) {
                         e.preventDefault();
                         $.ajax({
@@ -103,20 +150,36 @@
                             contentType: false,
                             success: function (res) {
                                 console.log(res);
-                                //reload datatable
-                                $('#example').DataTable().ajax.reload();
-                                //close modal and popup alert success
-                                $('#mymodal').modal('hide');
-                                toastSuccess();
+                                //remove "" from string
+                                if (res === `"Insert success"`) {
+                                    swal({
+                                        title: "Success!",
+                                        text: "Add employee success!",
+                                        icon: "success",
+                                        button: "OK"
+                                    }).then((value) => {
+                                        //click oke will hide modal and reload datatable
+                                        $("#mymodal").modal("hide");
+                                        $('#example').DataTable().ajax.reload();
+                                    });
+                                } else {
+                                    swal({
+                                        title: "Error!",
+                                        //remove "" from string
+                                        text: res.replace(/"/g, ""),
+                                        icon: "error",
+                                        button: "OK!"
+                                    });
+                                }
                             },
                             error: function (error) {
                                 console.log(error);
-                                toastFail();
+                                sweetAlert("Oops...", "Something went wrong!", "error");
                             }
                         });
                     });
                 });
-                //delete employee
+                //selected employee
                 $(document).ready(function () {
                     var table = $('#example').DataTable();
 
@@ -127,50 +190,55 @@
                     $('#button').click(function () {
                         alert(table.rows('.selected').data().length + ' row(s) selected');
                     });
-
-
                 });
-                $(document).ready(function () {
-                    $("#add").click(function () {
-                        //remove class active <li><a class="active" href="#">All</a></li>
-                        $("a").removeClass("active");
-                        $("#add").addClass("active");
-                        $(".table-responsive").hide();
-                        //get content from another jsp
-                        $("#content").load("addEmployee.jsp");
-                    });
+                
+                $(document).on('keydown', function(e) {
+                    if (e.keyCode === 27) { // ESC
+                        $("#mymodal").modal("hide");
+                    }
+                    if (e.key === 'Delete') {
+                        var selectedRows = $('#example').DataTable().rows('.selected').data();
+                        if (selectedRows.length > 0) {
+                            //send DELETE request to server to delete selected employees
+                            $.ajax({
+                                method: "DELETE",
+                                url: "/HRManagement/deleteEmployee",
+                                data: JSON.stringify(selectedRows),
+                                contentType: "application/json",
+                                dataType: "json",
+                                console: console.log(JSON.stringify(selectedRows)),
+                                success: function (res) {
+                                    console.log(res);
+                                    //remove "" from string
+                                    if (res === `"Delete success"`) {
+                                        swal({
+                                            title: "Success!",
+                                            text: "Delete employee success!",
+                                            icon: "success",
+                                            button: "OK",
+                                        }).then((value) => {
+                                            //click oke will hide modal and reload datatable
+                                            $("#mymodal").modal("hide");
+                                            $('#example').DataTable().ajax.reload();
+                                        });
+                                    } else {
+                                        swal({
+                                            title: "Error!",
+                                            //remove "" from string
+                                            text: res.replace(/"/g, ""),
+                                            icon: "error",
+                                            button: "OK!",
+                                        });
+                                    }
+                                },
+                                error: function (error) {
+                                    console.log(error);
+                                    sweetAlert("Oops...", "Something went wrong!", "error");
+                                }
+                            });
+                        }
+                    }
                 });
-
-                //toastjs
-                function toastSuccess() {
-                    Toastify({
-                        text: "Add success",
-                        duration: 3000,
-                        newWindow: true,
-                        close: true,
-                        gravity: "top", // `top` or `bottom`
-                        position: 'right', // `left`, `center` or `right`
-                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                        stopOnFocus: true, // Prevents dismissing of toast on hover
-                        onClick: function () {
-                        } // Callback after click
-                    }).showToast();
-                }
-                //add fail
-                function toastFail() {
-                    Toastify({
-                        text: "Add fail",
-                        duration: 3000,
-                        newWindow: true,
-                        close: true,
-                        gravity: "top", // `top` or `bottom`
-                        position: 'right', // `left`, `center` or `right`
-                        backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-                        stopOnFocus: true, // Prevents dismissing of toast on hover
-                        onClick: function () {
-                        } // Callback after click
-                    }).showToast();
-                }
             });
         </script>
     </head>
@@ -213,7 +281,7 @@
                                     <li><a class="active" href="#">All</a></li>
                                     <li><a id="add" href="#">Teams</a></li>
                                 </ul>
-                                <button class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Person</button>
+                                <a class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Person</a>
                             </div>
                         </div>
                         <form class="myform">
@@ -301,15 +369,7 @@
 
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="row">
-                                <div class="col-xl-10 col-sm-8 col-12 ">
-                                    <label class="employee_count"> People</label>
-                                </div>
-                                <div class="col-xl-1 col-sm-2 col-12 ">
-                                    <a href="employee-grid.html" class="btn-view "><i data-feather="grid"></i> </a>
-                                </div>
-                                <div class="col-xl-1 col-sm-2 col-12 ">
-                                    <a href="#" class="btn-view active"><i data-feather="list"></i> </a>
-                                </div>
+                                <label class="employee_count"> People</label>
                             </div>
                         </div>
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
@@ -321,37 +381,29 @@
                                     <table id="example" class="display" style="width:100%">
                                         <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>STT</th>
                                                 <th>Name</th>
-                                                <th>Image</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
                                                 <th>Username</th>
                                                 <th>Password</th>
-                                                <th>Address</th>
                                                 <th>Birthday</th>
-                                                <th>NameProject</th>
-                                                <th>Team_Name</th>
                                                 <th>Role</th>
                                                 <th class="col-sm-1">Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-
 
                                         <tfoot>
                                             <tr>
+                                                <th></th>
                                                 <th>STT</th>
                                                 <th>Name</th>
-                                                <th>Image</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
                                                 <th>Username</th>
                                                 <th>Password</th>
-                                                <th>Address</th>
                                                 <th>Birthday</th>
-                                                <th>NameProject</th>
-                                                <th>Team_Name</th>
                                                 <th>Role</th>
                                                 <th>Action</th>
                                             </tr>
@@ -370,7 +422,7 @@
 
             <script src="assets/js/feather.min.js"></script>
 
-            <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+            <!--<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>-->
 
             <script src="assets/plugins/select2/js/select2.min.js"></script>
             <script src="assets/js/script.js"></script>

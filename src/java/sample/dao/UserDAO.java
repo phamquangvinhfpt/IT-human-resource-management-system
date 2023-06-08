@@ -255,4 +255,36 @@ public class UserDAO {
         }
         return false;
     }
+
+    //delete user
+    public static boolean deleteUser(int UserID) throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                // Delete user from User table
+                String sql = "DELETE FROM [dbo].[User] WHERE [UserID] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setInt(1, UserID);
+                pst.executeUpdate();
+                return true;
+            }
+            // Delete user from Role table
+
+        } catch (Exception e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return false;
+    }
 }

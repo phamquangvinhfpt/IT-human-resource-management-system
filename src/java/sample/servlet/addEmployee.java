@@ -5,6 +5,7 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -66,6 +67,7 @@ public class addEmployee extends HttpServlet {
             Part filePart = request.getPart("image");
             String fileName = filePart.getSubmittedFileName();
             InputStream fileContent = filePart.getInputStream();
+            UserDAO userDAO = new UserDAO();
             //Encrypt password
             password = Encrypt.toSHA1(password);
             //get projectID
@@ -81,61 +83,88 @@ public class addEmployee extends HttpServlet {
             java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
             fileName = username + fileName.substring(fileName.lastIndexOf("."));
             //create user
-            //validation value of form
+            Gson json = new Gson();
+            String message = "";
             if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || address.isEmpty() || birthday.isEmpty() || projectName.isEmpty() || teamName.isEmpty()) {
-                out.println("Please fill all the form");
-                return;
+                if (name.isEmpty()) {
+                    message += "Name is empty";
+                }
+                if (phone.isEmpty()) {
+                    message += "Phone is empty";
+                }
+                if (email.isEmpty()) {
+                    message += "Email is empty";
+                }
+                if (username.isEmpty()) {
+                    message += "Username is empty";
+                }
+                if (password.isEmpty()) {
+                    message += "Password is empty";
+                }
+                if (address.isEmpty()) {
+                    message += "Address is empty";
+                }
+                if (birthday.equals("")) {
+                    message += "Birthday is empty";
+                }
+                if (projectName.isEmpty()) {
+                    message += "Project is empty";
+                }
+                if (teamName.isEmpty()) {
+                    message += "Team is empty";
+                }
+                //response to ajax using Gson
+                out.write(json.toJson(message));
+            } else if (filePart.getSize() > 1024 * 1024 * 2) {
+                message += "File size must be less than 2MB";
+                out.write(json.toJson(message));
+            } else if (!filePart.getContentType().equals("image/jpeg") && !filePart.getContentType().equals("image/png")) {
+                message += "File type must be jpeg or png";
+                out.write(json.toJson(message));
+            } else if (userDAO.checkUsernameExist(username)) {
+                message += "Username already exist";
+                out.write(json.toJson(message));
+            } else if (userDAO.checkEmailExist(email)) {
+                message += "Email already exist";
+                out.write(json.toJson(message));
+            }//check must input date
+            else if (birthdayDate == null) {
+                message += "Please input birthday";
+                out.write(json.toJson(message));
+            } else {
+                String filePath = getServletContext().getRealPath("") + "images\\" + fileName;
+                User user = new User(name, fileName, phone, email, username, password, address, birthdayDate, ProjectID, TeamID, "user");
+                // Call DAO to insert new user
+                UserDAO dao = new UserDAO();
+                boolean checkresult = dao.createUser(user);
+                if (checkresult) {
+                    message += "Insert success";
+                    out.write(json.toJson(message));
+                    FileOutputStream outputStream = new FileOutputStream(filePath);
+                    byte[] buffer = new byte[4096];
+                    int bytesRead = -1;
+                    while ((bytesRead = fileContent.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    fileContent.close();
+                    outputStream.close();
+                } else {
+                    message += "Insert fail";
+                    out.write(json.toJson(message));
+                }
             }
-            if (filePart.getSize() > 1024 * 1024 * 2) {
-                out.println("File size exceed 2MB");
-                return;
-            }
-            if (!filePart.getContentType().equals("image/jpeg") && !filePart.getContentType().equals("image/png")) {
-                out.println("File type must be jpeg or png");
-                return;
-            }
-            //check username exist
-            UserDAO userDAO = new UserDAO();
-            if (userDAO.checkUsernameExist(username)) {
-                out.println("Username already exist");
-                return;
-            }
-            //check email exist
-            if (userDAO.checkEmailExist(email)) {
-                out.println("Email already exist");
-                return;
-            }
-            out.println(name);
-            out.println(phone);
-            out.println(email);
-            out.println(username);
-            out.println(password);
-            out.println(address);
-            out.println(birthday);
-            out.println(ProjectID);
-            out.println(TeamID);
-            out.println(projectName);
-            out.println(teamName);
-            out.println(fileName);
-            String filePath = "E:/SWP/HRManagement/web/images/" + fileName;
-            out.print("File uploaded" + filePath);
-//              User user = new User(name, fileName, phone, email, username, password, address, birthdayDate, ProjectID, TeamID,"user");
-//              // Call DAO to insert new user
-//              UserDAO dao = new UserDAO();
-//              boolean checkresult = dao.createUser(user);
-//              if (checkresult) {
-//                  out.println("Insert success");
-//                  FileOutputStream outputStream = new FileOutputStream(filePath);
-//              byte[] buffer = new byte[4096];
-//              int bytesRead = -1;
-//              while ((bytesRead = fileContent.read(buffer)) != -1) {
-//                  outputStream.write(buffer, 0, bytesRead);
-//              }
-//              fileContent.close();
-//              outputStream.close();
-//              } else {
-//                  out.println("Insert failed");
-//              }
+            // out.println(name);
+            // out.println(phone);
+            // out.println(email);
+            // out.println(username);
+            // out.println(password);
+            // out.println(address);
+            // out.println(birthday);
+            // out.println(ProjectID);
+            // out.println(TeamID);
+            // out.println(projectName);
+            // out.println(teamName);
+            // out.println(fileName);
         }
     }
 
