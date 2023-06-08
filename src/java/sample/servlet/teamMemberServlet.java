@@ -50,13 +50,16 @@ public class teamMemberServlet extends HttpServlet {
 
         } else if (action.equals("delete")) {
             try {
-                int id = Integer.parseInt(request.getParameter("teamId"));
+                int id = Integer.parseInt(request.getParameter("userid"));
                 memberTeamDAO team = new memberTeamDAO();
                 team.delete(id);
                 String url = "memberservlet";
                 response.sendRedirect(url);
             } catch (Exception ex) {
             }
+        } else if(action.equals("add")){
+            int id = Integer.parseInt(request.getParameter("teamId"));
+           memberTeamDAO team = new memberTeamDAO();
         }
 
     }

@@ -294,7 +294,7 @@
                                                         <td> 
                                                             <div class="card-body">
                                                                 <div class="card_widget_header">
-                                                                    <a href="teamcontroller?action=delete&teamId=${member.getUserID()}">Delete</a>
+                                                                    <a href="memberservlet?action=delete&userid=${member.getUserID()}">Delete</a>
                                                                 </div>
                                                             </div>
                                                         </td>

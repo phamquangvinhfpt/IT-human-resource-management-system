@@ -265,7 +265,7 @@
                             <div class="head-link-set">
                                 <ul>
                                     <li><a href="#">All</a></li>
-                                    <li><a class="active" href="employee-team.html">Teams</a></li>
+                                    <li><a class="active" href="teamcontroller">Teams</a></li>
                                     <li><a href="employee-office.html">Offices</a></li>
                                 </ul>
                                 <div>                          
@@ -303,8 +303,8 @@
                                                         <td> 
                                                             <div class="card-body">
                                                                 <div class="card_widget_header">
-                                                                    <a class="btn-add-e" href="teamcontroller?action=edit&teamId=${team.getID_Team()}">Edit</a>
-                                                                    <a class="btn-add-e" href="teamcontroller?action=delete&teamId=${team.getID_Team()}">Delete</a>
+                                                                    <a class="btn-add-e " href="teamcontroller?action=edit&teamId=${team.getID_Team()}">Edit</a>
+                                                                    <a class="btn-add-e btn btn-danger" href="teamcontroller?action=delete&teamId=${team.getID_Team()}">Delete</a>
                                                                     <a class="btn-add-e" href="memberservlet?teamId=${team.getID_Team()}">View members</a>
                                                                 </div>
                                                             </div>

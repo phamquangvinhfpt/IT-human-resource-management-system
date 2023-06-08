@@ -63,16 +63,32 @@ public class memberTeamDAO {
             System.out.println("Error: " + e.getMessage());
         }
     }
-    public void addMemberTeam(User member) throws Exception{
-          try (Connection conn = DBUtils.makeConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("update [User] (Team_ID) VALUES (?)");
+
+    public void addMemberTeam(User member) throws Exception {
+        try (Connection conn = DBUtils.makeConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("update [User] (Team_ID) VALUES (?) where UserID = ?");
             stmt.setInt(1, member.getTeam_ID());
+            stmt.setInt(2, member.getUserID());
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-    }  
-    
-    
+    }
+    public  User getMemberbyid(int id ) throws Exception{
+       try (Connection conn = DBUtils.makeConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT [UserID], [TeamID] FROM [User] WHERE [UserID] = ?");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            User member = new User();
+            if (rs.next()) {
+                return member = new User();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+            return null;
+
+        }
+        return null;  
+    }
 
 }
