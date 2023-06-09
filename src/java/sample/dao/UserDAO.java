@@ -287,4 +287,47 @@ public class UserDAO {
         }
         return false;
     }
+
+    //update user
+    public static boolean updateUser(User user) throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                // Update user from User table
+                String sql = "UPDATE [dbo].[User] SET [Name] = ?, [Image] = ?, [Phone] = ?, [Email] = ?, [Username] = ?, [Password] = ?, [Address] = ?, [BirthDay] = ?, [ProjectId] = ?, [Team_ID] = ?, [Role] = ? WHERE [UserID] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setString(1, user.getName());
+                pst.setString(2, user.getImage());
+                pst.setString(3, user.getPhone());
+                pst.setString(4, user.getEmail());
+                pst.setString(5, user.getUsername());
+                pst.setString(6, user.getPassword());
+                pst.setString(7, user.getAddress());
+                pst.setDate(8, user.getBirthday());
+                pst.setInt(9, user.getProjectId());
+                pst.setInt(10, user.getTeam_ID());
+                pst.setString(11, user.getRole());
+                pst.setInt(12, user.getUserID());
+                pst.executeUpdate();
+                return true;
+            }
+            // Update user from Role table
+
+        } catch (Exception e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return false;
+    }
 }

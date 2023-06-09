@@ -128,7 +128,15 @@
                 });
 
                 $(document).ready(function () {
-                    //add employee
+                    //reset form when click button add
+                    $(".btn-add").click(function () {
+                        $(".myform").trigger("reset");
+                        $("#mymodal").modal("show");
+                        $("#mymodal .modal-title").text("Add Employee");
+                        $("#mymodal .modal-footer button").text("Add");
+                        $("#mymodal .modal-footer button").attr("id", "addEmployee");
+                        //show modal
+                        //add employee
                     $(".myform").on("submit", function (e) {
                         e.preventDefault();
                         $.ajax({
@@ -166,6 +174,7 @@
                                 sweetAlert("Oops...", "Something went wrong!", "error");
                             }
                         });
+                    });
                     });
                     //delete employee
                     //set event for button delete employee in table 
@@ -243,6 +252,70 @@
                             }
                         });
                     });
+                    //edit employee
+                    //set event for button edit employee in table
+                    $('#example tbody').on('click', '.edit-employee', function () {
+                        //get data of row which is clicked
+                        var data = $('#example').DataTable().row($(this).parents('tr')).data();
+                        //set id for button edit
+                        var id = data.UserID;
+                        //console id of employee
+                        console.log(id);
+                        //show modal
+                        $("#mymodal").modal("show");
+                        //set title for modal
+                        $("#mymodal .modal-title").text("Edit Employee");
+                        //import a input hidden to modal
+                        $("#mymodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
+                        $("#mymodal input[name='name']").val(data.Name);
+                        $("#mymodal input[name='phone']").val(data.Phone);
+                        $("#mymodal input[name='email']").val(data.Email);
+                        $("#mymodal input[name='username']").val(data.Username);
+                        $("#mymodal input[name='password']").val("");
+                        $("#mymodal input[name='address']").val(data.Address);
+                        $("#mymodal input[name='projectName']").val(data.NameProject);
+                        $("#mymodal input[name='teamName']").val(data.Team_Name);
+                        //sent all data to server
+                        $(".myform").on("submit", function (e) {
+                            e.preventDefault();
+                            $.ajax({
+                                method: "POST",
+                                url: "/HRManagement/editEmployee",
+                                data: new FormData(this),
+                                processData: false,
+                                contentType: false,
+                                success: function (res) {
+                                    console.log(res);
+                                    //remove "" from string
+                                    if (res === `"Edit success"`) {
+                                        console.log(res);
+                                            swal.fire({
+                                                title: "Success!",
+                                                text: "Edit employee success!",
+                                                icon: "success",
+                                                button: "OK"
+                                            }).then((value) => {
+                                                //click oke will hide modal and reload datatable
+                                                $("#mymodal").modal("hide");
+                                                $('#example').DataTable().ajax.reload();
+                                            });
+                                        } else {
+                                            swal.fire({
+                                                title: "Error!",
+                                                //remove "" from string
+                                                text: res.replace(/"/g, ""),
+                                                icon: "error",
+                                                button: "OK!"
+                                            });
+                                        }
+                                    },
+                                error: function (error) {
+                                    console.log(error);
+                                    sweetAlert("Oops...", "Something went wrong!", "error");
+                                }
+                            });
+                        });
+                    });
                 });
                 //selected employee
                 $(document).ready(function () {
@@ -260,6 +333,7 @@
                 $(document).on('keydown', function (e) {
                     if (e.keyCode === 27) { // ESC
                         $("#mymodal").modal("hide");
+                        $("#editmodal").modal("hide");
                     }
                     if (e.key === 'Delete') {
                         var selectedRows = $('#example').DataTable().rows('.selected').data();
@@ -372,7 +446,7 @@
                                     <li><a class="active" href="#">All</a></li>
                                     <li><a id="add" href="#">Teams</a></li>
                                 </ul>
-                                <a class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Person</a>
+                                <a class="btn-add"><i data-feather="plus"></i> Add Person</a>
                             </div>
                         </div>
                         <form class="myform">
@@ -386,7 +460,7 @@
                                             </button>
                                         </div>
 
-                                        <div class="modal-body">
+                                        <div class="modal-body"> 
                                             <div class="form-group">
                                                 <label for="name">Name:</label>
                                                 <input type="text" class="form-control" id="name" name="name">
@@ -457,6 +531,75 @@
                                 </div>
                             </div>
                         </form>
+
+<!--                        <form class="editform">
+                            <div class="modal fade" data-backdrop='static' id="editmodal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title">Edit a Employee</h3>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="name">Name:</label>
+                                                <input type="text" class="form-control" id="editname" name="name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name">Image:</label>
+                                                <input type="file" class="form-control" id="editimage" name="image">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="phone">Phone:</label>
+                                                <input type="text" class="form-control" id="editphone" name="phone">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="email">Email:</label>
+                                                <input type="email" class="form-control" id="editemail" name="email">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="username">Username:</label>
+                                                <input type="text" class="form-control" id="editusername" name="username">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password">Password:</label>
+                                                <input type="password" class="form-control" id="editpassword" name="password">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address">Address:</label>
+                                                <input type="text" class="form-control" id="editaddress" name="address">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="birthday">Birthday:</label>
+                                                <input type="date" class="form-control" id="editbirthday" name="birthday">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="experienceId">ExperienceId:</label>
+                                                <%-- combo box --%>
+                                                <select class="form-control" id="editexperienceId" name="projectName">
+                                                    
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="teamID">Team_ID:</label>
+                                                <%-- combo box --%>
+                                                <select class="form-control" id="editeamID" name="teamName">
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <input type="submit" value="Save" class="btn btn-primary" />
+                                            <input type="reset" value="Reset" class="btn btn-danger" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>-->
 
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="row">

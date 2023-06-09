@@ -44,6 +44,22 @@ public class User {
         this.Team_Name = Team_Name;
         this.Role = Role;
     }
+    
+
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ProjectId, int Team_ID, String Role) {
+        this.UserID = UserID;
+        this.Name = Name;
+        this.Image = Image;
+        this.Phone = Phone;
+        this.Email = Email;
+        this.Username = Username;
+        this.Password = Password;
+        this.Address = Address;
+        this.Birthday = Birthday;
+        this.ProjectId = ProjectId;
+        this.Team_ID = Team_ID;
+        this.Role = Role;
+    }
 
     public User(String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ProjectId, int Team_ID, String Role) {
         this.Name = Name;

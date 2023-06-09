@@ -6,16 +6,10 @@
 package sample.servlet;
 
 import com.google.gson.Gson;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -24,12 +18,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import org.omg.CORBA.Context;
 import sample.dao.ProjectDAO;
 import sample.dao.TeamDAO;
+
 import sample.dao.UserDAO;
-import sample.dto.Project;
-import sample.dto.Team;
 import sample.dto.User;
 import sample.utils.Encrypt;
 
@@ -38,7 +30,7 @@ import sample.utils.Encrypt;
  * @author Admin
  */
 @MultipartConfig
-public class addEmployee extends HttpServlet {
+public class editEmployee extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -54,7 +46,7 @@ public class addEmployee extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            // Get form data from request parameters
+            int userID = Integer.parseInt(request.getParameter("id"));
             String name = request.getParameter("name");
             String phone = request.getParameter("phone");
             String email = request.getParameter("email");
@@ -133,12 +125,12 @@ public class addEmployee extends HttpServlet {
                 out.write(json.toJson(message));
             } else {
                 String filePath = getServletContext().getRealPath("") + "images\\" + fileName;
-                User user = new User(name, fileName, phone, email, username, password, address, birthdayDate, ProjectID, TeamID, "user");
+                User user = new User(userID, name, fileName, phone, email, username, password, address, birthdayDate, ProjectID, TeamID, "user");
                 // Call DAO to insert new user
                 UserDAO dao = new UserDAO();
-                boolean checkresult = dao.createUser(user);
+                boolean checkresult = dao.updateUser(user);
                 if (checkresult) {
-                    message += "Insert success";
+                    message += "Edit success";
                     out.write(json.toJson(message));
                     FileOutputStream outputStream = new FileOutputStream(filePath);
                     byte[] buffer = new byte[4096];
@@ -149,10 +141,11 @@ public class addEmployee extends HttpServlet {
                     fileContent.close();
                     outputStream.close();
                 } else {
-                    message += "Insert fail";
+                    message += "Edit fail";
                     out.write(json.toJson(message));
                 }
             }
+//             out.println(userID);
 //             out.println(name);
 //             out.println(phone);
 //             out.println(email);
@@ -183,7 +176,7 @@ public class addEmployee extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(addEmployee.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(editEmployee.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -201,7 +194,7 @@ public class addEmployee extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(addEmployee.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(editEmployee.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
