@@ -18,9 +18,13 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import sample.dao.ProjectDAO;
+import sample.dao.TeamDAO;
 import sample.dao.UserDAO;
 import sample.dto.User;
 
@@ -28,6 +32,8 @@ import sample.dto.User;
  *
  * @author Admin
  */
+@MultipartConfig
+
 public class deleteEmployee extends HttpServlet {
 
     /**
@@ -40,11 +46,19 @@ public class deleteEmployee extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            // read the JSON data from the request body
-
+            //get data from form delete
+            int id = Integer.parseInt(request.getParameter("id"));
+            //delete employee
+            UserDAO dao = new UserDAO();
+            boolean result = dao.deleteUser(id);
+            if (result) {
+                out.print("success");
+            } else {
+                out.print("fail");
+            }
         }
     }
 
@@ -60,7 +74,11 @@ public class deleteEmployee extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(deleteEmployee.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -74,7 +92,11 @@ public class deleteEmployee extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(deleteEmployee.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
@@ -88,30 +110,33 @@ public class deleteEmployee extends HttpServlet {
             JsonArray array = parser.parse(reader).getAsJsonArray();
             int[] selectedId = gson.fromJson(array, int[].class);
             //print selectedId array to console for testing
-            out.print(Arrays.toString(selectedId));
+//            out.print(Arrays.toString(selectedId));
             // System.out.println(Arrays.toString(selectedId));//console browser
             //delete selectedId array
             UserDAO dao = new UserDAO();
             boolean result = false;
             for (int i = 0; i < selectedId.length; i++) {
-                try {
-                    result = dao.deleteUser(selectedId[i]);
-                } catch (Exception ex) {
-                    Logger.getLogger(deleteEmployee.class.getName()).log(Level.SEVERE, null, ex);
-                }//finally return result
-                finally {
-                    out.print(result);
-                }
+                result = dao.deleteUser(selectedId[i]);
             }
             if (result) {
-                out.write(gson.toJson("Delete successfully"));
+                // out.write(gson.toJson("Delete successfully"));
+                //response to client
+                JsonObject json = new JsonObject();
+                json.addProperty("message", "Delete successfully");
+                out.print(json.toString());
             } else {
-                out.write(gson.toJson("Delete failed"));
+                // out.write(gson.toJson("Delete failed"));
+                //response to client
+                JsonObject json = new JsonObject();
+                json.addProperty("message", "Delete failed");
+                out.print(json.toString());
             }
             // //response to client
             // JsonObject json = new JsonObject();
             // json.addProperty("message", "Delete successfully");
             // out.print(json.toString());
+        } catch (Exception ex) {
+            Logger.getLogger(deleteEmployee.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

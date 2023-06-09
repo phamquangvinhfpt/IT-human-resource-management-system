@@ -37,6 +37,9 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <%-- import node_modules --%>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <script>
             function format(d) {
                 // `d` is the original data object for the row
@@ -56,11 +59,11 @@
                         '</tr>' +
                         '<tr>' +
                         '<td>Project:</td>' +
-                        '<td>'+d.NameProject+'</td>' +
+                        '<td>' + d.NameProject + '</td>' +
                         '</tr>' +
                         '<tr>' +
                         '<td>Team:</td>' +
-                        '<td>'+d.Team_Name+'</td>' +
+                        '<td>' + d.Team_Name + '</td>' +
                         '</tr>' +
                         '</table>'
                         );
@@ -91,30 +94,16 @@
                             }
                         },
                         {data: 'Name'},
-//                        {
-//                            //get images from images folder
-//                            data: 'Image',
-//                            render: function (data) {
-//                                // replace \ to / for get image
-//                                data = data.replace(/\\/g, "/");
-//                                var img = '<img src="images/' + data + '" width="100px" height="100px"/>';
-//                                console.log(img);
-//                                return img;
-//                            }
-//                        },
                         {data: 'Phone'},
                         {data: 'Email'},
-//                        {data: 'Username'},
-//                        {data: 'Password'},
                         {data: 'Birthday'},
-                        {data: 'Role'},
                         {
                             data: null,
                             render: function (data, type, row) {
                                 //set id for button = id of employee
                                 return `
-                        <button onclick="deleteEmployee()" style="background-color: white;box-shadow: none" class="btn"><i class="fa-solid fa-trash text-danger"></i></button>
-                        <button onclick="update()" style="background-color: white;box-shadow: none" class="btn"><i class="fa-solid fa-pen-to-square text-primary"></i></button>
+                        <button style="background-color: white;box-shadow: none" class="del-employee btn m-1"><i class="fa-solid fa-trash text-danger"></i></button>
+                        <button style="background-color: white;box-shadow: none" class="edit-employee btn m-1"><i class="fa-solid fa-pen-to-square text-primary"></i></button>
                     `;
                             }
                         }
@@ -152,7 +141,7 @@
                                 console.log(res);
                                 //remove "" from string
                                 if (res === `"Insert success"`) {
-                                    swal({
+                                    swal.fire({
                                         title: "Success!",
                                         text: "Add employee success!",
                                         icon: "success",
@@ -163,7 +152,7 @@
                                         $('#example').DataTable().ajax.reload();
                                     });
                                 } else {
-                                    swal({
+                                    swal.fire({
                                         title: "Error!",
                                         //remove "" from string
                                         text: res.replace(/"/g, ""),
@@ -175,6 +164,82 @@
                             error: function (error) {
                                 console.log(error);
                                 sweetAlert("Oops...", "Something went wrong!", "error");
+                            }
+                        });
+                    });
+                    //delete employee
+                    //set event for button delete employee in table 
+                    $('#example tbody').on('click', '.del-employee', function () {
+                        //get data of row which is clicked
+                        var data = $('#example').DataTable().row($(this).parents('tr')).data();
+                        //set id for button delete
+                        var id = data.UserID;
+                        //console id of employee
+                        console.log(id);
+                        //use method post to send id to server
+                        const swalWithBootstrapButtons = Swal.mixin({
+                            customClass: {
+                                confirmButton: 'btn btn-success',
+                                cancelButton: 'btn btn-danger'
+                            },
+                            buttonsStyling: false
+                        });
+                        swalWithBootstrapButtons.fire({
+                            title: 'Are you sure?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes, delete it!',
+                            cancelButtonText: 'No, cancel!',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                swalWithBootstrapButtons.fire(
+                                        'Deleted!',
+                                        'Your file has been deleted.',
+                                        'success'
+                                        );
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/HRManagement/deleteEmployee?id=" + id + "",
+                                    success: function (res) {
+                                        console.log(res);
+                                        //remove "" from string
+                                        if (res === "success") {
+                                            swal.fire({
+                                                title: "Success!",
+                                                text: "Delete employee success!",
+                                                icon: "success",
+                                                button: "OK"
+                                            }).then((value) => {
+                                                //click oke will hide modal and reload datatable
+                                                $("#mymodal").modal("hide");
+                                                $('#example').DataTable().ajax.reload();
+                                            });
+                                        } else {
+                                            swal.fire({
+                                                title: "Error!",
+                                                //remove "" from string
+                                                text: res.replace(/"/g, ""),
+                                                icon: "error",
+                                                button: "OK!"
+                                            });
+                                        }
+                                    },
+                                    error: function (error) {
+                                        console.log(error);
+                                        sweetAlert("Oops...", "Something went wrong!", "error");
+                                    }
+                                });
+                            } else if (
+                                    /* Read more about handling dismissals below */
+                                    result.dismiss === Swal.DismissReason.cancel
+                                    ) {
+                                swalWithBootstrapButtons.fire(
+                                        'Cancelled',
+                                        'Your employee is safe :)',
+                                        'error'
+                                        );
                             }
                         });
                     });
@@ -191,8 +256,8 @@
                         alert(table.rows('.selected').data().length + ' row(s) selected');
                     });
                 });
-                
-                $(document).on('keydown', function(e) {
+
+                $(document).on('keydown', function (e) {
                     if (e.keyCode === 27) { // ESC
                         $("#mymodal").modal("hide");
                     }
@@ -206,40 +271,60 @@
                         // console.log(selectedId);
                         if (selectedRows.length > 0) {
                             //send DELETE request to server to delete selected employees
-                            $.ajax({
-                                method: "DELETE",
-                                url: "/HRManagement/deleteEmployee",
-                                data: JSON.stringify(selectedId),
-                                contentType: "application/json",
-                                dataType: "json",
-                                // console: console.log(JSON.stringify(selectedId)),
-                                success: function (res) {
-                                    console.log(res);
-                                    //remove "" from string
-                                    if (res === `"Delete successfully"`) {
-                                        swal({
-                                            title: "Success!",
-                                            text: "Delete employee success!",
-                                            icon: "success",
-                                            button: "OK",
-                                        }).then((value) => {
-                                            //click oke will hide modal and reload datatable
-                                            $("#mymodal").modal("hide");
-                                            $('#example').DataTable().ajax.reload();
-                                        });
-                                    } else {
-                                        swal({
-                                            title: "Error!",
-                                            //remove "" from string
-                                            // text: res.replace(/"/g, ""),
-                                            icon: "error",
-                                            button: "OK!",
-                                        });
-                                    }
+                            const swalWithBootstrapButtons = Swal.mixin({
+                                customClass: {
+                                    confirmButton: 'btn btn-success',
+                                    cancelButton: 'btn btn-danger'
                                 },
-                                error: function (error) {
-                                    console.log(error);
-                                    sweetAlert("Oops...", "Something went wrong!", "error");
+                                buttonsStyling: false
+                            });
+                            swalWithBootstrapButtons.fire({
+                                title: 'Are you sure?',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes, delete it!',
+                                cancelButtonText: 'No, cancel!',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    swalWithBootstrapButtons.fire(
+                                            'Deleted!',
+                                            'Employee has been deleted.',
+                                            'success'
+                                            );
+                                    $.ajax({
+                                        method: "DELETE",
+                                        url: "/HRManagement/deleteEmployee",
+                                        data: JSON.stringify(selectedId),
+                                        contentType: "application/json",
+                                        dataType: "json",
+                                        // console: console.log(JSON.stringify(selectedId)),
+                                        success: function (res) {
+                                            var message = res.message;
+                                            //remove "" from string
+                                            message = message.replace(/"/g, "");
+                                            console.log(message);
+                                            //if message = "Delete successfully"
+                                            if (message === "Delete successfully") {
+                                                //reload datatable
+                                                $('#example').DataTable().ajax.reload();
+                                            }
+                                        },
+                                        error: function (error) {
+                                            console.log(error);
+                                            sweetAlert("Oops...", "Something went wrong!", "error");
+                                        }
+                                    });
+                                } else if (
+                                        /* Read more about handling dismissals below */
+                                        result.dismiss === Swal.DismissReason.cancel
+                                        ) {
+                                    swalWithBootstrapButtons.fire(
+                                            'Cancelled',
+                                            'Your employee is safe :)',
+                                            'error'
+                                            );
                                 }
                             });
                         }
@@ -392,10 +477,7 @@
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
-                                                <!--<th>Username</th>-->
-                                                <!--<th>Password</th>-->
                                                 <th>Birthday</th>
-                                                <th>Role</th>
                                                 <th class="col-sm-1">Action</th>
                                             </tr>
                                         </thead>
@@ -407,10 +489,7 @@
                                                 <th>Name</th>
                                                 <th>Phone</th>
                                                 <th>Email</th>
-                                                <!--<th>Username</th>-->
-                                                <!--<th>Password</th>-->
                                                 <th>Birthday</th>
-                                                <th>Role</th>
                                                 <th>Action</th>
                                             </tr>
                                         </tfoot>
