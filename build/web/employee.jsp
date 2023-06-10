@@ -41,6 +41,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <script src="assets/js/employee.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     </head>
     <body>
         <%
@@ -298,7 +299,7 @@
             <script src="assets/js/feather.min.js"></script>
 
             <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
+            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
             <script src="assets/plugins/select2/js/select2.min.js"></script>
             <script src="assets/js/script.js"></script>
     </body>

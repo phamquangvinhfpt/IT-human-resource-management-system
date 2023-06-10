@@ -196,8 +196,8 @@ $(document).ready(function () {
         });
     });
     //add
-    $(document).ready(function(){
-       $(".myform").on("submit", function (e) {
+    $(document).ready(function () {
+        $(".myform").on("submit", function (e) {
             e.preventDefault();
             $.ajax({
                 method: "POST",
@@ -234,48 +234,48 @@ $(document).ready(function () {
                     sweetAlert("Oops...", "Something went wrong!", "error");
                 }
             });
-        }); 
+        });
     });
     //edit
-    $(document).ready(function(){
-       $(".editform").on("submit", function (e) {
-                e.preventDefault();
-                $.ajax({
-                    method: "POST",
-                    url: "/HRManagement/editEmployee",
-                    data: new FormData(this),
-                    processData: false,
-                    contentType: false,
-                    success: function (res) {
-                        console.log(res);
-                        //remove "" from string
-                        if (res === `"Edit success"`) {
-                                swal.fire({
-                                    title: "Success!",
-                                    text: "Edit employee success!",
-                                    icon: "success",
-                                    button: "OK"
-                                }).then((value) => {
-                                    //click oke will hide modal and reload datatable
-                                    $("#editmodal").modal("hide");
-                                    $('#example').DataTable().ajax.reload();
-                                });
-                            } else {
-                                swal.fire({
-                                    title: "Error!",
-                                    //remove "" from string
-                                    text: res.replace(/"/g, ""),
-                                    icon: "error",
-                                    button: "OK!"
-                                });
-                            }
-                        },
-                    error: function (error) {
-                        console.log(error);
-                        sweetAlert("Oops...", "Something went wrong!", "error");
+    $(document).ready(function () {
+        $(".editform").on("submit", function (e) {
+            e.preventDefault();
+            $.ajax({
+                method: "POST",
+                url: "/HRManagement/editEmployee",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    console.log(res);
+                    //remove "" from string
+                    if (res === `"Edit success"`) {
+                        swal.fire({
+                            title: "Success!",
+                            text: "Edit employee success!",
+                            icon: "success",
+                            button: "OK"
+                        }).then((value) => {
+                            //click oke will hide modal and reload datatable
+                            $("#editmodal").modal("hide");
+                            $('#example').DataTable().ajax.reload();
+                        });
+                    } else {
+                        swal.fire({
+                            title: "Error!",
+                            //remove "" from string
+                            text: res.replace(/"/g, ""),
+                            icon: "error",
+                            button: "OK!"
+                        });
                     }
-                });
-            }); 
+                },
+                error: function (error) {
+                    console.log(error);
+                    sweetAlert("Oops...", "Something went wrong!", "error");
+                }
+            });
+        });
     });
     //selected employee
     $(document).ready(function () {
@@ -283,8 +283,20 @@ $(document).ready(function () {
 
         $('#example tbody').on('click', 'tr', function () {
             $(this).toggleClass('selected');
+            //the first row is selected will show toast notify to user know can delete multiple selected employees then the another row is selected will not show toast notify
+            if (table.rows('.selected').data().length === 1) {
+                Toastify({
+                    //show message to show user know can delete employee by press delete button
+                    text: "Press delete button to delete multiple selected employees",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    stopOnFocus: true,
+                    onclick: function () {}
+                }).showToast();
+            }
         });
-
         $('#button').click(function () {
             alert(table.rows('.selected').data().length + ' row(s) selected');
         });
@@ -304,6 +316,16 @@ $(document).ready(function () {
             }
             // console.log(selectedId);
             if (selectedRows.length > 0) {
+                Toastify({
+                    //show message to show user know can delete employee by press delete button
+                    text: "Press delete button to delete multiple selected employees",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    stopOnFocus: true,
+                    onclick: function () {}
+                }).showToast();
                 //send DELETE request to server to delete selected employees
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
