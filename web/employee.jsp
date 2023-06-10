@@ -40,372 +40,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <script>
-            function format(d) {
-                // `d` is the original data object for the row
-                return (
-                        '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                        '<tr>' +
-                        '<td>Image:</td>' +
-                        '<td>' +
-                        '<img src="images/' + d.Image + '" width="100px" height="100px"/>' +
-                        '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Address:</td>' +
-                        '<td>' +
-                        d.Address +
-                        '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Project:</td>' +
-                        '<td>' + d.NameProject + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                        '<td>Team:</td>' +
-                        '<td>' + d.Team_Name + '</td>' +
-                        '</tr>' +
-                        '</table>'
-                        );
-            }
-            $(document).ready(function () {
-                //load data for datatable
-                $('#example').DataTable({
-
-                    ajax: {
-                        url: '/HRManagement/employee',
-                        dataSrc: ''
-                    },
-                    //justify content table center
-                    "columnDefs": [
-                        {"className": "dt-center", "targets": "_all"}
-                    ],
-                    columns: [
-                        {
-                            className: 'dt-control',
-                            orderable: false,
-                            data: null,
-                            defaultContent: ''
-                        },
-                        {data: null,
-                            //set identity for row
-                            render: function (data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        {data: 'Name'},
-                        {data: 'Phone'},
-                        {data: 'Email'},
-                        {data: 'Birthday'},
-                        {
-                            data: null,
-                            render: function (data, type, row) {
-                                //set id for button = id of employee
-                                return `
-                        <button style="background-color: white;box-shadow: none" class="del-employee btn m-1"><i class="fa-solid fa-trash text-danger"></i></button>
-                        <button style="background-color: white;box-shadow: none" class="edit-employee btn m-1"><i class="fa-solid fa-pen-to-square text-primary"></i></button>
-                    `;
-                            }
-                        }
-                    ],
-                    "order": [[0, "asc"]]
-                });
-
-                // Add event listener for opening and closing details
-                $('#example tbody').on('click', 'td.dt-control', function () {
-                    var tr = $(this).closest('tr');
-                    var row = $('#example').DataTable().row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        tr.removeClass('shown');
-                    } else {
-                        // Open this row
-                        row.child(format(row.data())).show();
-                        tr.addClass('shown');
-                    }
-                });
-
-                $(document).ready(function () {
-                    //reset form when click button add
-                    $(".btn-add").click(function () {
-                        $(".myform").trigger("reset");
-                        $("#mymodal").modal("show");
-                        $("#mymodal .modal-title").text("Add Employee");
-                        $("#mymodal .modal-footer button").text("Add");
-                        $("#mymodal .modal-footer button").attr("id", "addEmployee");
-                        //show modal
-                        //add employee
-                    $(".myform").on("submit", function (e) {
-                        e.preventDefault();
-                        $.ajax({
-                            method: "POST",
-                            url: "/HRManagement/addEmployee",
-                            data: new FormData(this),
-                            processData: false,
-                            contentType: false,
-                            success: function (res) {
-                                console.log(res);
-                                //remove "" from string
-                                if (res === `"Insert success"`) {
-                                    swal.fire({
-                                        title: "Success!",
-                                        text: "Add employee success!",
-                                        icon: "success",
-                                        button: "OK"
-                                    }).then((value) => {
-                                        //click oke will hide modal and reload datatable
-                                        $("#mymodal").modal("hide");
-                                        $('#example').DataTable().ajax.reload();
-                                    });
-                                } else {
-                                    swal.fire({
-                                        title: "Error!",
-                                        //remove "" from string
-                                        text: res.replace(/"/g, ""),
-                                        icon: "error",
-                                        button: "OK!"
-                                    });
-                                }
-                            },
-                            error: function (error) {
-                                console.log(error);
-                                sweetAlert("Oops...", "Something went wrong!", "error");
-                            }
-                        });
-                    });
-                    });
-                    //delete employee
-                    //set event for button delete employee in table 
-                    $('#example tbody').on('click', '.del-employee', function () {
-                        //get data of row which is clicked
-                        var data = $('#example').DataTable().row($(this).parents('tr')).data();
-                        //set id for button delete
-                        var id = data.UserID;
-                        //console id of employee
-                        console.log(id);
-                        //use method post to send id to server
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-success',
-                                cancelButton: 'btn btn-danger'
-                            },
-                            buttonsStyling: false
-                        });
-                        swalWithBootstrapButtons.fire({
-                            title: 'Are you sure?',
-                            text: "You won't be able to revert this!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonText: 'Yes, delete it!',
-                            cancelButtonText: 'No, cancel!',
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                swalWithBootstrapButtons.fire(
-                                        'Deleted!',
-                                        'Your file has been deleted.',
-                                        'success'
-                                        );
-                                $.ajax({
-                                    method: "POST",
-                                    url: "/HRManagement/deleteEmployee?id=" + id + "",
-                                    success: function (res) {
-                                        console.log(res);
-                                        //remove "" from string
-                                        if (res === "success") {
-                                            swal.fire({
-                                                title: "Success!",
-                                                text: "Delete employee success!",
-                                                icon: "success",
-                                                button: "OK"
-                                            }).then((value) => {
-                                                //click oke will hide modal and reload datatable
-                                                $("#mymodal").modal("hide");
-                                                $('#example').DataTable().ajax.reload();
-                                            });
-                                        } else {
-                                            swal.fire({
-                                                title: "Error!",
-                                                //remove "" from string
-                                                text: res.replace(/"/g, ""),
-                                                icon: "error",
-                                                button: "OK!"
-                                            });
-                                        }
-                                    },
-                                    error: function (error) {
-                                        console.log(error);
-                                        sweetAlert("Oops...", "Something went wrong!", "error");
-                                    }
-                                });
-                            } else if (
-                                    /* Read more about handling dismissals below */
-                                    result.dismiss === Swal.DismissReason.cancel
-                                    ) {
-                                swalWithBootstrapButtons.fire(
-                                        'Cancelled',
-                                        'Your employee is safe :)',
-                                        'error'
-                                        );
-                            }
-                        });
-                    });
-                    //edit employee
-                    //set event for button edit employee in table
-                    $('#example tbody').on('click', '.edit-employee', function () {
-                        //get data of row which is clicked
-                        var data = $('#example').DataTable().row($(this).parents('tr')).data();
-                        //set id for button edit
-                        var id = data.UserID;
-                        //console id of employee
-                        console.log(id);
-                        //show modal
-                        $("#mymodal").modal("show");
-                        //set title for modal
-                        $("#mymodal .modal-title").text("Edit Employee");
-                        //import a input hidden to modal
-                        $("#mymodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
-                        $("#mymodal input[name='name']").val(data.Name);
-                        $("#mymodal input[name='phone']").val(data.Phone);
-                        $("#mymodal input[name='email']").val(data.Email);
-                        $("#mymodal input[name='username']").val(data.Username);
-                        $("#mymodal input[name='password']").val("");
-                        $("#mymodal input[name='address']").val(data.Address);
-                        $("#mymodal input[name='projectName']").val(data.NameProject);
-                        $("#mymodal input[name='teamName']").val(data.Team_Name);
-                        //sent all data to server
-                        $(".myform").on("submit", function (e) {
-                            e.preventDefault();
-                            $.ajax({
-                                method: "POST",
-                                url: "/HRManagement/editEmployee",
-                                data: new FormData(this),
-                                processData: false,
-                                contentType: false,
-                                success: function (res) {
-                                    console.log(res);
-                                    //remove "" from string
-                                    if (res === `"Edit success"`) {
-                                        console.log(res);
-                                            swal.fire({
-                                                title: "Success!",
-                                                text: "Edit employee success!",
-                                                icon: "success",
-                                                button: "OK"
-                                            }).then((value) => {
-                                                //click oke will hide modal and reload datatable
-                                                $("#mymodal").modal("hide");
-                                                $('#example').DataTable().ajax.reload();
-                                            });
-                                        } else {
-                                            swal.fire({
-                                                title: "Error!",
-                                                //remove "" from string
-                                                text: res.replace(/"/g, ""),
-                                                icon: "error",
-                                                button: "OK!"
-                                            });
-                                        }
-                                    },
-                                error: function (error) {
-                                    console.log(error);
-                                    sweetAlert("Oops...", "Something went wrong!", "error");
-                                }
-                            });
-                        });
-                    });
-                });
-                //selected employee
-                $(document).ready(function () {
-                    var table = $('#example').DataTable();
-
-                    $('#example tbody').on('click', 'tr', function () {
-                        $(this).toggleClass('selected');
-                    });
-
-                    $('#button').click(function () {
-                        alert(table.rows('.selected').data().length + ' row(s) selected');
-                    });
-                });
-
-                $(document).on('keydown', function (e) {
-                    if (e.keyCode === 27) { // ESC
-                        $("#mymodal").modal("hide");
-                        $("#editmodal").modal("hide");
-                    }
-                    if (e.key === 'Delete') {
-                        var selectedRows = $('#example').DataTable().rows('.selected').data();
-                        //Get id of selected employees
-                        var selectedId = [];
-                        for (var i = 0; i < selectedRows.length; i++) {
-                            selectedId.push(selectedRows[i].UserID);
-                        }
-                        // console.log(selectedId);
-                        if (selectedRows.length > 0) {
-                            //send DELETE request to server to delete selected employees
-                            const swalWithBootstrapButtons = Swal.mixin({
-                                customClass: {
-                                    confirmButton: 'btn btn-success',
-                                    cancelButton: 'btn btn-danger'
-                                },
-                                buttonsStyling: false
-                            });
-                            swalWithBootstrapButtons.fire({
-                                title: 'Are you sure?',
-                                text: "You won't be able to revert this!",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonText: 'Yes, delete it!',
-                                cancelButtonText: 'No, cancel!',
-                                reverseButtons: true
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    swalWithBootstrapButtons.fire(
-                                            'Deleted!',
-                                            'Employee has been deleted.',
-                                            'success'
-                                            );
-                                    $.ajax({
-                                        method: "DELETE",
-                                        url: "/HRManagement/deleteEmployee",
-                                        data: JSON.stringify(selectedId),
-                                        contentType: "application/json",
-                                        dataType: "json",
-                                        // console: console.log(JSON.stringify(selectedId)),
-                                        success: function (res) {
-                                            var message = res.message;
-                                            //remove "" from string
-                                            message = message.replace(/"/g, "");
-                                            console.log(message);
-                                            //if message = "Delete successfully"
-                                            if (message === "Delete successfully") {
-                                                //reload datatable
-                                                $('#example').DataTable().ajax.reload();
-                                            }
-                                        },
-                                        error: function (error) {
-                                            console.log(error);
-                                            sweetAlert("Oops...", "Something went wrong!", "error");
-                                        }
-                                    });
-                                } else if (
-                                        /* Read more about handling dismissals below */
-                                        result.dismiss === Swal.DismissReason.cancel
-                                        ) {
-                                    swalWithBootstrapButtons.fire(
-                                            'Cancelled',
-                                            'Your employee is safe :)',
-                                            'error'
-                                            );
-                                }
-                            });
-                        }
-                    }
-                });
-            });
-        </script>
+        <script src="assets/js/employee.js"></script>
     </head>
     <body>
         <%
@@ -532,7 +167,7 @@
                             </div>
                         </form>
 
-<!--                        <form class="editform">
+                        <form class="editform">
                             <div class="modal fade" data-backdrop='static' id="editmodal">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -577,17 +212,29 @@
                                                 <input type="date" class="form-control" id="editbirthday" name="birthday">
                                             </div>
                                             <div class="form-group">
-                                                <label for="experienceId">ExperienceId:</label>
+                                                <label for="experienceId">Project:</label>
                                                 <%-- combo box --%>
                                                 <select class="form-control" id="editexperienceId" name="projectName">
-                                                    
+                                                    <%
+                                                        for (Project project : list) {
+                                                    %>
+                                                    <option value="<%=project.getNameProject()%>"><%=project.getNameProject()%></option>
+                                                    <%
+                                                        }
+                                                    %>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="teamID">Team_ID:</label>
+                                                <label for="teamID">Team:</label>
                                                 <%-- combo box --%>
                                                 <select class="form-control" id="editeamID" name="teamName">
-                                                    
+                                                    <%
+                                                        for (Team team : listTeam) {
+                                                    %>
+                                                    <option value="<%=team.getTeam_Name()%>"><%=team.getTeam_Name()%></option>
+                                                    <%
+                                                        }
+                                                    %>
                                                 </select>
                                             </div>
                                         </div>
@@ -599,7 +246,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>-->
+                        </form>
 
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="row">
@@ -650,7 +297,7 @@
 
             <script src="assets/js/feather.min.js"></script>
 
-            <!--<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>-->
+            <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
             <script src="assets/plugins/select2/js/select2.min.js"></script>
             <script src="assets/js/script.js"></script>

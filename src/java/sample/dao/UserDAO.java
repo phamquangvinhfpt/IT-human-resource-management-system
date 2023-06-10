@@ -6,6 +6,7 @@
 package sample.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -329,5 +330,46 @@ public class UserDAO {
             }
         }
         return false;
+    }
+
+    //get all user
+    public static List<User> getAllUser() throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List<User> list = new ArrayList<>();
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT [UserID], [Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [ProjectId], [Team_ID], [Role] FROM [dbo].[User]";
+                pst = cn.prepareStatement(sql);
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    int UserID = rs.getInt("UserID");
+                    String Name = rs.getString("Name");
+                    String Image = rs.getString("Image");
+                    String Phone = rs.getString("Phone");
+                    String Email = rs.getString("Email");
+                    String Username = rs.getString("Username");
+                    String Password = rs.getString("Password");
+                    String Address = rs.getString("Address");
+                    Date BirthDay = rs.getDate("BirthDay");
+                    int ProjectId = rs.getInt("ProjectId");
+                    int Team_ID = rs.getInt("Team_ID");
+                    String Role = rs.getString("Role");
+                    list.add(new User(UserID, Name, Image, Phone, Email, Username, Password, Address, BirthDay, ProjectId, Team_ID, Role));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return list;
     }
 }

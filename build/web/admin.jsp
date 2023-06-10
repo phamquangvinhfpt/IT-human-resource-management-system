@@ -4,6 +4,8 @@
     Author     : Admin
 --%>
 
+<%@page import="java.util.List"%>
+<%@page import="sample.dao.UserDAO"%>
 <%@page import="sample.dto.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -30,6 +32,15 @@
             request.setAttribute("errorMessage", errorMessage);
             // Forward the request to an error page to display the message
             request.getRequestDispatcher("error.jsp").forward(request, response);
+        }
+        //get all users
+        UserDAO userDAO = new UserDAO();
+        List<User> users = userDAO.getAllUser();
+        int count = 0;
+        for (User u : users) {
+            if (u.getRole().equals("user")) {
+                count++;
+            }
         }
     %>
     <body>
@@ -69,7 +80,7 @@
                                 <div class="card-body">
                                     <div class="card_widget_header">
                                         <label>Employees</label>
-                                        <h4>700</h4>
+                                        <h4><%=count %></h4>
                                     </div>
                                     <div class="card_widget_img">
                                         <img src="assets/img/dash1.png" alt="card-img" />
