@@ -31,10 +31,10 @@
         <!--CDN-->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
-        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="assets/js/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <!-- Bootstrap JavaScript library -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
         <%-- import node_modules --%>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -292,13 +292,13 @@
                 </div>
 
             </div>
-
+            
             <script src="assets/js/popper.min.js"></script>
             <script src="assets/js/bootstrap.min.js"></script>
 
             <script src="assets/js/feather.min.js"></script>
 
-            <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+            <!--<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>-->
             <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
             <script src="assets/plugins/select2/js/select2.min.js"></script>
             <script src="assets/js/script.js"></script>

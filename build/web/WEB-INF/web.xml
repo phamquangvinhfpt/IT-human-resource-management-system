@@ -24,6 +24,10 @@
         <servlet-name>editEmployee</servlet-name>
         <servlet-class>sample.servlet.editEmployee</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditProfileServlet</servlet-name>
+        <servlet-class>sample.servlet.EditProfileServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>mainController</servlet-name>
         <url-pattern>/mainController</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>editEmployee</servlet-name>
         <url-pattern>/editEmployee</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditProfileServlet</servlet-name>
+        <url-pattern>/EditProfileServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

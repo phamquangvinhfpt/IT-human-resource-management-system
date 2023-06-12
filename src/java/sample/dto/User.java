@@ -74,6 +74,20 @@ public class User {
         this.Team_ID = Team_ID;
         this.Role = Role;
     }
+
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Address, Date Birthday, int ProjectId, int Team_ID, String Role) {
+        this.UserID = UserID;
+        this.Name = Name;
+        this.Image = Image;
+        this.Phone = Phone;
+        this.Email = Email;
+        this.Username = Username;
+        this.Address = Address;
+        this.Birthday = Birthday;
+        this.ProjectId = ProjectId;
+        this.Team_ID = Team_ID;
+        this.Role = Role;
+    }
     
     
 
