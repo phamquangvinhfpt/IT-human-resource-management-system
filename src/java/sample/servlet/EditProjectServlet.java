@@ -5,14 +5,12 @@
  */
 package sample.servlet;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,8 +23,8 @@ import sample.dto.ProjectManageDTO;
  *
  * @author ADMIN
  */
-@WebServlet(name = "ProjectManageServlet", urlPatterns = {"/ProjectManageServlet"})
-public class ProjectManageServlet extends HttpServlet {
+@WebServlet(name = "EditProjectServlet", urlPatterns = {"/EditProjectServlet"})
+public class EditProjectServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,24 +38,27 @@ public class ProjectManageServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try(PrintWriter out = response.getWriter()) {
+        String url = "error.jsp";
+        try {
             /* TODO output your page here. You may use following sample code. */
+            int id = Integer.parseInt(request.getParameter("id"));
+            String name = request.getParameter("ProjectName");
+            String decs = request.getParameter("Description");
+            String SDate = request.getParameter("SDate");
+            Date startDate = Date.valueOf(SDate);
+            String EDate = request.getParameter("EDate");
+            Date endDate = Date.valueOf(EDate);
+            String TechS = request.getParameter("TechS");
+            ProjectManageDTO dto = new ProjectManageDTO(id, name, startDate, endDate, TechS, decs, 0, null);
             ProjectManageDAO dao = new ProjectManageDAO();
-            dao.GetProject();
-            List<ProjectManageDTO> listProject = dao.getListProject();
-//            if(listProject != null){
-//                int size = listProject.size();
-//                request.setAttribute("AmountOfProject", size);
-//                request.setAttribute("projectList", listProject);
-//                Result = "ProjectManage.jsp";
-//            }
-            response.setContentType("application/json");
-            response.setStatus(200);
-            Gson gson = new Gson();
-            String json = gson.toJson(listProject);
-            out.println(json);
+            boolean result = dao.UpdateProject(dto);
+            if(result){
+                url = "ProjectManage.jsp";
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EditProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            response.sendRedirect(url);
         }
     }
 

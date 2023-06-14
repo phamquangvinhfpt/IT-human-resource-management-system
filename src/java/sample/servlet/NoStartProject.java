@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,8 +24,8 @@ import sample.dto.ProjectManageDTO;
  *
  * @author ADMIN
  */
-@WebServlet(name = "ProjectManageServlet", urlPatterns = {"/ProjectManageServlet"})
-public class ProjectManageServlet extends HttpServlet {
+@WebServlet(name = "NoStartProject", urlPatterns = {"/NoStartProject"})
+public class NoStartProject extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +39,10 @@ public class ProjectManageServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try(PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             ProjectManageDAO dao = new ProjectManageDAO();
-            dao.GetProject();
+            dao.getNoStartProject();
             List<ProjectManageDTO> listProject = dao.getListProject();
 //            if(listProject != null){
 //                int size = listProject.size();
@@ -57,7 +56,7 @@ public class ProjectManageServlet extends HttpServlet {
             String json = gson.toJson(listProject);
             out.println(json);
         } catch (SQLException ex) {
-            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(inProgressServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

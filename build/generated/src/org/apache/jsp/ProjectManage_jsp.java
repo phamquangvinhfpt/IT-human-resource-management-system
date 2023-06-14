@@ -3,6 +3,7 @@ package org.apache.jsp;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import sample.dto.User;
 
 public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBase
     implements org.apache.jasper.runtime.JspSourceDependent {
@@ -11,26 +12,10 @@ public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBa
 
   private static java.util.List<String> _jspx_dependants;
 
-  private org.apache.jasper.runtime.TagHandlerPool _jspx_tagPool_c_set_var_value_nobody;
-  private org.apache.jasper.runtime.TagHandlerPool _jspx_tagPool_c_forEach_varStatus_var_items;
-  private org.apache.jasper.runtime.TagHandlerPool _jspx_tagPool_c_if_test;
-
   private org.glassfish.jsp.api.ResourceInjector _jspx_resourceInjector;
 
   public java.util.List<String> getDependants() {
     return _jspx_dependants;
-  }
-
-  public void _jspInit() {
-    _jspx_tagPool_c_set_var_value_nobody = org.apache.jasper.runtime.TagHandlerPool.getTagHandlerPool(getServletConfig());
-    _jspx_tagPool_c_forEach_varStatus_var_items = org.apache.jasper.runtime.TagHandlerPool.getTagHandlerPool(getServletConfig());
-    _jspx_tagPool_c_if_test = org.apache.jasper.runtime.TagHandlerPool.getTagHandlerPool(getServletConfig());
-  }
-
-  public void _jspDestroy() {
-    _jspx_tagPool_c_set_var_value_nobody.release();
-    _jspx_tagPool_c_forEach_varStatus_var_items.release();
-    _jspx_tagPool_c_if_test.release();
   }
 
   public void _jspService(HttpServletRequest request, HttpServletResponse response)
@@ -57,8 +42,8 @@ public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBa
       _jspx_out = out;
       _jspx_resourceInjector = (org.glassfish.jsp.api.ResourceInjector) application.getAttribute("com.sun.appserv.jsp.resource.injector");
 
-      out.write('`');
-      out.write('`');
+      out.write("\n");
+      out.write("``");
       out.write("\n");
       out.write("\n");
       out.write("\n");
@@ -77,20 +62,223 @@ public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("\n");
       out.write("        <link rel=\"stylesheet\" href=\"assets/css/style.css\">\n");
       out.write("\n");
-      out.write("        ");
-      out.write("\n");
       out.write("        <script src=\"https://kit.fontawesome.com/b3fa33d056.js\" crossorigin=\"anonymous\"></script>\n");
       out.write("\n");
       out.write("        <!--CDN-->\n");
       out.write("        <link rel=\"stylesheet\" href=\"https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css\" />\n");
-      out.write("        <script src=\"https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js\"></script>\n");
-      out.write("        <script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>\n");
+      out.write("        <link rel=\"stylesheet\" href=\"https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css\" />\n");
+      out.write("        <script src=\"https://code.jquery.com/jquery-3.5.1.js\"></script>\n");
       out.write("        <script src=\"https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js\"></script>\n");
       out.write("        <!-- Bootstrap JavaScript library -->\n");
       out.write("        <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js\"></script>\n");
+      out.write("        ");
       out.write("\n");
+      out.write("        <script src=\"https://unpkg.com/sweetalert/dist/sweetalert.min.js\"></script>\n");
+      out.write("\n");
+      out.write("        <script src=\"https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script>\n");
+      out.write("        <script>\n");
+      out.write("            $(document).ready(function () {\n");
+      out.write("\n");
+      out.write("                $('#example').DataTable({\n");
+      out.write("                    ajax: {\n");
+      out.write("                        url: '/HRManagement/ProjectManageServlet',\n");
+      out.write("                        dataSrc: ''\n");
+      out.write("                    },\n");
+      out.write("                    columns: [\n");
+      out.write("                        {data: null,\n");
+      out.write("                            //set identity for row\n");
+      out.write("                            render: function (data, type, row, meta) {\n");
+      out.write("                                return meta.row + meta.settings._iDisplayStart + 1;\n");
+      out.write("                            }\n");
+      out.write("                        },\n");
+      out.write("                        {data: 'NameProject'\n");
+      out.write("                        }\n");
+      out.write("                        ,\n");
+      out.write("                        {\n");
+      out.write("                            data: 'startDate'\n");
+      out.write("                        }\n");
+      out.write("                        ,\n");
+      out.write("                        {\n");
+      out.write("                            data: 'endDate'\n");
+      out.write("                        }\n");
+      out.write("                        ,\n");
+      out.write("                        {\n");
+      out.write("                            data: 'techStack'\n");
+      out.write("                        }\n");
+      out.write("                        ,\n");
+      out.write("                        {\n");
+      out.write("                            data: 'decs'\n");
+      out.write("                        }\n");
+      out.write("                        ,\n");
+      out.write("                        {\n");
+      out.write("                            data: null,\n");
+      out.write("                            render: function (data, type, row) {\n");
+      out.write("                                //set id for button = id of employee\n");
+      out.write("                                return `\n");
+      out.write("                       <button class=\"btn delete-btn\" style=\"background-color: white;box-shadow: none\">\n");
+      out.write("    <i class=\"fa-solid fa-trash text-danger\"></i>\n");
+      out.write("</button>\n");
+      out.write("                       <button class=\"btn edit-btn\" style=\"background-color: white;box-shadow: none\">\n");
+      out.write("    <i class=\"fa-solid fa-pen-to-square text-primary\"></i>\n");
+      out.write("</button>\n");
+      out.write("                   `;\n");
+      out.write("                            }\n");
+      out.write("                        }\n");
+      out.write("                    ],\n");
+      out.write("                    \"order\": [[1, 'asc']]\n");
+      out.write("\n");
+      out.write("                });\n");
+      out.write("                $('#example tbody').on('click', '.delete-btn', function () {\n");
+      out.write("                    //get data of row which is clicked\n");
+      out.write("                    var data = $('#example').DataTable().row($(this).parents('tr')).data();\n");
+      out.write("                    //set id for button delete\n");
+      out.write("                    var id = data.ProjectID;\n");
+      out.write("                    //console id of employee\n");
+      out.write("                    console.log(id);\n");
+      out.write("                    //use method post to send id to server\n");
+      out.write("                    const swalWithBootstrapButtons = Swal.mixin({\n");
+      out.write("                        customClass: {\n");
+      out.write("                            confirmButton: 'btn btn-success',\n");
+      out.write("                            cancelButton: 'btn btn-danger'\n");
+      out.write("                        },\n");
+      out.write("                        buttonsStyling: false\n");
+      out.write("                    });\n");
+      out.write("                    swalWithBootstrapButtons.fire({\n");
+      out.write("                        title: 'Are you sure?',\n");
+      out.write("                        text: \"You won't be able to revert this!\",\n");
+      out.write("                        icon: 'warning',\n");
+      out.write("                        showCancelButton: true,\n");
+      out.write("                        confirmButtonText: 'Yes, delete it!',\n");
+      out.write("                        cancelButtonText: 'No, cancel!',\n");
+      out.write("                        reverseButtons: true\n");
+      out.write("                    }).then((result) => {\n");
+      out.write("                        if (result.isConfirmed) {\n");
+      out.write("                            swalWithBootstrapButtons.fire(\n");
+      out.write("                                    'Deleted!',\n");
+      out.write("                                    'Your file has been deleted.',\n");
+      out.write("                                    'success'\n");
+      out.write("                                    );\n");
+      out.write("                            $.ajax({\n");
+      out.write("                                method: \"POST\",\n");
+      out.write("                                action: \"DELETE\",\n");
+      out.write("                                url: \"/HRManagement/DeleteProjectServlet?id=\" + id + \"\",\n");
+      out.write("                                success: function (res) {\n");
+      out.write("                                    console.log(res);\n");
+      out.write("                                    //remove \"\" from string\n");
+      out.write("                                    if (res === \"success\") {\n");
+      out.write("                                        swal.fire({\n");
+      out.write("                                            title: \"Success!\",\n");
+      out.write("                                            text: \"Delete success!\",\n");
+      out.write("                                            icon: \"success\",\n");
+      out.write("                                            button: \"OK\"\n");
+      out.write("                                        }).then((value) => {\n");
+      out.write("                                            //click oke will hide modal and reload datatable\n");
+      out.write("                                            $(\"#mymodal\").modal(\"hide\");\n");
+      out.write("                                            $('#example').DataTable().ajax.reload();\n");
+      out.write("                                        });\n");
+      out.write("                                    } else {\n");
+      out.write("                                        swal.fire({\n");
+      out.write("                                            title: \"Error!\",\n");
+      out.write("                                            //remove \"\" from string\n");
+      out.write("                                            text: res.replace(/\"/g, \"\"),\n");
+      out.write("                                            icon: \"error\",\n");
+      out.write("                                            button: \"OK!\"\n");
+      out.write("                                        });\n");
+      out.write("                                    }\n");
+      out.write("                                },\n");
+      out.write("                                error: function (error) {\n");
+      out.write("                                    console.log(error);\n");
+      out.write("                                    sweetAlert(\"Oops...\", \"Something went wrong!\", \"error\");\n");
+      out.write("                                }\n");
+      out.write("                            });\n");
+      out.write("                        } else if (result.dismiss === Swal.DismissReason.cancel) {\n");
+      out.write("                            swalWithBootstrapButtons.fire(\n");
+      out.write("                                    'Cancelled'\n");
+      out.write("                                    );\n");
+      out.write("                        }\n");
+      out.write("                    });\n");
+      out.write("                });\n");
+      out.write("                $('#example tbody').on('click', '.edit-btn', function () {\n");
+      out.write("                    //get data of row which is clicked\n");
+      out.write("                    var data = $('#example').DataTable().row($(this).parents('tr')).data();\n");
+      out.write("                    //set id for button edit\n");
+      out.write("                    var id = data.ProjectID;\n");
+      out.write("                    //console id of employee\n");
+      out.write("                    console.log(id);\n");
+      out.write("                    //show modal\n");
+      out.write("                    $(\"#editmodal\").modal(\"show\");\n");
+      out.write("                    //set title for modal\n");
+      out.write("                    //import a input hidden to modal\n");
+      out.write("                    $(\"#editmodal .modal-body\").append(\"<input type='hidden' name='id' value='\" + id + \"'>\");\n");
+      out.write("                    $(\"#editmodal input[name='ProjectName']\").val(data.NameProject);\n");
+      out.write("                    $(\"#editmodal input[name='Description']\").val(data.decs);\n");
+      out.write("                    $(\"#editmodal input[name='SDate']\").val(data.startDate);\n");
+      out.write("                    $(\"#editmodal input[name='EDate']\").val(data.endDate);\n");
+      out.write("                    $(\"#editmodal input[name='TechS']\").val(data.techStack);\n");
+      out.write("                    //sent all data to server\n");
+      out.write("                });\n");
+      out.write("\n");
+      out.write("            });\n");
+      out.write("            $(document).ready(function () {\n");
+      out.write("                $(\".myform\").on(\"submit\", function (e) {\n");
+      out.write("                    e.preventDefault();\n");
+      out.write("                    $.ajax({\n");
+      out.write("                        method: \"POST\",\n");
+      out.write("                        url: \"/HRManagement/AddProjectServlet\",\n");
+      out.write("                        data: new FormData(this),\n");
+      out.write("                        processData: false,\n");
+      out.write("                        contentType: false,\n");
+      out.write("                        success: function (res) {\n");
+      out.write("                            console.log(res);\n");
+      out.write("                            //remove \"\" from string\n");
+      out.write("                            if (res === \"success\") {\n");
+      out.write("                                swal.fire({\n");
+      out.write("                                    title: \"Success!\",\n");
+      out.write("                                    text: \"Add Project success!\",\n");
+      out.write("                                    icon: \"success\",\n");
+      out.write("                                    button: \"OK\"\n");
+      out.write("                                }).then((value) => {\n");
+      out.write("                                    //click oke will hide modal and reload datatable\n");
+      out.write("                                    $(\"#mymodal\").modal(\"hide\");\n");
+      out.write("                                    $('#example').DataTable().ajax.reload();\n");
+      out.write("                                });\n");
+      out.write("                            } else {\n");
+      out.write("                                swal.fire({\n");
+      out.write("                                    title: \"Error!\",\n");
+      out.write("                                    //remove \"\" from string\n");
+      out.write("                                    text: res.replace(/\"/g, \"\"),\n");
+      out.write("                                    icon: \"error\",\n");
+      out.write("                                    button: \"OK!\"\n");
+      out.write("                                });\n");
+      out.write("                            }\n");
+      out.write("                        },\n");
+      out.write("                        error: function (error) {\n");
+      out.write("                            console.log(error);\n");
+      out.write("                        }\n");
+      out.write("                    });\n");
+      out.write("                });\n");
+      out.write("            });\n");
+      out.write("            //delete employee\n");
+      out.write("            $(document).ready(function () {\n");
+      out.write("                var table = $('#example').DataTable();\n");
+      out.write("                $('#example tbody').on('click', 'tr', function () {\n");
+      out.write("                    $(this).toggleClass('selected');\n");
+      out.write("                });\n");
+      out.write("                $('#button').click(function () {\n");
+      out.write("                    alert(table.rows('.selected').data().length + ' row(s) selected');\n");
+      out.write("                });\n");
+      out.write("            });\n");
+      out.write("        </script>\n");
       out.write("    </head>\n");
       out.write("    <body>\n");
+      out.write("        ");
+
+//            User user = (User) session.getAttribute("user");
+//            if (user == null || !user.getRole().equals("admin")) {
+//                response.sendRedirect("login.jsp");
+//            }
+        
+      out.write("\n");
       out.write("        <div class=\"main-wrapper\">\n");
       out.write("\n");
       out.write("            <div class=\"header\">\n");
@@ -124,13 +312,13 @@ public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("                        <div class=\"col-xl-12 col-sm-12 col-12 mb-4\">\n");
       out.write("                            <div class=\"head-link-set\">\n");
       out.write("                                <ul>\n");
-      out.write("                                    <li><a class=\"active\" href=\"#\">All</a></li>\n");
-      out.write("                                    <li><a href=\"employee-team.html\">In progress</a></li>\n");
-      out.write("                                    <li><a href=\"employee-office.html\">Not Start</a></li>\n");
+      out.write("                                    <li><a class=\"active\" href=\"#\" id=\"allPro\">All</a></li>\n");
+      out.write("                                    <li><a href=\"inProgressServlet\" id=\"inProgressbtn\" >In progress</a></li>\n");
+      out.write("                                    <li><a href=\"noStartProject.jsp\" id=\"noStart\">Not Start</a></li>\n");
       out.write("                                </ul>\n");
       out.write("                                <button class=\"btn-add\" onclick=\"$('#mymodal').modal('show')\"><i data-feather=\"plus\"></i> Add Project</button>\n");
       out.write("                            </div>\n");
-      out.write("                            <form action=\"mainController\">\n");
+      out.write("                            <form class=\"myform\">\n");
       out.write("                                <div class=\"modal fade\" data-backdrop='static' id=\"mymodal\">\n");
       out.write("                                    <div class=\"modal-dialog\">\n");
       out.write("                                        <div class=\"modal-content\">\n");
@@ -165,50 +353,79 @@ public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("                                            </div>\n");
       out.write("\n");
       out.write("                                            <div class=\"modal-footer\">\n");
-      out.write("                                                <input type=\"submit\" value=\"addProject\" class=\"btn\" name=\"btAction\" />\n");
+      out.write("                                                <input type=\"submit\" value=\"addProject\" class=\"btn btn-warning\" />\n");
       out.write("                                                <input type=\"reset\" value=\"Reset\" class=\"btn btn-danger\" />\n");
       out.write("                                            </div>\n");
       out.write("                                        </div>\n");
       out.write("                                    </div>\n");
       out.write("                                </div>\n");
       out.write("                            </form>\n");
-      out.write("                        </div>\n");
-      out.write("                        <div class=\"col-xl-12 col-sm-12 col-12 mb-4\">\n");
-      out.write("                            <div class=\"row\">\n");
-      out.write("                                <div class=\"col-xl-10 col-sm-8 col-12 \">\n");
-      out.write("                                    <label class=\"employee_count\">\n");
-      out.write("                                        ");
-      if (_jspx_meth_c_set_0(_jspx_page_context))
-        return;
+      out.write("<!--                            <form class=\"editform\">\n");
+      out.write("                                <div class=\"modal fade\" data-backdrop='static' id=\"editmodal\">\n");
+      out.write("                                    <div class=\"modal-dialog\">\n");
+      out.write("                                        <div class=\"modal-content\">\n");
+      out.write("                                            <div class=\"modal-header\">\n");
+      out.write("                                                <h3 class=\"modal-title\">Edit Projects</h3>\n");
+      out.write("                                                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\n");
+      out.write("                                                    <span aria-hidden=\"true\">&times;</span>\n");
+      out.write("                                                </button>\n");
+      out.write("                                            </div>\n");
       out.write("\n");
-      out.write("                                        ");
-      out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${size}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-      out.write(" Projects \n");
-      out.write("                                    </label>\n");
-      out.write("                                </div>\n");
-      out.write("                                <div class=\"col-xl-1 col-sm-2 col-12 \">\n");
-      out.write("                                    <a href=\"employee-grid.html\" class=\"btn-view \"><i data-feather=\"grid\"></i> </a>\n");
-      out.write("                                </div>\n");
-      out.write("                                <div class=\"col-xl-1 col-sm-2 col-12 \">\n");
-      out.write("                                    <a href=\"#\" class=\"btn-view active\"><i data-feather=\"list\"></i> </a>\n");
-      out.write("                                </div>\n");
-      out.write("                            </div>\n");
-      out.write("                        </div>\n");
+      out.write("                                            <div class=\"modal-body\">\n");
+      out.write("                                                <div class=\"form-group\">\n");
+      out.write("                                                    <label for=\"ProjectName\">Project Name:</label>\n");
+      out.write("                                                    <input type=\"text\" class=\"form-control\" id=\"ProjectName\" name=\"ProjectName\">\n");
+      out.write("                                                </div>\n");
+      out.write("                                                <div class=\"form-group\">\n");
+      out.write("                                                    <label for=\"Description\">Description:</label>\n");
+      out.write("                                                    <input type=\"text\" class=\"form-control\" id=\"Description\" name=\"Description\">\n");
+      out.write("                                                </div>\n");
+      out.write("                                                <div class=\"form-group\">\n");
+      out.write("                                                    <label for=\"SDate\">Start Date:</label>\n");
+      out.write("                                                    <input type=\"date\" class=\"form-control\" id=\"SDate\" name=\"SDate\">\n");
+      out.write("                                                </div>\n");
+      out.write("                                                <div class=\"form-group\">\n");
+      out.write("                                                    <label for=\"EDate\">End Date</label>\n");
+      out.write("                                                    <input type=\"date\" class=\"form-control\" id=\"EDate\" name=\"EDate\">\n");
+      out.write("                                                </div>\n");
+      out.write("                                                <div class=\"form-group\">\n");
+      out.write("                                                    <label for=\"TechS\">Tech Stack</label>\n");
+      out.write("                                                    <input type=\"text\" class=\"form-control\" id=\"TechS\" name=\"TechS\">\n");
+      out.write("                                                </div>\n");
+      out.write("                                            </div>\n");
       out.write("\n");
+      out.write("                                            <div class=\"modal-footer\">\n");
+      out.write("                                                <input type=\"submit\" value=\"EditProject\" class=\"btn btn-primary\" />\n");
+      out.write("                                                <input type=\"reset\" value=\"Reset\" class=\"btn btn-danger\" />\n");
+      out.write("                                            </div>\n");
+      out.write("                                        </div>\n");
+      out.write("                                    </div>\n");
+      out.write("                                </div>\n");
+      out.write("                            </form>-->\n");
+      out.write("                        </div>\n");
       out.write("                        <div class=\"col-xl-12 col-sm-12 col-12 mb-4\">\n");
       out.write("                            <div class=\"card\">\n");
       out.write("                                <div class=\"table-heading\">\n");
       out.write("                                    <h2>All Projects</h2>\n");
       out.write("                                </div>\n");
       out.write("                                <div class=\"table-responsive\">\n");
-      out.write("                                    ");
-      if (_jspx_meth_c_set_1(_jspx_page_context))
-        return;
+      out.write("                                    <table id=\"example\" class=\"display\" style=\"width:100%\">\n");
+      out.write("                                        <thead>\n");
+      out.write("                                            <tr>\n");
+      out.write("                                                <th>STT</th>\n");
+      out.write("                                                <th>Project Name</th>\n");
+      out.write("                                                <th>Start Date</th>\n");
+      out.write("                                                <th>End Date</th>\n");
+      out.write("                                                <th>Tech Stack</th>\n");
+      out.write("                                                <th>Description</th>\n");
+      out.write("                                                <th>Action</th>\n");
+      out.write("                                            </tr>\n");
+      out.write("                                        </thead>\n");
+      out.write("                                        <tbody>\n");
       out.write("\n");
-      out.write("                                    ");
-      if (_jspx_meth_c_if_0(_jspx_page_context))
-        return;
       out.write("\n");
+      out.write("\n");
+      out.write("                                    </table>\n");
       out.write("                                </div>\n");
       out.write("                            </div>\n");
       out.write("                        </div>\n");
@@ -228,7 +445,6 @@ public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("    </body>\n");
       out.write("</html>\n");
       out.write("\n");
-      out.write(" ");
     } catch (Throwable t) {
       if (!(t instanceof SkipPageException)){
         out = _jspx_out;
@@ -240,160 +456,5 @@ public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBa
     } finally {
       _jspxFactory.releasePageContext(_jspx_page_context);
     }
-  }
-
-  private boolean _jspx_meth_c_set_0(PageContext _jspx_page_context)
-          throws Throwable {
-    PageContext pageContext = _jspx_page_context;
-    JspWriter out = _jspx_page_context.getOut();
-    //  c:set
-    org.apache.taglibs.standard.tag.rt.core.SetTag _jspx_th_c_set_0 = (org.apache.taglibs.standard.tag.rt.core.SetTag) _jspx_tagPool_c_set_var_value_nobody.get(org.apache.taglibs.standard.tag.rt.core.SetTag.class);
-    _jspx_th_c_set_0.setPageContext(_jspx_page_context);
-    _jspx_th_c_set_0.setParent(null);
-    _jspx_th_c_set_0.setVar("size");
-    _jspx_th_c_set_0.setValue((java.lang.Object) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${requestScope.AmountOfProject}", java.lang.Object.class, (PageContext)_jspx_page_context, null));
-    int _jspx_eval_c_set_0 = _jspx_th_c_set_0.doStartTag();
-    if (_jspx_th_c_set_0.doEndTag() == javax.servlet.jsp.tagext.Tag.SKIP_PAGE) {
-      _jspx_tagPool_c_set_var_value_nobody.reuse(_jspx_th_c_set_0);
-      return true;
-    }
-    _jspx_tagPool_c_set_var_value_nobody.reuse(_jspx_th_c_set_0);
-    return false;
-  }
-
-  private boolean _jspx_meth_c_set_1(PageContext _jspx_page_context)
-          throws Throwable {
-    PageContext pageContext = _jspx_page_context;
-    JspWriter out = _jspx_page_context.getOut();
-    //  c:set
-    org.apache.taglibs.standard.tag.rt.core.SetTag _jspx_th_c_set_1 = (org.apache.taglibs.standard.tag.rt.core.SetTag) _jspx_tagPool_c_set_var_value_nobody.get(org.apache.taglibs.standard.tag.rt.core.SetTag.class);
-    _jspx_th_c_set_1.setPageContext(_jspx_page_context);
-    _jspx_th_c_set_1.setParent(null);
-    _jspx_th_c_set_1.setVar("result");
-    _jspx_th_c_set_1.setValue((java.lang.Object) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${requestScope.projectList}", java.lang.Object.class, (PageContext)_jspx_page_context, null));
-    int _jspx_eval_c_set_1 = _jspx_th_c_set_1.doStartTag();
-    if (_jspx_th_c_set_1.doEndTag() == javax.servlet.jsp.tagext.Tag.SKIP_PAGE) {
-      _jspx_tagPool_c_set_var_value_nobody.reuse(_jspx_th_c_set_1);
-      return true;
-    }
-    _jspx_tagPool_c_set_var_value_nobody.reuse(_jspx_th_c_set_1);
-    return false;
-  }
-
-  private boolean _jspx_meth_c_if_0(PageContext _jspx_page_context)
-          throws Throwable {
-    PageContext pageContext = _jspx_page_context;
-    JspWriter out = _jspx_page_context.getOut();
-    //  c:if
-    org.apache.taglibs.standard.tag.rt.core.IfTag _jspx_th_c_if_0 = (org.apache.taglibs.standard.tag.rt.core.IfTag) _jspx_tagPool_c_if_test.get(org.apache.taglibs.standard.tag.rt.core.IfTag.class);
-    _jspx_th_c_if_0.setPageContext(_jspx_page_context);
-    _jspx_th_c_if_0.setParent(null);
-    _jspx_th_c_if_0.setTest(((java.lang.Boolean) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${not empty result}", java.lang.Boolean.class, (PageContext)_jspx_page_context, null)).booleanValue());
-    int _jspx_eval_c_if_0 = _jspx_th_c_if_0.doStartTag();
-    if (_jspx_eval_c_if_0 != javax.servlet.jsp.tagext.Tag.SKIP_BODY) {
-      do {
-        out.write("\n");
-        out.write("                                        <table class=\"table  custom-table no-footer\">\n");
-        out.write("                                            <thead>\n");
-        out.write("                                                <tr>\n");
-        out.write("                                                    <th>No.</th>\n");
-        out.write("                                                    <th>Name Project</th>\n");
-        out.write("                                                    <th>Start Date</th>\n");
-        out.write("                                                    <th>End Date</th>\n");
-        out.write("                                                    <th>Tech Stack</th>\n");
-        out.write("                                                    <th>Description</th>\n");
-        out.write("                                                </tr>\n");
-        out.write("                                            </thead>\n");
-        out.write("                                            <tbody>\n");
-        out.write("                                                ");
-        if (_jspx_meth_c_forEach_0((javax.servlet.jsp.tagext.JspTag) _jspx_th_c_if_0, _jspx_page_context))
-          return true;
-        out.write("\n");
-        out.write("                                            </tbody>\n");
-        out.write("                                        </table>\n");
-        out.write("                                    ");
-        int evalDoAfterBody = _jspx_th_c_if_0.doAfterBody();
-        if (evalDoAfterBody != javax.servlet.jsp.tagext.BodyTag.EVAL_BODY_AGAIN)
-          break;
-      } while (true);
-    }
-    if (_jspx_th_c_if_0.doEndTag() == javax.servlet.jsp.tagext.Tag.SKIP_PAGE) {
-      _jspx_tagPool_c_if_test.reuse(_jspx_th_c_if_0);
-      return true;
-    }
-    _jspx_tagPool_c_if_test.reuse(_jspx_th_c_if_0);
-    return false;
-  }
-
-  private boolean _jspx_meth_c_forEach_0(javax.servlet.jsp.tagext.JspTag _jspx_th_c_if_0, PageContext _jspx_page_context)
-          throws Throwable {
-    PageContext pageContext = _jspx_page_context;
-    JspWriter out = _jspx_page_context.getOut();
-    //  c:forEach
-    org.apache.taglibs.standard.tag.rt.core.ForEachTag _jspx_th_c_forEach_0 = (org.apache.taglibs.standard.tag.rt.core.ForEachTag) _jspx_tagPool_c_forEach_varStatus_var_items.get(org.apache.taglibs.standard.tag.rt.core.ForEachTag.class);
-    _jspx_th_c_forEach_0.setPageContext(_jspx_page_context);
-    _jspx_th_c_forEach_0.setParent((javax.servlet.jsp.tagext.Tag) _jspx_th_c_if_0);
-    _jspx_th_c_forEach_0.setVar("dto");
-    _jspx_th_c_forEach_0.setItems((java.lang.Object) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${result}", java.lang.Object.class, (PageContext)_jspx_page_context, null));
-    _jspx_th_c_forEach_0.setVarStatus("counter");
-    int[] _jspx_push_body_count_c_forEach_0 = new int[] { 0 };
-    try {
-      int _jspx_eval_c_forEach_0 = _jspx_th_c_forEach_0.doStartTag();
-      if (_jspx_eval_c_forEach_0 != javax.servlet.jsp.tagext.Tag.SKIP_BODY) {
-        do {
-          out.write("\n");
-          out.write("                                                    <tr>\n");
-          out.write("                                                        <td>\n");
-          out.write("                                                            ");
-          out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${counter.count}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-          out.write("\n");
-          out.write("                                                            <input type=\"hidden\" name=\"txtProjectID\" value=\"");
-          out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${dto.getProjectID()}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-          out.write("\" />\n");
-          out.write("                                                        </td>\n");
-          out.write("                                                        <td>\n");
-          out.write("                                                            ");
-          out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${dto.getNameProject()}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-          out.write("\n");
-          out.write("                                                        </td>\n");
-          out.write("                                                        <td>\n");
-          out.write("                                                            ");
-          out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${dto.getStartDate()}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-          out.write("\n");
-          out.write("                                                        </td>\n");
-          out.write("                                                        <td>\n");
-          out.write("                                                            ");
-          out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${dto.getEndDate()}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-          out.write("\n");
-          out.write("                                                        </td>\n");
-          out.write("                                                        <td>\n");
-          out.write("                                                            ");
-          out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${dto.getTechStack()}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-          out.write("\n");
-          out.write("                                                        </td>\n");
-          out.write("                                                        <td>\n");
-          out.write("                                                            ");
-          out.write((java.lang.String) org.apache.jasper.runtime.PageContextImpl.evaluateExpression("${dto.getDecs()}", java.lang.String.class, (PageContext)_jspx_page_context, null));
-          out.write("\n");
-          out.write("                                                        </td>\n");
-          out.write("                                                    </tr>\n");
-          out.write("                                                ");
-          int evalDoAfterBody = _jspx_th_c_forEach_0.doAfterBody();
-          if (evalDoAfterBody != javax.servlet.jsp.tagext.BodyTag.EVAL_BODY_AGAIN)
-            break;
-        } while (true);
-      }
-      if (_jspx_th_c_forEach_0.doEndTag() == javax.servlet.jsp.tagext.Tag.SKIP_PAGE) {
-        return true;
-      }
-    } catch (Throwable _jspx_exception) {
-      while (_jspx_push_body_count_c_forEach_0[0]-- > 0)
-        out = _jspx_page_context.popBody();
-      _jspx_th_c_forEach_0.doCatch(_jspx_exception);
-    } finally {
-      _jspx_th_c_forEach_0.doFinally();
-      _jspx_tagPool_c_forEach_varStatus_var_items.reuse(_jspx_th_c_forEach_0);
-    }
-    return false;
   }
 }

@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import sample.dto.ProjectManageDTO;
+import sample.dto.inProgress;
 import sample.utils.DBUtils;
 
 /**
@@ -20,46 +21,47 @@ import sample.utils.DBUtils;
  * @author ADMIN
  */
 public class ProjectManageDAO {
+
     private List<ProjectManageDTO> listProject;
-    
-    public void GetProject() throws SQLException{
+
+    public void GetProject() throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         ProjectManageDTO exp = null;
-        try{
+        try {
             con = DBUtils.makeConnection();
-            if(con != null){
+            if (con != null) {
                 String sql = "SELECT [dbo].[Projects].Id, [dbo].[Projects].NameProject, [dbo].[Projects].StartDate, "
                         + "[dbo].[Projects].EndDate, [dbo].[Projects].TechStack, [dbo].[Projects].Description, [dbo].[Projects].Status_id "
                         + "FROM [dbo].[Projects]";
                 pst = con.prepareStatement(sql);
                 rs = pst.executeQuery();
-                while(rs.next()){
+                while (rs.next()) {
                     int id = rs.getInt("Id");
                     String name = rs.getString("NameProject");
-                    String sd = rs.getString("StartDate");
-                    String ed = rs.getString("EndDate");
+                    Date sd = rs.getDate("StartDate");
+                    Date ed = rs.getDate("EndDate");
                     String techS = rs.getString("TechStack");
                     String decs = rs.getString("Description");
                     int status = rs.getInt("Status_id");
-                    exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, status);
-                    if(this.listProject == null){
+                    exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, status, null);
+                    if (this.listProject == null) {
                         listProject = new ArrayList<>();
                     }
                     this.listProject.add(exp);
                 }
             }
-        }catch(Exception ex){
-            
-        }finally{
-            if(rs!=null){
+        } catch (Exception ex) {
+
+        } finally {
+            if (rs != null) {
                 rs.close();
             }
-            if(pst!=null){
+            if (pst != null) {
                 pst.close();
             }
-            if(con!=null){
+            if (con != null) {
                 con.close();
             }
         }
@@ -71,15 +73,15 @@ public class ProjectManageDAO {
     public List<ProjectManageDTO> getListProject() {
         return listProject;
     }
-    
-    public boolean addProject(ProjectManageDTO project) throws SQLException, Exception{
+
+    public boolean addProject(ProjectManageDTO project) throws SQLException, Exception {
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         boolean result = false;
-        try{
+        try {
             con = DBUtils.makeConnection();
-            if(con != null){
+            if (con != null) {
 //                int StatusID = 1;
 //                String resultS = "Select Status_id from [Status] where Status = ?";
 //                pst = con.prepareStatement(resultS);
@@ -95,17 +97,17 @@ public class ProjectManageDAO {
                         + ")";
                 pst = con.prepareStatement(sql);
                 pst.setString(1, project.getNameProject());
-                pst.setString(2, project.getStartDate());
-                pst.setString(3, project.getEndDate());
+                pst.setDate(2, project.getStartDate());
+                pst.setDate(3, project.getEndDate());
                 pst.setString(4, project.getTechStack());
                 pst.setString(5, project.getTechStack());
                 pst.setInt(6, project.getStatus());
                 int effectRow = pst.executeUpdate();
-                if(effectRow > 0 ){
+                if (effectRow > 0) {
                     result = true;
                 }
             }
-        }finally{
+        } finally {
             if (pst != null) {
                 pst.close();
             }
@@ -115,4 +117,206 @@ public class ProjectManageDAO {
         }
         return result;
     }
+
+    public void getInProgressProject() throws SQLException {
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ProjectManageDTO exp = null;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                String sql = "SELECT [dbo].[Projects].Id, [dbo].[Projects].NameProject, [dbo].[Projects].StartDate, "
+                        + "[dbo].[Projects].EndDate, [dbo].[Projects].TechStack, [dbo].[Projects].Description, [dbo].[Projects].Status_id "
+                        + "FROM [dbo].[Projects]";
+                pst = con.prepareStatement(sql);
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    int id = rs.getInt("Id");
+                    String name = rs.getString("NameProject");
+                    Date sd = rs.getDate("StartDate");
+                    Date ed = rs.getDate("EndDate");
+                    String techS = rs.getString("TechStack");
+                    String decs = rs.getString("Description");
+                    int status = rs.getInt("Status_id");
+                    if (this.listProject == null) {
+                        listProject = new ArrayList<>();
+                    }
+                    if (status == 2) {
+                        exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, status, null);
+                        this.listProject.add(exp);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+
+    public void getNoStartProject() throws SQLException {
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ProjectManageDTO exp = null;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                String sql = "SELECT [dbo].[Projects].Id, [dbo].[Projects].NameProject, [dbo].[Projects].StartDate, "
+                        + "[dbo].[Projects].EndDate, [dbo].[Projects].TechStack, [dbo].[Projects].Description, [dbo].[Projects].Status_id "
+                        + "FROM [dbo].[Projects]";
+                pst = con.prepareStatement(sql);
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    int id = rs.getInt("Id");
+                    String name = rs.getString("NameProject");
+                    Date sd = rs.getDate("StartDate");
+                    Date ed = rs.getDate("EndDate");
+                    String techS = rs.getString("TechStack");
+                    String decs = rs.getString("Description");
+                    int status = rs.getInt("Status_id");
+                    if (this.listProject == null) {
+                        listProject = new ArrayList<>();
+                    }
+                    if (status == 1) {
+                        exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, status, null);
+                        this.listProject.add(exp);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+
+    public boolean DeleteProject(int id) throws SQLException {
+        Connection con = null;
+        PreparedStatement pst = null;
+        ProjectManageDTO exp = null;
+        boolean result = false;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                String sql = "Delete from Projects "
+                        + "Where Id = ?";
+                pst = con.prepareStatement(sql);
+                pst.setInt(1, id);
+                int effect = pst.executeUpdate();
+                if (effect > 0) {
+                    result = true;
+                }
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+
+    public boolean UpdateProject(ProjectManageDTO dto) throws SQLException {
+        Connection con = null;
+        PreparedStatement pst = null;
+        boolean result = false;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                String sql = "UPDATE Projects "
+                        + "SET NameProject = ?,StartDate = ?, EndDate = ?, TechStack = ?, Description = ? "
+                        + "WHERE Id = ?";
+                pst = con.prepareStatement(sql);
+                pst.setString(1, dto.getNameProject());
+                pst.setDate(2, dto.getStartDate());
+                pst.setDate(3, dto.getEndDate());
+                pst.setString(4, dto.getTechStack());
+                pst.setString(5, dto.getDecs());
+                pst.setInt(6, dto.getProjectID());
+                int effect = pst.executeUpdate();
+                if (effect > 0) {
+                    result = true;
+                }
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+
+    public List<inProgress> getProcessLine(ProjectManageDTO dto) throws SQLException {
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        List<inProgress> ListProcess = null;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                String sql = "select Task.Task_id, Task.Description, Task.Status_id, Team.Team_ID, Team.Team_Name "
+                        + "from Projects, Task, Team "
+                        + "where Projects.Id = ? and Projects.Id = Task.Project_id and Projects.Id = Team.Project_id";
+
+                pst = con.prepareStatement(sql);
+                pst.setInt(1, dto.getProjectID());
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    inProgress ip = new inProgress();
+                    int Task_id = rs.getInt("Task_id");
+                    String task_desc = rs.getString("Description");
+                    int Status_id = rs.getInt("Status_id");
+                    int team_id = rs.getInt("Team_ID");
+                    String team_name = rs.getString("Team_Name");
+                    ip = new inProgress(Task_id, team_name, Status_id, team_id, team_name, null);
+                    if(ListProcess == null){
+                        ListProcess = new ArrayList<>();
+                    }
+                    ListProcess.add(ip);
+                }
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+
+        return ListProcess;
+    }
+
 }

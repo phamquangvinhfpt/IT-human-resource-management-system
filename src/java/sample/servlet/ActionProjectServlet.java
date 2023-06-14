@@ -6,13 +6,15 @@
 package sample.servlet;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,8 +27,8 @@ import sample.dto.ProjectManageDTO;
  *
  * @author ADMIN
  */
-@WebServlet(name = "ProjectManageServlet", urlPatterns = {"/ProjectManageServlet"})
-public class ProjectManageServlet extends HttpServlet {
+@WebServlet(name = "DeleteProjectServlet", urlPatterns = {"/DeleteProjectServlet"})
+public class ActionProjectServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,24 +42,20 @@ public class ProjectManageServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try(PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+        String action = request.getParameter("action");
+        int id = Integer.parseInt(request.getParameter("id"));
+        try (PrintWriter out = response.getWriter()) {
+            //get data from form delete
+            //delete employee
             ProjectManageDAO dao = new ProjectManageDAO();
-            dao.GetProject();
-            List<ProjectManageDTO> listProject = dao.getListProject();
-//            if(listProject != null){
-//                int size = listProject.size();
-//                request.setAttribute("AmountOfProject", size);
-//                request.setAttribute("projectList", listProject);
-//                Result = "ProjectManage.jsp";
-//            }
-            response.setContentType("application/json");
-            response.setStatus(200);
-            Gson gson = new Gson();
-            String json = gson.toJson(listProject);
-            out.println(json);
+            boolean result = dao.DeleteProject(id);
+            if (result) {
+                out.print("success");
+            } else {
+                out.print("fail");
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ActionProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

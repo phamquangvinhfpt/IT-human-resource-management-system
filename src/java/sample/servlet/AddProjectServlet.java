@@ -5,16 +5,14 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +24,7 @@ import sample.dto.ProjectManageDTO;
  *
  * @author ADMIN
  */
+@MultipartConfig
 @WebServlet(name = "AddProjectServlet", urlPatterns = {"/AddProjectServlet"})
 public class AddProjectServlet extends HttpServlet {
 
@@ -41,30 +40,59 @@ public class AddProjectServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String Result = "error.jsp";
-        try{
+//        String Result = "error.jsp";
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String name = request.getParameter("ProjectName");
             String decs = request.getParameter("Description");
             String SDate = request.getParameter("SDate");
+            Date startDate = Date.valueOf(SDate);
             String EDate = request.getParameter("EDate");
+            Date endDate = Date.valueOf(EDate);
             String TechS = request.getParameter("TechS");
             ProjectManageDAO dao = new ProjectManageDAO();
             int status = 1;
-            ProjectManageDTO project = new ProjectManageDTO(0, name, SDate, EDate, TechS, decs, status);
-            boolean result = dao.addProject(project);
-            
-            if(result){
-                Result = "mainController?btAction=getProjects";
+            Gson json = new Gson();
+            String message = "";
+            if (name.isEmpty() || decs.isEmpty() || SDate.isEmpty() || EDate.isEmpty() || TechS.isEmpty()) {
+                if (name.isEmpty()) {
+                    message += "Name is empty";
+                }
+                if (decs.isEmpty()) {
+                    message += "Description is empty";
+                }
+                if (SDate.isEmpty()) {
+                    message += "Start date is empty";
+                }
+                if (EDate.isEmpty()) {
+                    message += "End date is empty";
+                }
+                if (TechS.isEmpty()) {
+                    message += "Tech Stack is empty";
+                }
+                //response to ajax using Gson
+                out.write(json.toJson(message));
+            } else {
+                ProjectManageDTO project = new ProjectManageDTO(0, name, startDate, endDate, TechS, decs, status, null);
+                boolean result = dao.addProject(project);
+                if (result) {
+                    message += "success";
+                    out.write(json.toJson(message));
+                } else {
+                    message += "fail";
+                    out.write(json.toJson(message));
+                }
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(AddProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            RequestDispatcher rd = request.getRequestDispatcher(Result);
-            rd.forward(request, response);
         }
+//            if(result){
+//                Result = "ProjectManage.jsp";
+//            }
+//        }finally{
+//            RequestDispatcher rd = request.getRequestDispatcher(Result);
+//            rd.forward(request, response);
+//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

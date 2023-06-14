@@ -63,7 +63,7 @@ public class addEmployee extends HttpServlet {
             //parse to date
             java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
             // Create a new User object
-            User user = new User(userIDInt, name, "test",phone, email, username, password, address, birthdayDate, experienceIdInt, 1, teamIDInt, 1);
+            User user = new User(userIDInt, name, "test",phone, email, username, password, address, birthdayDate, experienceIdInt, 1, teamIDInt, "admin");
             // Call DAO to insert new user
             UserDAO dao = new UserDAO();
             boolean checkresult = dao.createUser(user);

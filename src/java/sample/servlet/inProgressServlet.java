@@ -25,8 +25,8 @@ import sample.dto.ProjectManageDTO;
  *
  * @author ADMIN
  */
-@WebServlet(name = "ProjectManageServlet", urlPatterns = {"/ProjectManageServlet"})
-public class ProjectManageServlet extends HttpServlet {
+@WebServlet(name = "inProgressServlet", urlPatterns = {"/inProgressServlet"})
+public class inProgressServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,24 +40,22 @@ public class ProjectManageServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try(PrintWriter out = response.getWriter()) {
+        String Result = "error.jsp";
+        try {
             /* TODO output your page here. You may use following sample code. */
             ProjectManageDAO dao = new ProjectManageDAO();
-            dao.GetProject();
+            dao.getInProgressProject();
             List<ProjectManageDTO> listProject = dao.getListProject();
-//            if(listProject != null){
-//                int size = listProject.size();
-//                request.setAttribute("AmountOfProject", size);
-//                request.setAttribute("projectList", listProject);
-//                Result = "ProjectManage.jsp";
-//            }
-            response.setContentType("application/json");
-            response.setStatus(200);
-            Gson gson = new Gson();
-            String json = gson.toJson(listProject);
-            out.println(json);
+            if(listProject != null){
+                int size = listProject.size();
+                request.setAttribute("projectList", listProject);
+                Result = "inProgressProject.jsp";
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(inProgressServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            RequestDispatcher rd = request.getRequestDispatcher(Result);
+            rd.forward(request, response);
         }
     }
 

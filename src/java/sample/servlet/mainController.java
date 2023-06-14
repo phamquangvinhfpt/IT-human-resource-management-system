@@ -38,10 +38,14 @@ public class mainController extends HttpServlet {
                 url="loginServlet";
             } else if(action.equals("Logout")) {
                 url="logoutServlet";
-            }else if(action.equals("getProjects")){
-                url = "ProjectManageServlet";
             }else if(action.equals("addProject")){
                 url = "AddProjectServlet";
+            }else if(action.equals("viewInProgress")){
+                url = "ViewInProgressProjectServlet";
+            }else if(action.equals("EditProject")){
+                url = "EditProjectServlet";
+            }else if(action.equals("View progress")){
+                url = "ViewInProgressProjectServlet";
             }
             RequestDispatcher rd=request.getRequestDispatcher(url);
             rd.forward(request, response);

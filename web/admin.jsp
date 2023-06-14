@@ -24,7 +24,7 @@
         User user = (User) session.getAttribute("user");
         if (user == null) {
             response.sendRedirect("login.jsp");
-        } else if (user.getRole() != 1) {
+        } else if (user.getRole() != "admin") {
             // If user is not an admin, display an error message
             String errorMessage = "You don't have the necessary privileges to perform this action";
             request.setAttribute("errorMessage", errorMessage);

@@ -24,13 +24,13 @@ public class User {
     private int ExperienceId;
     private int Status;
     private int Team_ID;
-    private int Role;
+    private String Role;
     private String token;
 
     public User() {
     }
 
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, int Role) {
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, String Role) {
         this.UserID = UserID;
         this.Name = Name;
         this.Image = Image;
@@ -48,23 +48,9 @@ public class User {
     
     
 
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, String token) {
-        this.UserID = UserID;
-        this.Name = Name;
-        this.Image = Image;
-        this.Phone = Phone;
-        this.Email = Email;
-        this.Username = Username;
-        this.Password = Password;
-        this.Address = Address;
-        this.Birthday = Birthday;
-        this.ExperienceId = ExperienceId;
-        this.Status = Status;
-        this.Team_ID = Team_ID;
-        this.token = token;
-    }
+    
 
-    public User(String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, int Role) {
+    public User(String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, String Role) {
         this.Name = Name;
         this.Image = Image;
         this.Phone = Phone;
@@ -169,11 +155,11 @@ public class User {
         this.Team_ID = Team_ID;
     }
 
-    public int getRole() {
+    public String getRole() {
         return Role;
     }
 
-    public void setRole(int Role) {
+    public void setRole(String Role) {
         this.Role = Role;
     }
 

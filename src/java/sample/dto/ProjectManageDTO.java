@@ -6,6 +6,7 @@
 package sample.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 /**
  *
@@ -14,16 +15,17 @@ import java.sql.Date;
 public class ProjectManageDTO {
     private int ProjectID;
     private String NameProject;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
     private String techStack;
     private String decs;
     private int status;
+    private List<inProgress> progress;
 
     public ProjectManageDTO() {
     }
 
-    public ProjectManageDTO(int ProjectID, String NameProject, String startDate, String endDate, String techStack, String decs, int status) {
+    public ProjectManageDTO(int ProjectID, String NameProject, Date startDate, Date endDate, String techStack, String decs, int status, List<inProgress> progress) {
         this.ProjectID = ProjectID;
         this.NameProject = NameProject;
         this.startDate = startDate;
@@ -31,6 +33,7 @@ public class ProjectManageDTO {
         this.techStack = techStack;
         this.decs = decs;
         this.status = status;
+        this.progress = progress;
     }
 
     /**
@@ -64,28 +67,28 @@ public class ProjectManageDTO {
     /**
      * @return the startDate
      */
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
     /**
      * @param startDate the startDate to set
      */
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
     /**
      * @return the endDate
      */
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
     /**
      * @param endDate the endDate to set
      */
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
@@ -130,6 +133,22 @@ public class ProjectManageDTO {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    /**
+     * @return the progress
+     */
+    public List<inProgress> getProgress() {
+        return progress;
+    }
+
+    /**
+     * @param progress the progress to set
+     */
+    public void setProgress(List<inProgress> progress) {
+        this.progress = progress;
+    }
+
+    
 
     
 }

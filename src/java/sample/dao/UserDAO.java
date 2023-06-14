@@ -74,7 +74,7 @@ public class UserDAO {
                 if (rs.next()) {
                     user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), rs.getString("Phone"), rs.getString("Email"),
                             rs.getString("Username"), rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), rs.getInt("ExperienceId"),
-                            rs.getInt("Team_ID"), rs.getInt("Status"), rs.getInt("Role_id"));
+                            rs.getInt("Team_ID"), rs.getInt("Status"), rs.getString("Role_id"));
                 }
             }
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public class UserDAO {
                 while (rs.next()) {
                     list.add(new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), rs.getString("Phone"), rs.getString("Email"),
                             rs.getString("Username"), rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), rs.getInt("ExperienceId"),
-                            rs.getInt("Team_ID"), rs.getInt("Status"), rs.getInt("Role_id")));
+                            rs.getInt("Team_ID"), rs.getInt("Status"), rs.getString("Role_id")));
                 }
             }
         } catch (Exception e) {
