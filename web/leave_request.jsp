@@ -124,10 +124,11 @@
     <body>
         <%
             User user = (User) session.getAttribute("user");
+            int leave_balance = 0;
             if (user == null) {
                 response.sendRedirect("login.jsp");
             } else {
-                int leave_balance = user.getLeaveBalances();
+                leave_balance = user.getLeaveBalances();
             }
         %>
         <div class="main-wrapper">
@@ -183,7 +184,7 @@
                                             <div class="col-xl-6 col-sm-6 col-12 ">
                                                 <div class="form-group">
                                                     <label>Remaining Leaves</label>
-                                                    <input type="text" value="10" disabled>
+                                                    <input type="text" value="<%= leave_balance%>" disabled>
                                                 </div>
                                             </div>
                                         </div>

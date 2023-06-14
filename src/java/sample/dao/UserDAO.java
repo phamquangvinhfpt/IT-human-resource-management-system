@@ -331,6 +331,50 @@ public class UserDAO {
         }
         return false;
     }
+
+    //update user leave request
+    public static boolean updateUserLeave(User user) throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                // Update user from User table
+                String sql = "UPDATE [dbo].[User] SET [Name] = ?, [Image] = ?, [Phone] = ?, [Email] = ?, [Username] = ?, [Password] = ?, [Address] = ?, [BirthDay] = ?, [ProjectId] = ?, [Team_ID] = ?, [Role] = ?, [leaveBalances] = ? WHERE [UserID] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setString(1, user.getName());
+                pst.setString(2, user.getImage());
+                pst.setString(3, user.getPhone());
+                pst.setString(4, user.getEmail());
+                pst.setString(5, user.getUsername());
+                pst.setString(6, user.getPassword());
+                pst.setString(7, user.getAddress());
+                pst.setDate(8, user.getBirthday());
+                pst.setInt(9, user.getProjectId());
+                pst.setInt(10, user.getTeam_ID());
+                pst.setString(11, user.getRole());
+                pst.setInt(12, user.getUserID());
+                pst.setInt(13, user.getLeaveBalances());
+                pst.executeUpdate();
+                return true;
+            }
+            // Update user from Role table
+
+        } catch (Exception e) {
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return false;
+    }
     
     public static boolean updateUserProfile(User user) throws Exception {
         Connection cn = null;
@@ -453,5 +497,102 @@ public class UserDAO {
             }
         }
         return user;
+    }
+
+    public static User getUserByID(int UserID) throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        User user = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT [UserID], [Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [ProjectId], [Team_ID], [Role], [leaveBalances] FROM [dbo].[User] WHERE [UserID] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setInt(1, UserID);
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    String Name = rs.getString("Name");
+                    String Image = rs.getString("Image");
+                    String Phone = rs.getString("Phone");
+                    String Email = rs.getString("Email");
+                    String Username = rs.getString("Username");
+                    String Password = rs.getString("Password");
+                    String Address = rs.getString("Address");
+                    Date BirthDay = rs.getDate("BirthDay");
+                    int ProjectId = rs.getInt("ProjectId");
+                    int Team_ID = rs.getInt("Team_ID");
+                    String Role = rs.getString("Role");
+                    int leaveBalances = rs.getInt("leaveBalances");
+                    user = new User(UserID, Name, Image, Phone, Email, Username, Password, Address, BirthDay, ProjectId, Team_ID, Role, leaveBalances);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return user;
+    }
+
+    public static boolean updateLeaveRequest(int id, String status) {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "UPDATE [dbo].[LeaveRequests] SET Status = ? WHERE [UserID] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setString(1, status);
+                pst.setInt(2, id);
+                pst.executeUpdate();
+                return true;
+            }
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return false;
+    }
+
+    public static boolean updateLeaveBalance(int id, int balance) {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "UPDATE [dbo].[User] SET leaveBalances = ? WHERE [UserID] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setInt(1, balance);
+                pst.setInt(2, id);
+                pst.executeUpdate();
+                return true;
+            }
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (pst != null) {
+                    pst.close();
+                }
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return false;
     }
 }

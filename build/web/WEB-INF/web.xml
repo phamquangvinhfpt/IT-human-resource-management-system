@@ -40,6 +40,14 @@
         <servlet-name>leaveReport</servlet-name>
         <servlet-class>sample.servlet.leaveReport</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>updateLeaveBalance</servlet-name>
+        <servlet-class>sample.servlet.updateLeaveBalance</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>updateLeaveRequest</servlet-name>
+        <servlet-class>sample.servlet.updateLeaveRequest</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>mainController</servlet-name>
         <url-pattern>/mainController</url-pattern>
@@ -79,6 +87,14 @@
     <servlet-mapping>
         <servlet-name>leaveReport</servlet-name>
         <url-pattern>/leaveReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateLeaveBalance</servlet-name>
+        <url-pattern>/updateLeaveBalance</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateLeaveRequest</servlet-name>
+        <url-pattern>/updateLeaveRequest</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

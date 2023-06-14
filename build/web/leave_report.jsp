@@ -63,9 +63,16 @@
                         {"data": "EndDate"},
                         {"data": "Reason"},
                         {"data": null,
-                        //create 2 button for each row
+                        //create 2 button for each row if status is pending
                             render: function (data, type, row) {
-                                return '<button class="btn btn-primary btn-sm" onclick="approve()" style="padding: .25rem .5rem !important;">Approve</button> <button class="btn btn-danger btn-sm" onclick="reject()">Reject</button>';
+                                var status = row.Status;
+                                if (status === "Pending") {
+                                    return '<button class="btn btn-success approve">Approve</button><button class="btn btn-danger reject">Reject</button>';
+                                } else if (status === "Approved") {
+                                    return '<label><a class="action_label3">Approved</a></label>';
+                                } else {
+                                    return '<label><a class="action_label4">Rejected</a></label>';
+                                }
                             }
                         }
                     ],
@@ -84,27 +91,127 @@
                             "visible": false,
                             "searchable": false
                         }
+                        //set padding for each column in table
+                        , {
+                            "targets": "_all",
+                            "createdCell": function (td, cellData, rowData, row, col) {
+                                $(td).css('padding', '15px')
+                            }
+                        }
                     ],
-                    "order": [[0, "desc"]],
-                    "initComplete": function () {
-                        // Apply the search
-                        this.api().columns([2]).every(function () {
-                            var that = this;
+                    "order": [[0, "desc"]]
+                });
 
-                            $('#min').on('change', function () {
-                                that.search(this.value).draw();
-                            });
-
-                            $('#max').on('change', function () {
-                                that.search(this.value).draw();
-                            });
+                //set event for button approve leave request in table
+                $('#example tbody').on('click', '.approve', function () {
+                    //get data of row
+                    var data = table.row($(this).parents('tr')).data();
+                    //get status of leave request
+                    var status = data.Status;
+                    var user_id = data.UserID;
+                    //check status of leave request
+                    if(status === "Approved"){
+                        //hide button Reject and show button Approve in middle of row
+                        $(this).hide();
+                        $(this).next().show();
+                    } else if(status === "Rejected") {
+                        //hide button Approve and show button Reject in middle of row
+                        $(this).hide();
+                        $(this).prev().show();
+                    } else {
+                        //if status is pending, show alert
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You want to approve this leave request!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Approve'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                //sent data to server
+                                $.ajax({
+                                    url: "/HRManagement/updateLeaveRequest",
+                                    type: "POST",
+                                    data: {
+                                        "UserID": user_id,
+                                        "Status": "Approved"
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+                                        //reload table
+                                        table.ajax.reload();
+                                        //show alert
+                                        Swal.fire(
+                                                'Approved!',
+                                                'This leave request has been approved.',
+                                                'success'
+                                                )
+                                    },
+                                    error: function (data) {
+                                        console.log(data);
+                                    }
+                                });
+                            }
                         });
                     }
                 });
 
-                // Re-draw the table when the a date range filter changes
-                $('#min, #max').on('change', function () {
-                    table.draw();
+                //set event for button reject leave request in table
+                $('#example tbody').on('click', '.reject', function () {
+                    //get data of row
+                    var data = table.row($(this).parents('tr')).data();
+                    //get status of leave request
+                    var status = data.Status;
+                    var user_id = data.UserID;
+                    //check status of leave request
+                    if(status === "Approved"){
+                        //hide button Reject and show button Approve in middle of row
+                        $(this).hide();
+                        $(this).prev().show();
+                    } else if(status === "Rejected") {
+                        //hide button Approve and show button Reject in middle of row
+                        $(this).hide();
+                        $(this).next().show();
+                    } else {
+                        //if status is pending, show alert
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You want to reject this leave request!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Reject'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                //sent data to server
+                                $.ajax({
+                                    url: "/HRManagement/updateLeaveRequest",
+                                    type: "POST",
+                                    data: {
+                                        "UserID": user_id,
+                                        "Status": "Rejected"
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+                                        //reload table
+                                        table.ajax.reload();
+                                        //show alert
+                                        Swal.fire(
+                                                'Rejected!',
+                                                'This leave request has been rejected.',
+                                                'success'
+                                                )
+                                    },
+                                    error: function (data) {
+                                        console.log(data);
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
             });
         </script>
