@@ -41,10 +41,30 @@ public class LeaveDAO {
         List<LeaveRequest> list = new ArrayList<>();
         try {
             Connection conn = DBUtils.makeConnection();
-            PreparedStatement ps = conn.prepareStatement("select [UserID], [LeaveTypeID], [StartDate], [EndDate], [Reason], [Status], [time_req] from [dbo].[LeaveRequests]");
+            PreparedStatement ps = conn.prepareStatement("select [UserID], [LeaveTypeName], [StartDate], [EndDate], [Reason], [Status], [time_req] from [dbo].[LeaveRequests], [dbo].[LeaveTypes]\n" +
+"WHERE [dbo].[LeaveRequests].[LeaveTypeID] = [dbo].[LeaveTypes].[LeaveTypeID]");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new LeaveRequest(rs.getInt(1), rs.getInt(2), rs.getDate(3), rs.getDate(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+                list.add(new LeaveRequest(rs.getInt(1), rs.getString(2), rs.getDate(3), rs.getDate(4), rs.getString(5), rs.getString(6), rs.getString(7)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public static List<LeaveRequest> getListLeaveRequest(int userID) {
+        List<LeaveRequest> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.makeConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT lr.[UserID], lt.[LeaveTypeName], lr.[StartDate], lr.[EndDate], lr.[Reason], lr.[Status], lr.[time_req]\n"
+                    + "FROM [dbo].[LeaveRequests] lr\n"
+                    + "JOIN [dbo].[LeaveTypes] lt ON lr.[LeaveTypeID] = lt.[LeaveTypeID]\n"
+                    + "WHERE lr.[UserID] = ?");
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new LeaveRequest(rs.getInt(1), rs.getString(2), rs.getDate(3), rs.getDate(4), rs.getString(5), rs.getString(6), rs.getString(7)));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -15,16 +15,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import sample.dao.LeaveDAO;
+import sample.dao.UserDAO;
 import sample.dto.LeaveRequest;
 import sample.dto.User;
 
 /**
  *
- * @author Admin
+ * @author Vinh
  */
-public class leaveRequestPage extends HttpServlet {
+public class leaveReport extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,9 +40,7 @@ public class leaveRequestPage extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            User user = (User) request.getSession().getAttribute("user");
-            int userID = user.getUserID();
-            List<LeaveRequest> list = LeaveDAO.getListLeaveRequest(userID);
+            List<LeaveRequest> list = LeaveDAO.getListLeaveRequest();
             response.setContentType("application/json");
             response.setStatus(200);
             Gson gson = new Gson();
@@ -66,7 +64,7 @@ public class leaveRequestPage extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(leaveRequestPage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(leaveReport.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -84,7 +82,7 @@ public class leaveRequestPage extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (Exception ex) {
-            Logger.getLogger(leaveRequestPage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(leaveReport.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

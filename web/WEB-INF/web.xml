@@ -36,6 +36,10 @@
         <servlet-name>leaveRequestPage</servlet-name>
         <servlet-class>sample.servlet.leaveRequestPage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>leaveReport</servlet-name>
+        <servlet-class>sample.servlet.leaveReport</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>mainController</servlet-name>
         <url-pattern>/mainController</url-pattern>
@@ -71,6 +75,10 @@
     <servlet-mapping>
         <servlet-name>leaveRequestPage</servlet-name>
         <url-pattern>/leaveRequestPage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>leaveReport</servlet-name>
+        <url-pattern>/leaveReport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

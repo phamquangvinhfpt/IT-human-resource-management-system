@@ -64,7 +64,7 @@
                                 return meta.row + meta.settings._iDisplayStart + 1;
                                 }
                         },
-                        {data: 'LeaveTypeID'},
+                        {data: 'LeaveTypeName'},
                         {data: 'StartDate'},
                         {data: 'EndDate'},
                         {data: 'time_req'},
@@ -126,8 +126,9 @@
             User user = (User) session.getAttribute("user");
             if (user == null) {
                 response.sendRedirect("login.jsp");
+            } else {
+                int leave_balance = user.getLeaveBalances();
             }
-            int leave_balance = user.getLeaveBalances();
         %>
         <div class="main-wrapper">
 
@@ -245,7 +246,7 @@
                                             <tbody>
 
                                             </tbody>
-                                            <tfoot>
+<!--                                            <tfoot>
                                                 <tr>
                                                     <th>STT</th>
                                                     <th>Leave Type</th>
@@ -255,7 +256,7 @@
                                                     <th>Notes</th>
                                                     <th>Status</th>
                                                 </tr>
-                                            </tfoot>
+                                            </tfoot>-->
                                         </table>
                                     </div>
                                 </div>

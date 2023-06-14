@@ -413,4 +413,45 @@ public class UserDAO {
         }
         return list;
     }
+
+    //get user by id
+    public static User getUserById(int UserID) throws Exception {
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        User user = null;
+        try {
+            cn = DBUtils.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT [UserID], [Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [ProjectId], [Team_ID], [Role] FROM [dbo].[User] WHERE [UserID] = ?";
+                pst = cn.prepareStatement(sql);
+                pst.setInt(1, UserID);
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    String Name = rs.getString("Name");
+                    String Image = rs.getString("Image");
+                    String Phone = rs.getString("Phone");
+                    String Email = rs.getString("Email");
+                    String Username = rs.getString("Username");
+                    String Password = rs.getString("Password");
+                    String Address = rs.getString("Address");
+                    Date BirthDay = rs.getDate("BirthDay");
+                    int ProjectId = rs.getInt("ProjectId");
+                    int Team_ID = rs.getInt("Team_ID");
+                    String Role = rs.getString("Role");
+                    user = new User(UserID, Name, Image, Phone, Email, Username, Password, Address, BirthDay, ProjectId, Team_ID, Role);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return user;
+    }
 }

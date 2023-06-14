@@ -15,6 +15,7 @@ public class LeaveRequest {
     private int RequestID;
     private int UserID;
     private int LeaveTypeID;
+    private String LeaveTypeName;
     private Date StartDate;
     private Date EndDate;
     private String Reason;
@@ -22,6 +23,17 @@ public class LeaveRequest {
     private String time_req;
     public LeaveRequest() {
     }
+
+    public LeaveRequest(int UserID, String LeaveTypeName, Date StartDate, Date EndDate, String Reason, String Status, String time_req) {
+        this.UserID = UserID;
+        this.LeaveTypeName = LeaveTypeName;
+        this.StartDate = StartDate;
+        this.EndDate = EndDate;
+        this.Reason = Reason;
+        this.Status = Status;
+        this.time_req = time_req;
+    }
+    
 
     public LeaveRequest(int UserID, int LeaveTypeID, Date StartDate, Date EndDate, String Reason, String Status, String time_req) {
         this.UserID = UserID;
