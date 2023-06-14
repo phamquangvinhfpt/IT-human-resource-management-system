@@ -20,16 +20,19 @@
 
         <link rel="stylesheet" href="assets/css/style.css">
 
-        <%-- <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script> --%>
         <script src="https://kit.fontawesome.com/b3fa33d056.js" crossorigin="anonymous"></script>
 
         <!--CDN-->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <!-- Bootstrap JavaScript library -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <%-- import node_modules --%>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             $(document).ready(function () {
                 $('#example').DataTable({
@@ -54,14 +57,108 @@
                             render: function (data, type, row) {
                                 //set id for button = id of employee
                                 return `
-                       <button onclick="deleteEmployee()" style="background-color: white;box-shadow: none" class="btn"><i class="fa-solid fa-trash text-danger"></i></button>
-                       <button onclick="update(this)" style="background-color: white;box-shadow: none" class="btn"><i class="fa-solid fa-pen-to-square text-primary"></i></button>
+                       <button class="btn delete-btn" style="background-color: white;box-shadow: none">
+    <i class="fa-solid fa-trash text-danger"></i>
+</button>
+                       <button class="btn edit-btn" style="background-color: white;box-shadow: none">
+    <i class="fa-solid fa-pen-to-square text-primary"></i>
+</button>
                    `;
                             }
                         }
                     ],
                     "order": [[1, 'asc']]
                 });
+                $('#example tbody').on('click', '.delete-btn', function () {
+                    //get data of row which is clicked
+                    var data = $('#example').DataTable().row($(this).parents('tr')).data();
+                    //set id for button delete
+                    var id = data.ProjectID;
+                    //console id of employee
+                    console.log(id);
+                    //use method post to send id to server
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success',
+                            cancelButton: 'btn btn-danger'
+                        },
+                        buttonsStyling: false
+                    });
+                    swalWithBootstrapButtons.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Delete',
+                        cancelButtonText: 'Cancel!',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            swalWithBootstrapButtons.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                    );
+                            $.ajax({
+                                method: "POST",
+                                action: "DELETE",
+                                url: "/HRManagement/DeleteProjectServlet?id=" + id + "",
+                                success: function (res) {
+                                    console.log(res);
+                                    //remove "" from string
+                                    if (res === "success") {
+                                        swal.fire({
+                                            title: "Success!",
+                                            text: "Delete success!",
+                                            icon: "success",
+                                            button: "OK"
+                                        }).then((value) => {
+                                            //click oke will hide modal and reload datatable
+                                            $("#mymodal").modal("hide");
+                                            $('#example').DataTable().ajax.reload();
+                                        });
+                                    } else {
+                                        swal.fire({
+                                            title: "Error!",
+                                            //remove "" from string
+                                            text: res.replace(/"/g, ""),
+                                            icon: "error",
+                                            button: "OK!"
+                                        });
+                                    }
+                                },
+                                error: function (error) {
+                                    console.log(error);
+                                    sweetAlert("Oops...", "Something went wrong!", "error");
+                                }
+                            });
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons.fire(
+                                    'Cancelled'
+                                    );
+                        }
+                    });
+                });
+                $('#example tbody').on('click', '.edit-btn', function () {
+                    //get data of row which is clicked
+                    var data = $('#example').DataTable().row($(this).parents('tr')).data();
+                    //set id for button edit
+                    var id = data.ProjectID;
+                    //console id of employee
+                    console.log(id);
+                    //show modal
+                    $("#editmodal").modal("show");
+                    //set title for modal
+                    //import a input hidden to modal
+                    $("#editmodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
+                    $("#editmodal input[name='ProjectName']").val(data.NameProject);
+                    $("#editmodal input[name='Description']").val(data.decs);
+                    $("#editmodal input[name='SDate']").val(data.startDate);
+                    $("#editmodal input[name='EDate']").val(data.endDate);
+                    $("#editmodal input[name='TechS']").val(data.techStack);
+                    //sent all data to server
+                });
+
             });
 
             $(document).ready(function () {
@@ -177,7 +274,7 @@
                                 </div>
                             </form>
                         </div>
-                        
+
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="card">
                                 <div class="table-heading">

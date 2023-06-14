@@ -148,8 +148,8 @@ public final class ProjectManage_jsp extends org.apache.jasper.runtime.HttpJspBa
       out.write("                        text: \"You won't be able to revert this!\",\n");
       out.write("                        icon: 'warning',\n");
       out.write("                        showCancelButton: true,\n");
-      out.write("                        confirmButtonText: 'Yes, delete it!',\n");
-      out.write("                        cancelButtonText: 'No, cancel!',\n");
+      out.write("                        confirmButtonText: 'Delete',\n");
+      out.write("                        cancelButtonText: 'Cancel!',\n");
       out.write("                        reverseButtons: true\n");
       out.write("                    }).then((result) => {\n");
       out.write("                        if (result.isConfirmed) {\n");

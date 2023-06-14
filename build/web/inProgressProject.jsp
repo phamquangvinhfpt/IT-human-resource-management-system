@@ -72,7 +72,17 @@
                             console.log(res);
                             //store progress data in session
                             //redirect to ProgressPage.jsp
-                            window.location.href = "ProgressPage.jsp";
+                            if (res === "success") {
+                                window.location.href = "ProgressPage.jsp";
+                            } else {
+                                swal.fire({
+                                    title: "Error!",
+                                    //remove "" from string
+                                    text: res.replace(/"/g, ""),
+                                    icon: "error",
+                                    button: "OK!"
+                                });
+                            }
                         },
                         error: function (error) {
                             console.log(error);

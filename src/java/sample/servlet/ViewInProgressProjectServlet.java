@@ -43,8 +43,8 @@ public class ViewInProgressProjectServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = "error.jsp";
-        try {
+//        String url = "error.jsp";
+        try(PrintWriter out = response.getWriter()){
             /* TODO output your page here. You may use following sample code. */
             int id = Integer.parseInt(request.getParameter("ProjectId"));
             String name = request.getParameter("ProjectName");
@@ -60,15 +60,18 @@ public class ViewInProgressProjectServlet extends HttpServlet {
             if (ip != null) {
                 dto.setProgress(ip);
                 request.setAttribute("DTOProgress", dto);
-                url = "ProgressPage.jsp";
+                out.print("success");
+            }else{
+                out.print("fail");
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ViewInProgressProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
-        }
+        } 
+//        finally {
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
+//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
