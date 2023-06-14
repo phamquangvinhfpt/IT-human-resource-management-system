@@ -160,7 +160,7 @@
                                         </div>
 
                                         <div class="modal-footer">
-                                            <input type="submit" value="Save" class="btn btn-primary" />
+                                            <input type="submit" value="Save" class="btn btn-primary" style="padding: .375rem .75rem !important;" />
                                             <input type="reset" value="Reset" class="btn btn-danger" />
                                         </div>
                                     </div>
@@ -241,7 +241,7 @@
                                         </div>
 
                                         <div class="modal-footer">
-                                            <input type="submit" value="Save" class="btn btn-primary" />
+                                            <input type="submit" value="Save" class="btn btn-primary" style="padding: .375rem .75rem !important;" />
                                             <input type="reset" value="Reset" class="btn btn-danger" />
                                         </div>
                                     </div>
@@ -272,7 +272,9 @@
                                                 <th class="col-sm-1">Action</th>
                                             </tr>
                                         </thead>
-
+                                        <tbody>
+                                            
+                                        </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th></th>

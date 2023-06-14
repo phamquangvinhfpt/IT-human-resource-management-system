@@ -26,11 +26,12 @@ public class User {
     private int ProjectId;
     private int Team_ID;
     private String Role;
+    private int leaveBalances;
 
     public User() {
     }
 
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, String NameProject, String Team_Name, String Role) {
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, String NameProject, String Team_Name, String Role, int leaveBalances) {
         this.UserID = UserID;
         this.Name = Name;
         this.Image = Image;
@@ -43,6 +44,7 @@ public class User {
         this.NameProject = NameProject;
         this.Team_Name = Team_Name;
         this.Role = Role;
+        this.leaveBalances = leaveBalances;
     }
     
 
@@ -201,6 +203,14 @@ public class User {
 
     public void setTeam_ID(int Team_ID) {
         this.Team_ID = Team_ID;
+    }
+
+    public int getLeaveBalances() {
+        return leaveBalances;
+    }
+
+    public void setLeaveBalances(int leaveBalances) {
+        this.leaveBalances = leaveBalances;
     }
     
 }

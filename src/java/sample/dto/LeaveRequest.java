@@ -19,18 +19,18 @@ public class LeaveRequest {
     private Date EndDate;
     private String Reason;
     private String Status;
-
+    private String time_req;
     public LeaveRequest() {
     }
 
-    public LeaveRequest(int RequestID, int UserID, int LeaveTypeID, Date StartDate, Date EndDate, String Reason, String Status) {
-        this.RequestID = RequestID;
+    public LeaveRequest(int UserID, int LeaveTypeID, Date StartDate, Date EndDate, String Reason, String Status, String time_req) {
         this.UserID = UserID;
         this.LeaveTypeID = LeaveTypeID;
         this.StartDate = StartDate;
         this.EndDate = EndDate;
         this.Reason = Reason;
         this.Status = Status;
+        this.time_req = time_req;
     }
 
     public int getRequestID() {
@@ -87,6 +87,14 @@ public class LeaveRequest {
 
     public void setStatus(String Status) {
         this.Status = Status;
+    }
+
+    public String getTime_req() {
+        return time_req;
+    }
+
+    public void setTime_req(String time_req) {
+        this.time_req = time_req;
     }
     
 }

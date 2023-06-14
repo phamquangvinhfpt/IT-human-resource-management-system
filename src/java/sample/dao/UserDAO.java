@@ -64,7 +64,7 @@ public class UserDAO {
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role] "
+                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role], [leaveBalances] "
                         + "from [dbo].[User], [dbo].[Projects],[dbo].[Team] "
                         + "where [Username] = ? and [Password] = ? "
                         + "and [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] "
@@ -77,7 +77,7 @@ public class UserDAO {
                     user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), 
                     rs.getString("Phone"), rs.getString("Email"), rs.getString("Username"), 
                     rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), 
-                    rs.getString("NameProject"), rs.getString("Team_Name"), rs.getString("Role"));
+                    rs.getString("NameProject"), rs.getString("Team_Name"), rs.getString("Role"), rs.getInt("leaveBalances"));
                 }
             }
         } catch (Exception e) {
@@ -104,7 +104,7 @@ public class UserDAO {
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role] "
+                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role], [leaveBalances] "
                         + "from [dbo].[User], [dbo].[Projects],[dbo].[Team] "
                         + "WHERE [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] "
                         + "and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID]";
@@ -114,7 +114,7 @@ public class UserDAO {
                     list.add(new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"), 
                     rs.getString("Phone"), rs.getString("Email"), rs.getString("Username"), 
                     rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"), 
-                    rs.getString("NameProject"), rs.getString("Team_Name"), rs.getString("Role")));
+                    rs.getString("NameProject"), rs.getString("Team_Name"), rs.getString("Role"), rs.getInt("leaveBalances")));
                 }
             }
         } catch (Exception e) {

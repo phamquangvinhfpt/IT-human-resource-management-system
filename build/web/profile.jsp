@@ -36,9 +36,6 @@
             .edit-profile-btn:hover {
                 background-color: #0069d9;
             }
-            .form-edit {
-                display: none;
-            }
         </style>
     </head>
     <body>
@@ -105,11 +102,8 @@
                                         <label>Date of Birth:</label>
                                         <p><%=birthDay%></p>
                                     </div>
-                                </div>
+                                </div>      
                             </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="col">
                                 <div class="card">
                                     <div class="card-body">
                                         <h5>Work Information</h5>
@@ -128,7 +122,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                        </div>
+                        <div class="col-md-9 align-self-center">
+                            
                             <div class="col">
                                 <div class="card form-edit" >
                                     <form id="edit">
@@ -161,7 +157,7 @@
                                                 <input type="date" class="form-control" id="editbirthday" name="birthday" onchange="formatDate(this)">
                                             </div>
                                             <div class="modal-footer">
-                                                <input type="submit" value="Save" class="btn btn-primary" />
+                                                <input type="submit" value="Save" class="btn btn-primary" style="padding: .375rem .75rem !important;"/>
                                                 <input type="reset" value="Reset" class="btn btn-danger" />
                                             </div>
                                         </div>
@@ -170,9 +166,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="edit-profile-wrapper">
-                    <input type="button" class="edit-profile-btn" value="Edit Profile">
                 </div>
             </div>
         </div>
@@ -183,13 +176,6 @@
         <!--<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>-->
         <script src="assets/js/script.js"></script>
         <script>
-            $(document).ready(function () {
-                $(".edit-profile-btn").click(function () {
-                    $(".form-edit").show();
-                    //hide button edit
-                    $(".edit-profile-btn").hide();
-                });
-            });
             $(document).ready(function () {
                 //get value from form
                 $("#edit").submit(function (e) {

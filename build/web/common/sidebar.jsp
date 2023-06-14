@@ -65,7 +65,7 @@
                                     <a href="calendar.html"><img src="assets/img/calendar.svg" alt="sidebar_img"> <span>Calendar</span></a>
                                 </li>
                                 <li>
-                                    <a href="leave.html"><img src="assets/img/leave.svg" alt="sidebar_img"> <span>Leave</span></a>
+                                    <a href="leave_request.jsp"><img src="assets/img/leave.svg" alt="sidebar_img"> <span>Leave</span></a>
                                 </li>
                                 <li>
                                     <a href="review.html"><img src="assets/img/review.svg" alt="sidebar_img"><span>Review</span></a>

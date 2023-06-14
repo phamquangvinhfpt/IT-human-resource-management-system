@@ -28,6 +28,14 @@
         <servlet-name>EditProfileServlet</servlet-name>
         <servlet-class>sample.servlet.EditProfileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>leaveServlet</servlet-name>
+        <servlet-class>sample.servlet.leaveServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>leaveRequestPage</servlet-name>
+        <servlet-class>sample.servlet.leaveRequestPage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>mainController</servlet-name>
         <url-pattern>/mainController</url-pattern>
@@ -55,6 +63,14 @@
     <servlet-mapping>
         <servlet-name>EditProfileServlet</servlet-name>
         <url-pattern>/EditProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>leaveServlet</servlet-name>
+        <url-pattern>/leaveServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>leaveRequestPage</servlet-name>
+        <url-pattern>/leaveRequestPage</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
