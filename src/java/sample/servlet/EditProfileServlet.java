@@ -87,7 +87,10 @@ public class EditProfileServlet extends HttpServlet {
                 message = "Invalid birthday";
             } else {
                 String filePath = getServletContext().getRealPath("") + "images\\" + fileName;
-                user = new User(id, name, fileName, phone, email, username, password, address, birthdayDate, ProjectID, TeamID, "user");
+                //get role from session
+                User userSession = (User) request.getSession().getAttribute("user");
+                String role = userSession.getRole();
+                user = new User(id, name, fileName, phone, email, username, password, address, birthdayDate, ProjectID, TeamID, role);
                 UserDAO dao = new UserDAO();
                 boolean checkresult = dao.updateUser(user);
                 //get user

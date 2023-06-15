@@ -127,7 +127,10 @@
             int leave_balance = 0;
             if (user == null) {
                 response.sendRedirect("login.jsp");
-            } else {
+            } else if(user.getRole().equals("admin")){
+                response.sendRedirect("leave_report.jsp");
+            }
+             else {
                 leave_balance = user.getLeaveBalances();
             }
         %>

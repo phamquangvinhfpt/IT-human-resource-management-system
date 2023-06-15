@@ -64,7 +64,7 @@ public class UserDAO {
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role], [leaveBalances] "
+                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role], [leaveBalances]"
                         + "from [dbo].[User], [dbo].[Projects],[dbo].[Team] "
                         + "where [Username] = ? and [Password] = ? "
                         + "and [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] "
@@ -107,7 +107,7 @@ public class UserDAO {
                 String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role], [leaveBalances] "
                         + "from [dbo].[User], [dbo].[Projects],[dbo].[Team] "
                         + "WHERE [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] "
-                        + "and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID]";
+                        + "and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID] and [Role] = 'user'";
                 pst = cn.prepareStatement(sql);
                 rs = pst.executeQuery();
                 while (rs.next()) {

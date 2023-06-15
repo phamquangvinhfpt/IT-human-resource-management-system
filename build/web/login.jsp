@@ -65,14 +65,13 @@
                                         window.location.href = 'admin.jsp';
                                     });
                                 } else {
-                                    
                                     swal({
                                         title: "Login Success!",
                                         text: "Welcome!",
                                         icon: "success",
                                         button: "OK"
                                     }).then((value) => {
-                                        window.location.href = 'datatable.jsp';
+                                        window.location.href = 'leave_request.jsp';
                                     });
                                 }
                             } else {
@@ -98,11 +97,6 @@
     <body>
         <%
             User user = (User) session.getAttribute("user");
-            if (user != null && user.getRole().equals("admin")) {
-                response.sendRedirect("admin.jsp");
-            } else if (user != null && user.getRole().equals("user")) {
-                response.sendRedirect("datatable.jsp");
-            }
         %>
         <%
             String error_message = (String) request.getAttribute("error");

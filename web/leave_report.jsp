@@ -27,7 +27,19 @@
         <script>
 
             $(document).ready(function () {
+                var employees = [];
 
+    // make an AJAX call to fetch the list of employees
+    $.ajax({
+        url: "/HRManagement/employee",
+        type: "POST",
+        dataType: "json",
+        async: false,
+        success: function (data) {
+            employees = data;
+            console.log(employees);
+        }
+    });
                 // DataTables initialisation
                 var table = $('#example').DataTable({
                     "ajax": {
@@ -46,16 +58,10 @@
                             //get name of employee from UserID in json file
                             , render: function (data, type, row) {
                                 var user_id = row.UserID;
-                                //get list of employee from ajax
-                                var list = $.ajax({
-                                    url: "/HRManagement/employee",
-                                    type: "POST",
-                                    dataType: "json",
-                                    async: false
-                                }).responseJSON;
-                                //get name of employee from list where UserID = user_id
-                                var name = list.find(x => x.UserID === user_id).Name;
-                                return name;
+                    var employee = employees.find(x => x.UserID === user_id);
+                    var name = employee?.Name || 'Unknown';
+                    console.log(user_id);
+                    return name;
                             }
                         },
                         {"data": "LeaveTypeName"},
@@ -221,6 +227,8 @@
             User user = (User) session.getAttribute("user");
             if (user == null) {
                 response.sendRedirect("login.jsp");
+            } else if(user.getRole().equals("user")){
+                response.sendRedirect("leave_request.jsp");
             }
         %>
 

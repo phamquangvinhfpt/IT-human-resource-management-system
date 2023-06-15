@@ -63,12 +63,13 @@ public class loginServlet extends HttpServlet {
 
                 // Check if user is admin
                 String role = UserDAO.getUser(username, password).getRole();
+
                 if (role.equals("admin")) {
                     // User is authorized to access adminresources, show the admin page
 //                    RequestDispatcher dispatcher = request.getRequestDispatcher("admin.jsp");
 //                    dispatcher.forward(request, response);
                     response.getWriter().write("{\"success\": true, \"role\": \"admin\"}");
-                } else if (!role.equals("admin")) {
+                } else if (role.equals("user")) {
                     // User is not authorized, show an error message or redirect to a different page
 //                    RequestDispatcher dispatcher = request.getRequestDispatcher("datatable.jsp");
 //                    dispatcher.forward(request, response);
