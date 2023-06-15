@@ -40,13 +40,13 @@
                             <a href="admin.jsp"><img src="assets/img/home.svg" alt="sidebar_img"> <span>Dashboard</span></a>
                         </li>
                         <li>
-                            <a href="ProjectManage.jsp"><img src="assets/img/project.png" alt="sidebar_img" id="onProject"><span> Projects</span></a>
+                            <a href="ProjectManage.jsp"><img src="assets/img/project.png" alt="sidebar_img"><span> Projects</span></a>
                         </li>
                         <li>
                             <a href="company.html"><img src="assets/img/group.png" alt="sidebar_img"> <span> Team</span></a>
                         </li>
                         <li>
-                            <a href="calendar.html"><img src="assets/img/calendar.svg" alt="sidebar_img"> <span>Calendar</span></a>
+                            <a href="ProgressPage.jsp"><img src="assets/img/progress.png" alt="sidebar_img"> <span>Progress</span></a>
                         </li>
                         <li>
                             <a href="leave.html"><img src="assets/img/leave.svg" alt="sidebar_img"> <span>Leave</span></a>

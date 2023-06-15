@@ -60,7 +60,7 @@
     var pieCtx = document.getElementById("invoice_chart"),
         pieConfig = {
             colors: ['#7638ff', '#ff737b', '#fda600', '#1ec1b0'],
-            series: [55, 40, 20, 10],
+            series: [2, 2, 1, 0],
             chart: {
                 fontFamily: 'Poppins, sans-serif',
                 height: 350, type: 'donut',

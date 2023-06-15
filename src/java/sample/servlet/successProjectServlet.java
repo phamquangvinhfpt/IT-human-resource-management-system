@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,13 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import sample.dao.ProjectManageDAO;
 import sample.dto.ProjectManageDTO;
+import sample.dto.successProject;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "inProgressServlet", urlPatterns = {"/inProgressServlet"})
-public class inProgressServlet extends HttpServlet {
+@WebServlet(name = "successProjectServlet", urlPatterns = {"/successProjectServlet"})
+public class successProjectServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,17 +43,15 @@ public class inProgressServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             ProjectManageDAO dao = new ProjectManageDAO();
-            dao.getInProgressProject();
-            List<ProjectManageDTO> listProject = dao.getListProject();
-            if (listProject != null) {
-                response.setContentType("application/json");
-                response.setStatus(200);
-                Gson gson = new Gson();
-                String json = gson.toJson(listProject);
-                out.println(json);
-            }
+            dao.GetSuccessProject();
+            List<successProject> listProject = dao.getListSuccessProject();
+            response.setContentType("application/json");
+            response.setStatus(200);
+            Gson gson = new Gson();
+            String json = gson.toJson(listProject);
+            out.println(json);
         } catch (SQLException ex) {
-            Logger.getLogger(inProgressServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(successProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

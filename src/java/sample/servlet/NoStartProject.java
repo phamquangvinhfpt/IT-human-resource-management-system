@@ -44,12 +44,6 @@ public class NoStartProject extends HttpServlet {
             ProjectManageDAO dao = new ProjectManageDAO();
             dao.getNoStartProject();
             List<ProjectManageDTO> listProject = dao.getListProject();
-//            if(listProject != null){
-//                int size = listProject.size();
-//                request.setAttribute("AmountOfProject", size);
-//                request.setAttribute("projectList", listProject);
-//                Result = "ProjectManage.jsp";
-//            }
             response.setContentType("application/json");
             response.setStatus(200);
             Gson gson = new Gson();

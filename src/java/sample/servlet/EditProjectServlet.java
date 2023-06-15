@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import sample.dto.ProjectManageDTO;
  *
  * @author ADMIN
  */
+@MultipartConfig
 @WebServlet(name = "EditProjectServlet", urlPatterns = {"/EditProjectServlet"})
 public class EditProjectServlet extends HttpServlet {
 
@@ -39,26 +41,30 @@ public class EditProjectServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = "error.jsp";
-        try {
+        try(PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             int id = Integer.parseInt(request.getParameter("id"));
             String name = request.getParameter("ProjectName");
             String decs = request.getParameter("Description");
-            String SDate = request.getParameter("SDate");
-            Date startDate = Date.valueOf(SDate);
+            int team_id = Integer.parseInt(request.getParameter("team_id"));
             String EDate = request.getParameter("EDate");
-            Date endDate = Date.valueOf(EDate);
+            Date endDate;
             String TechS = request.getParameter("TechS");
-            ProjectManageDTO dto = new ProjectManageDTO(id, name, startDate, endDate, TechS, decs, 0, null);
+            ProjectManageDTO dto = new ProjectManageDTO(id, name, null, null, TechS, decs, 0, null);
+            if(!EDate.isEmpty()){
+                endDate = Date.valueOf(EDate);
+                dto.setEndDate(endDate);
+            }
+            
             ProjectManageDAO dao = new ProjectManageDAO();
-            boolean result = dao.UpdateProject(dto);
+            boolean result = dao.UpdateProject(dto, team_id);
             if(result){
-                url = "ProjectManage.jsp";
+                out.print("success");
+            }else{
+                out.print("Fail");
             }
         } catch (SQLException ex) {
             Logger.getLogger(EditProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            response.sendRedirect(url);
         }
     }
 

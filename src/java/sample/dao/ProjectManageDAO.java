@@ -13,7 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import sample.dto.ProjectManageDTO;
+import sample.dto.TeamDTO;
 import sample.dto.inProgress;
+import sample.dto.successProject;
 import sample.utils.DBUtils;
 
 /**
@@ -23,6 +25,7 @@ import sample.utils.DBUtils;
 public class ProjectManageDAO {
 
     private List<ProjectManageDTO> listProject;
+    private List<successProject> listSuccessProject;
 
     public void GetProject() throws SQLException {
         Connection con = null;
@@ -49,7 +52,58 @@ public class ProjectManageDAO {
                     if (this.listProject == null) {
                         listProject = new ArrayList<>();
                     }
-                    this.listProject.add(exp);
+                    if (status != 3) {
+                        this.listProject.add(exp);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+
+    public void GetSuccessProject() throws SQLException {
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ProjectManageDTO exp = null;
+        TeamDTO team = null;
+        successProject sp = null;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                String sql = "select Projects.Id, Projects.NameProject, Projects.StartDate, Projects.EndDate, Projects.TechStack, Projects.Description "
+                        + "from Projects "
+                        + "where Projects.Status_id = 3";
+                pst = con.prepareStatement(sql);
+                rs = pst.executeQuery();
+                while (rs.next()) {
+                    int id = rs.getInt("Id");
+                    String name = rs.getString("NameProject");
+                    Date sd = rs.getDate("StartDate");
+                    Date ed = rs.getDate("EndDate");
+                    String techS = rs.getString("TechStack");
+                    String decs = rs.getString("Description");
+                    exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, 3, null);
+                    TeamDAO dao = new TeamDAO();
+                    team = dao.GetTeamSuccessProject(id);
+                    if(team != null){
+                        sp = new successProject(exp, team);
+                        if(this.listSuccessProject == null){
+                            listSuccessProject = new ArrayList<>();
+                        }
+                        this.listSuccessProject.add(sp);
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -82,14 +136,7 @@ public class ProjectManageDAO {
         try {
             con = DBUtils.makeConnection();
             if (con != null) {
-//                int StatusID = 1;
-//                String resultS = "Select Status_id from [Status] where Status = ?";
-//                pst = con.prepareStatement(resultS);
-//                pst.setString(1, project.getStatus());
-//                rs = pst.executeQuery();
-//                if(rs.next()){
-//                    StatusID = rs.getInt("Status_id");
-//                }
+
                 String sql = "Insert into [dbo].[Projects]("
                         + "[NameProject], [StartDate], [EndDate], [TechStack], [Description], [Status_id]"
                         + ") Values("
@@ -238,26 +285,47 @@ public class ProjectManageDAO {
         return result;
     }
 
-    public boolean UpdateProject(ProjectManageDTO dto) throws SQLException {
+    public boolean UpdateProject(ProjectManageDTO dto, int team_id) throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
         boolean result = false;
         try {
             con = DBUtils.makeConnection();
             if (con != null) {
-                String sql = "UPDATE Projects "
-                        + "SET NameProject = ?,StartDate = ?, EndDate = ?, TechStack = ?, Description = ? "
-                        + "WHERE Id = ?";
+//                int row = 1;
+                String headS = "UPDATE Projects ";
+                String setBody = "SET NameProject = '" + dto.getNameProject() + "', ";
+                String Edate = "EndDate = '" + dto.getEndDate() + "', ";
+                String remain = "TechStack = '" + dto.getTechStack() + "', Description = '" + dto.getDecs() + "' ";
+                String sql = headS + setBody;
+                if (dto.getEndDate() != null) {
+                    sql += Edate;
+                }
+                sql = sql + remain + "WHERE Id = ?";
                 pst = con.prepareStatement(sql);
-                pst.setString(1, dto.getNameProject());
-                pst.setDate(2, dto.getStartDate());
-                pst.setDate(3, dto.getEndDate());
-                pst.setString(4, dto.getTechStack());
-                pst.setString(5, dto.getDecs());
-                pst.setInt(6, dto.getProjectID());
+//                pst.setString(row, dto.getNameProject());
+//                if(dto.getEndDate() != null){
+//                    pst.setDate(row +1, dto.getEndDate());
+//                }
+//                pst.setString(row +1, dto.getTechStack());
+//                pst.setString(row +1, dto.getDecs());
+                pst.setInt(1, dto.getProjectID());
                 int effect = pst.executeUpdate();
                 if (effect > 0) {
-                    result = true;
+                    if (team_id != 0) {
+                        sql = "UPDATE Team "
+                                + "SET Project_id = ? "
+                                + "WHERE Team_ID = ?";
+                        pst = con.prepareStatement(sql);
+                        pst.setInt(1, dto.getProjectID());
+                        pst.setInt(2, team_id);
+                        int e = pst.executeUpdate();
+                        if (e > 0) {
+                            result = true;
+                        }
+                    } else {
+                        result = true;
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -296,7 +364,7 @@ public class ProjectManageDAO {
                     int team_id = rs.getInt("Team_ID");
                     String team_name = rs.getString("Team_Name");
                     ip = new inProgress(Task_id, team_name, Status_id, team_id, team_name, null);
-                    if(ListProcess == null){
+                    if (ListProcess == null) {
                         ListProcess = new ArrayList<>();
                     }
                     ListProcess.add(ip);
@@ -317,6 +385,13 @@ public class ProjectManageDAO {
         }
 
         return ListProcess;
+    }
+
+    /**
+     * @return the listSuccessProject
+     */
+    public List<successProject> getListSuccessProject() {
+        return listSuccessProject;
     }
 
 }

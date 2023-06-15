@@ -184,6 +184,46 @@
                     });
                 });
             });
+            $(document).ready(function () {
+                $(".editform").on("submit", function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        method: "POST",
+                        url: "/HRManagement/EditProjectServlet",
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            console.log(res);
+                            //remove "" from string
+                            if (res === "success") {
+                                swal.fire({
+                                    title: "Success!",
+                                    text: "Edit success!",
+                                    icon: "success",
+                                    button: "OK"
+                                }).then((value) => {
+                                    //click oke will hide modal and reload datatable
+                                    $("#editmodal").modal("hide");
+                                    $('#example').DataTable().ajax.reload();
+                                });
+                            } else {
+                                swal.fire({
+                                    title: "Error!",
+                                    //remove "" from string
+                                    text: res.replace(/"/g, ""),
+                                    icon: "error",
+                                    button: "OK!"
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            sweetAlert("Oops...", "Something went wrong!", "error");
+                        }
+                    });
+                });
+            });
             //delete employee
             $(document).ready(function () {
                 var table = $('#example').DataTable();
@@ -225,9 +265,9 @@
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="head-link-set">
                                 <ul>
-                                    <li><a href="ProjectManage.jsp" id="allPro">All</a></li>
-                                    <li><a href="inProgressServlet" id="inProgressbtn" >In progress</a></li>
-                                    <li><a class="active" href="noStartProject.jsp" id="noStart">Not Start</a></li>
+                                    <li><a href="ProjectManage.jsp">All</a></li>
+                                    <li><a href="successProject.jsp">Success</a></li>
+                                    <li><a class="active" href="noStartProject.jsp">Not Start</a></li>
                                 </ul>
                                 <button class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Project</button>
                             </div>
@@ -267,6 +307,55 @@
 
                                             <div class="modal-footer">
                                                 <input type="submit" value="addProject" class="btn btn-warning" name="btAction" />
+                                                <input type="reset" value="Reset" class="btn btn-danger" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form class="editform">
+                                <div class="modal fade" data-backdrop='static' id="editmodal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title">Edit Project</h3>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="ProjectName">Project Name:</label>
+                                                    <input type="text" class="form-control" id="ProjectName" name="ProjectName">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Description">Description:</label>
+                                                    <input type="text" class="form-control" id="Description" name="Description">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Team">Team: </label>
+                                                    <select name="team_id">
+                                                        <option value="0" Selected></option>
+                                                        <option value="1">Web Development</option>
+                                                        <option value="2">Marketing</option>
+                                                        <option value="3">Data Analysis</option>
+                                                        <option value="4">Product Development</option>
+                                                        <option value="5">IT Support</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="EDate">End Date</label>
+                                                    <input type="date" class="form-control" id="EDate" name="EDate">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="TechS">Tech Stack</label>
+                                                    <input type="text" class="form-control" id="TechS" name="TechS">
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <input type="submit" value="Save" class="btn btn-warning" />
                                                 <input type="reset" value="Reset" class="btn btn-danger" />
                                             </div>
                                         </div>

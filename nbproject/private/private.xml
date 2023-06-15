@@ -3,11 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ADMIN/University/semester5/SWP/code/IT-human-resource-management-system02/src/java/sample/servlet/mainController.java</file>
+            <file>file:/C:/Users/ADMIN/University/semester5/SWP/code/IT-human-resource-management-system02/web/successProject.jsp</file>
             <file>file:/C:/Users/ADMIN/University/semester5/SWP/code/IT-human-resource-management-system02/web/ProjectManage.jsp</file>
-            <file>file:/C:/Users/ADMIN/University/semester5/SWP/code/IT-human-resource-management-system02/web/inProgressProject.jsp</file>
-            <file>file:/C:/Users/ADMIN/University/semester5/SWP/code/IT-human-resource-management-system02/web/ProgressPage.jsp</file>
-            <file>file:/C:/Users/ADMIN/University/semester5/SWP/code/IT-human-resource-management-system02/src/java/sample/servlet/ViewInProgressProjectServlet.java</file>
+            <file>file:/C:/Users/ADMIN/University/semester5/SWP/code/IT-human-resource-management-system02/web/noStartProject.jsp</file>
         </group>
     </open-files>
 </project-private>
