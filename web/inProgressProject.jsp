@@ -30,51 +30,119 @@
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <!-- Bootstrap JavaScript library -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script>
             $(document).ready(function () {
-                $('#example').DataTable();
-            });
-
-            $(document).ready(function () {
-                $(".myform").on("submit", function (e) {
-                    e.preventDefault();
-                    $.ajax({
-                        method: "POST",
-                        url: "/HRManagement/AddProjectServlet",
-                        data: new FormData(this),
-                        processData: false,
-                        contentType: false,
-                        success: function (res) {
-                            console.log(res);
-                            //reload datatable
-                            $('#example').DataTable().ajax.reload();
-                            //close modal and popup alert success
-                            $('#mymodal').modal('hide');
-                            alert("Add success");
+                $('#example').DataTable({
+                    ajax: {
+                        url: '/HRManagement/inProgressServlet',
+                        dataSrc: ''
+                    },
+                    columns: [
+                        {data: null,
+                            //set identity for row
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
                         },
-                        error: function (error) {
-                            console.log(error);
+                        {data: 'NameProject'
                         }
-                    });
+                        ,
+                        {
+                            data: 'startDate'
+                        }
+                        ,
+                        {
+                            data: 'endDate'
+                        }
+                        ,
+                        {
+                            data: 'techStack'
+                        }
+                        ,
+                        {
+                            data: 'decs'
+                        }
+                        ,
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                //set id for button = id of employee
+                                return `
+        <button class="btn edit-btn" style="background-color: white;box-shadow: none">
+ <i class="fa-solid fa-pen-to-square text-primary"></i>
+</button>
+                   `;
+                            }
+                        }
+                    ],
+                    "order": [[1, 'asc']]
+
+                });
+                $('#example tbody').on('click', '.edit-btn', function () {
+                    //get data of row which is clicked
+                    var data = $('#example').DataTable().row($(this).parents('tr')).data();
+                    //set id for button edit
+                    var id = data.ProjectID;
+                    $("#editmodal").modal("show");
+                    //set title for modal
+                    //import a input hidden to modal
+                    $("#editmodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
+                    //sent all data to server
                 });
             });
-
             $(document).ready(function () {
-                $(".formView").on("submit", function (e) {
+                // Counter to keep track of the number of task description input fields
+                var numTasks = 1;
+
+                // Event listener for the "More" button that appends a new task description input field
+                $('#more').click(function (e) {
                     e.preventDefault();
+                    numTasks++;
+                    var newTask = $('<div class="form-group"><label for="Task">Task Description:</label><input type="text" class="form-control" id="Task' + numTasks + '" name="TaskDesc' + numTasks + '"></div>');
+                    $('#task-container').append(newTask);
+                });
+
+                // Event listener for the form submission
+                $(".editform").on("submit", function (e) {
+                    e.preventDefault();
+
+                    // Get the project ID and create a FormData object to hold the form data
+                    var id = $('#example').DataTable().row({selected: true}).data().ProjectID;
+                    var formData = new FormData();
+
+                    // Append the project ID to the form data
+                    formData.append('ProjectID', id);
+
+                    // Loop through the task description input fields and append their values to the form data
+                    for (var i = 1; i <= numTasks; i++) {
+                        var taskValue = $('#Task' + i).val();
+                        formData.append('descriptions[]', taskValue);
+                    }
+
+                    // Send the form data to the server using an AJAX request
                     $.ajax({
                         method: "POST",
-                        url: "/HRManagement/ViewInProgressProjectServlet",
-                        data: new FormData(this),
-                        processData: false,
+                        url: "/HRManagement/AddTaskServlet",
+                        data: formData,
                         contentType: false,
+                        processData: false,
                         success: function (res) {
                             console.log(res);
-                            //store progress data in session
-                            //redirect to ProgressPage.jsp
+                            //remove "" from string
                             if (res === "success") {
-                                window.location.href = "ProgressPage.jsp";
+                                swal.fire({
+                                    title: "Success!",
+                                    text: "Edit success!",
+                                    icon: "success",
+                                    button: "OK"
+                                }).then((value) => {
+                                    //click oke will hide modal and reload datatable
+                                    $("#editmodal").modal("hide");
+                                    $('#example').DataTable().ajax.reload();
+                                });
                             } else {
+                                console.log(res);
                                 swal.fire({
                                     title: "Error!",
                                     //remove "" from string
@@ -86,12 +154,11 @@
                         },
                         error: function (error) {
                             console.log(error);
+                            sweetAlert("Oops...", "Something went wrong!", "error");
                         }
                     });
                 });
             });
-
-
         </script>
     </head>
     <body>
@@ -113,7 +180,7 @@
                         <div class="col-xl-12 col-sm-12 col-12">
                             <div class="breadcrumb-path mb-4">
                                 <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/dash.png"
+                                    <li class="breadcrumb-item"><a href="admin.jsp"><img src="assets/img/dash.png"
                                                                                           class="mr-2" alt="breadcrumb" />Home</a>
                                     </li>
                                     <li class="breadcrumb-item active"> Projects</li>
@@ -124,18 +191,18 @@
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="head-link-set">
                                 <ul>
-                                    <li><a href="ProjectManage.jsp" id="allPro">All</a></li>
-                                    <li><a class="active" href="inProgressServlet" id="inProgressbtn" >In progress</a></li>
-                                    <li><a href="noStartProject.jsp" id="noStart">Not Start</a></li>
+                                    <li><a href="noStartProject.jsp">Not Start</a></li>
+                                    <li><a class="active" href="inProgressProject.jsp">In progress</a></li>
+                                    <li><a href="successProject.jsp">Success</a></li>
+                                    <li><a href="failProject.jsp">Fail</a></li>
                                 </ul>
-                                <button class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Project</button>
                             </div>
-                            <form class="myform">
-                                <div class="modal fade" data-backdrop='static' id="mymodal">
+                            <form class="editform">
+                                <div class="modal fade" data-backdrop='static' id="editmodal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h3 class="modal-title">Add New Project</h3>
+                                                <h3 class="modal-title">Add Task</h3>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -143,30 +210,15 @@
 
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <label for="ProjectName">Project Name:</label>
-                                                    <input type="text" class="form-control" id="ProjectName" name="ProjectName">
+                                                    <label for="Task">Task Description:</label>
+                                                    <input type="text" class="form-control" id="Task1" name="TaskDesc1">
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="Description">Description:</label>
-                                                    <input type="text" class="form-control" id="Description" name="Description">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="SDate">Start Date:</label>
-                                                    <input type="date" class="form-control" id="SDate" name="SDate">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="EDate">End Date</label>
-                                                    <input type="date" class="form-control" id="EDate" name="EDate">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="TechS">Tech Stack</label>
-                                                    <input type="text" class="form-control" id="TechS" name="TechS">
-                                                </div>
+                                                <div id="task-container"></div>
                                             </div>
 
                                             <div class="modal-footer">
-                                                <input type="submit" value="addProject" class="btn btn-warning" />
-                                                <input type="reset" value="Reset" class="btn btn-danger" />
+                                                <input type="submit" value="Save" class="btn btn-warning" />
+                                                <input type="reset" value="More" id="more" class="btn btn-danger"/>
                                             </div>
                                         </div>
                                     </div>
@@ -178,59 +230,23 @@
                                 <div class="table-heading">
                                     <h2>All Projects</h2>
                                 </div>
-                                <c:set var="result" value="${requestScope.projectList}"/>
-                                <c:if test="${not empty result}">
-                                    <div class="table-responsive">
-                                        <table id="example" class="display" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>STT</th>
-                                                    <th>Project Name</th>
-                                                    <th>Start Date</th>
-                                                    <th>End Date</th>
-                                                    <th>Tech Stack</th>
-                                                    <th>Description</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:forEach var="dto" items="${result}" varStatus="counter">
-                                                <form class="formView">
-                                                    <tr>
-                                                        <td>
-                                                            ${counter.count}
-                                                            <input type="hidden" name="ProjectId" value="${dto.getProjectID()}" />
-                                                        </td>
-                                                        <td>
-                                                            ${dto.getNameProject()}
-                                                            <input type="hidden" name="ProjectName" value="${dto.getNameProject()}" />
-                                                        </td>
-                                                        <td>
-                                                            ${dto.getStartDate()}
-                                                            <input type="hidden" name="SDate" value="${dto.getStartDate()}" />
-                                                        </td>
-                                                        <td>
-                                                            ${dto.getEndDate()}
-                                                            <input type="hidden" name="EDate" value="${dto.getEndDate()}" />
-                                                        </td>
-                                                        <td>
-                                                            ${dto.getTechStack()}
-                                                            <input type="hidden" name="TStack" value="${dto.getTechStack()}" />
-                                                        </td>
-                                                        <td>
-                                                            ${dto.getDecs()}
-                                                            <input type="hidden" name="PDesc" value="${dto.getDecs()}" />
-                                                        </td>
-                                                        <td>
-                                                            <input type="submit" class="btn btn-warning" value="View progress"/>
-                                                        </td>
-                                                    </tr>
-                                                </form>
-                                            </c:forEach>
-                                            </tbody> 
-                                        </table>
-                                    </div>
-                                </c:if>
+                                <div class="table-responsive">
+                                    <table id="example" class="display" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Project Name</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th>Tech Stack</th>
+                                                <th>Description</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

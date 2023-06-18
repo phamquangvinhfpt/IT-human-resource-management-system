@@ -48,6 +48,5 @@ public class successProject {
     public void setTeam(TeamDTO team) {
         this.team = team;
     }
-    
-    
+
 }

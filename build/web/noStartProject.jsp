@@ -141,19 +141,24 @@
                 });
                 $('#example tbody').on('click', '.edit-btn', function () {
                     //get data of row which is clicked
+
                     var data = $('#example').DataTable().row($(this).parents('tr')).data();
                     //set id for button edit
                     var id = data.ProjectID;
-                    //console id of employee
-                    console.log(id);
-                    //show modal
+                    var startDate = data.startDate;
+                    var endDate = data.endDate;
                     $("#editmodal").modal("show");
                     //set title for modal
                     //import a input hidden to modal
                     $("#editmodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
                     $("#editmodal input[name='ProjectName']").val(data.NameProject);
                     $("#editmodal input[name='Description']").val(data.decs);
-                    $("#editmodal input[name='SDate']").val(data.startDate);
+                    $.get("getTeamValid", {startDate: startDate, endDate: endDate}, function (responseJson) {                 // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
+                        var $select = $("#someselect");                           // Locate HTML DOM element with ID "someselect".
+                        $.each(responseJson, function (key, value) {               // Iterate over the JSON object.
+                            $("<option>").val(key).text(value).appendTo($select); // Create HTML <option> element, set its value with currently iterated key and its text content with currently iterated item and finally append it to the <select>.
+                        });
+                    });
                     $("#editmodal input[name='EDate']").val(data.endDate);
                     $("#editmodal input[name='TechS']").val(data.techStack);
                     //sent all data to server
@@ -171,15 +176,29 @@
                         processData: false,
                         contentType: false,
                         success: function (res) {
-                            console.log(res);
-                            //reload datatable
-                            $('#example').DataTable().ajax.reload();
-                            //close modal and popup alert success
-                            $('#mymodal').modal('hide');
-                            alert("Add success");
+                            if (res === "success") {
+                                swal.fire({
+                                    title: "Success!",
+                                    text: "Add success!",
+                                    icon: "success",
+                                    button: "OK"
+                                }).then((value) => {
+                                    //click oke will hide modal and reload datatable
+                                    $("#mymodal").modal("hide");
+                                    $('#example').DataTable().ajax.reload();
+                                });
+                            } else {
+                                swal.fire({
+                                    title: "Error!",
+                                    //remove "" from string
+                                    text: res.replace(/"/g, ""),
+                                    icon: "error",
+                                    button: "OK!"
+                                });
+                            }
                         },
                         error: function (error) {
-                            console.log(error);
+                            sweetAlert("Oops...", "Something went wrong!", "error");
                         }
                     });
                 });
@@ -254,8 +273,8 @@
                         <div class="col-xl-12 col-sm-12 col-12">
                             <div class="breadcrumb-path mb-4">
                                 <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/dash.png"
-                                                                                          class="mr-2" alt="breadcrumb" />Home</a>
+                                    <li class="breadcrumb-item"><a href="admin.jsp"><img src="assets/img/dash.png"
+                                                                                         class="mr-2" alt="breadcrumb" />Home</a>
                                     </li>
                                     <li class="breadcrumb-item active"> Projects</li>
                                 </ul>
@@ -265,13 +284,14 @@
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="head-link-set">
                                 <ul>
-                                    <li><a href="ProjectManage.jsp">All</a></li>
-                                    <li><a href="successProject.jsp">Success</a></li>
                                     <li><a class="active" href="noStartProject.jsp">Not Start</a></li>
+                                    <li><a href="inProgressProject.jsp">In progress</a></li>
+                                    <li><a href="successProject.jsp">Success</a></li>
+                                    <li><a href="failProject.jsp">Fail</a></li>
                                 </ul>
                                 <button class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Project</button>
                             </div>
-                            <form action="mainController">
+                            <form class="myform">
                                 <div class="modal fade" data-backdrop='static' id="mymodal">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -335,13 +355,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="Team">Team: </label>
-                                                    <select name="team_id">
-                                                        <option value="0" Selected></option>
-                                                        <option value="1">Web Development</option>
-                                                        <option value="2">Marketing</option>
-                                                        <option value="3">Data Analysis</option>
-                                                        <option value="4">Product Development</option>
-                                                        <option value="5">IT Support</option>
+                                                    <select id="someselect" name="team_id">
+                                                        <option value="0" selected=""> </option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group">

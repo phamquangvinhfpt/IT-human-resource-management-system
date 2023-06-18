@@ -1,9 +1,12 @@
-<%-- Document : successProject Created on : Jun 14, 2023, 10:52:11 PM Author : ADMIN --%>
+<%-- 
+    Document   : failProject
+    Created on : Jun 18, 2023, 10:46:54 PM
+    Author     : ADMIN
+--%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -60,7 +63,7 @@
 
                 var table = $('#example').DataTable({
                     ajax: {
-                        url: '/HRManagement/successProjectServlet',
+                        url: '/HRManagement/FailProjectServlet',
                         dataSrc: ''
                     },
                     columns: [
@@ -127,7 +130,6 @@
             });
         </script>
     </head>
-
     <body>
         <div class="main-wrapper">
 
@@ -160,8 +162,8 @@
                                 <ul>
                                     <li><a href="noStartProject.jsp">Not Start</a></li>
                                     <li><a href="inProgressProject.jsp">In progress</a></li>
-                                    <li><a class="active" href="successProject.jsp">Success</a></li>
-                                    <li><a href="failProject.jsp">Fail</a></li>
+                                    <li><a href="successProject.jsp">Success</a></li>
+                                    <li><a class="active" href="failProject.jsp">Fail</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -202,5 +204,4 @@
         <script src="assets/plugins/select2/js/select2.min.js"></script>
         <script src="assets/js/script.js"></script>
     </body>
-
 </html>

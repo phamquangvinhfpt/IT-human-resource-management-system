@@ -8,7 +8,6 @@ package sample.servlet;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -17,16 +16,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sample.dao.ProjectManageDAO;
-import sample.dto.ProjectManageDTO;
+import sample.dao.TaskDAO;
 
 /**
  *
  * @author ADMIN
  */
 @MultipartConfig
-@WebServlet(name = "AddProjectServlet", urlPatterns = {"/AddProjectServlet"})
-public class AddProjectServlet extends HttpServlet {
+@WebServlet(name = "AddTaskServlet", urlPatterns = {"/AddTaskServlet"})
+public class AddTaskServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,67 +38,35 @@ public class AddProjectServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-//        String Result = "error.jsp";
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String name = request.getParameter("ProjectName");
-            String decs = request.getParameter("Description");
-            String SDate = request.getParameter("SDate");
-            Date startDate = Date.valueOf(SDate);
-            String EDate = request.getParameter("EDate");
-            Date endDate = Date.valueOf(EDate);
-            String TechS = request.getParameter("TechS");
-            ProjectManageDAO dao = new ProjectManageDAO();
-            int status = 1;
+            int projectID = Integer.parseInt(request.getParameter("ProjectID"));
+            String[] descriptions = request.getParameterValues("descriptions");
+
+            boolean result = false;
+            TaskDAO dao = new TaskDAO();
             Gson json = new Gson();
             String message = "";
-            long millis = System.currentTimeMillis();
-            Date date = new Date(millis);
-            if (name.isEmpty() || decs.isEmpty() || SDate.isEmpty() || EDate.isEmpty() || endDate.before(date) || endDate.before(startDate) || TechS.isEmpty()) {
-                if (name.isEmpty()) {
-                    message += "Name is empty";
-                }
-                if (decs.isEmpty()) {
-                    message += "Description is empty";
-                }
-                if (SDate.isEmpty()) {
-                    message += "Start date is empty";
-                }
-                if (EDate.isEmpty()) {
-                    message += "End date is empty";
-                }
-                if (endDate.before(date)) {
-                    message += "end date is not valid";
-                }
-                if (endDate.before(startDate)) {
-                    message += "end date is not valid";
-                }
-                if (TechS.isEmpty()) {
-                    message += "Tech Stack is empty";
-                }
-                //response to ajax using Gson
+            if (descriptions == null) {
+                message += "Description is empty";
                 out.write(json.toJson(message));
-            } else {
-                ProjectManageDTO project = new ProjectManageDTO(0, name, startDate, endDate, TechS, decs, status, null);
-                boolean result = dao.addProject(project);
-                if (result) {
-                    message += "success";
-                    out.write(json.toJson(message));
-                } else {
-                    message += "fail";
-                    out.write(json.toJson(message));
+            }
+            for (String description : descriptions) {
+                result = dao.addTask(projectID, description);
+                if (result == false) {
+                    break;
                 }
             }
+            if (result) {
+                message += "success";
+                out.write(json.toJson(message));
+            } else {
+                message += "fail";
+                out.write(json.toJson(message));
+            }
         } catch (Exception ex) {
-            Logger.getLogger(AddProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddTaskServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-//            if(result){
-//                Result = "ProjectManage.jsp";
-//            }
-//        }finally{
-//            RequestDispatcher rd = request.getRequestDispatcher(Result);
-//            rd.forward(request, response);
-//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -40,25 +40,25 @@ public class ProjectManageServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try(PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            ProjectManageDAO dao = new ProjectManageDAO();
-            dao.GetProject();
-            List<ProjectManageDTO> listProject = dao.getListProject();
-//            if(listProject != null){
-//                int size = listProject.size();
-//                request.setAttribute("AmountOfProject", size);
-//                request.setAttribute("projectList", listProject);
-//                Result = "ProjectManage.jsp";
-//            }
-            response.setContentType("application/json");
-            response.setStatus(200);
-            Gson gson = new Gson();
-            String json = gson.toJson(listProject);
-            out.println(json);
-        } catch (SQLException ex) {
-            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try(PrintWriter out = response.getWriter()) {
+//            /* TODO output your page here. You may use following sample code. */
+//            ProjectManageDAO dao = new ProjectManageDAO();
+//            dao.GetProject();
+//            List<ProjectManageDTO> listProject = dao.getListProject();
+////            if(listProject != null){
+////                int size = listProject.size();
+////                request.setAttribute("AmountOfProject", size);
+////                request.setAttribute("projectList", listProject);
+////                Result = "ProjectManage.jsp";
+////            }
+//            response.setContentType("application/json");
+//            response.setStatus(200);
+//            Gson gson = new Gson();
+//            String json = gson.toJson(listProject);
+//            out.println(json);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

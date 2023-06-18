@@ -27,17 +27,19 @@ public class ProjectManageDAO {
     private List<ProjectManageDTO> listProject;
     private List<successProject> listSuccessProject;
 
-    public void GetProject() throws SQLException {
+    public void GetFailProject() throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         ProjectManageDTO exp = null;
+        TeamDTO team = null;
+        successProject sp = null;
         try {
             con = DBUtils.makeConnection();
             if (con != null) {
-                String sql = "SELECT [dbo].[Projects].Id, [dbo].[Projects].NameProject, [dbo].[Projects].StartDate, "
-                        + "[dbo].[Projects].EndDate, [dbo].[Projects].TechStack, [dbo].[Projects].Description, [dbo].[Projects].Status_id "
-                        + "FROM [dbo].[Projects]";
+                String sql = "select Projects.Id, Projects.NameProject, Projects.StartDate, Projects.EndDate, Projects.TechStack, Projects.Description "
+                        + "from Projects "
+                        + "where Projects.Status_id = 4";
                 pst = con.prepareStatement(sql);
                 rs = pst.executeQuery();
                 while (rs.next()) {
@@ -47,14 +49,17 @@ public class ProjectManageDAO {
                     Date ed = rs.getDate("EndDate");
                     String techS = rs.getString("TechStack");
                     String decs = rs.getString("Description");
-                    int status = rs.getInt("Status_id");
-                    exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, status, null);
-                    if (this.listProject == null) {
-                        listProject = new ArrayList<>();
+                    exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, 4, null);
+                    TeamDAO dao = new TeamDAO();
+                    team = dao.GetTeamFailProject(id);
+                    if (team != null) {
+                        sp = new successProject(exp, team);
+                        if (this.listSuccessProject == null) {
+                            listSuccessProject = new ArrayList<>();
+                        }
+                        this.listSuccessProject.add(sp);
                     }
-                    if (status != 3) {
-                        this.listProject.add(exp);
-                    }
+                    
                 }
             }
         } catch (Exception ex) {
@@ -97,9 +102,9 @@ public class ProjectManageDAO {
                     exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, 3, null);
                     TeamDAO dao = new TeamDAO();
                     team = dao.GetTeamSuccessProject(id);
-                    if(team != null){
+                    if (team != null) {
                         sp = new successProject(exp, team);
-                        if(this.listSuccessProject == null){
+                        if (this.listSuccessProject == null) {
                             listSuccessProject = new ArrayList<>();
                         }
                         this.listSuccessProject.add(sp);
@@ -235,8 +240,12 @@ public class ProjectManageDAO {
                         listProject = new ArrayList<>();
                     }
                     if (status == 1) {
-                        exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, status, null);
-                        this.listProject.add(exp);
+                        long millis = System.currentTimeMillis();
+                        Date date = new Date(millis);
+                        if (ed.after(date)) {
+                            exp = new ProjectManageDTO(id, name, sd, ed, techS, decs, status, null);
+                            this.listProject.add(exp);
+                        }
                     }
                 }
             }
@@ -269,7 +278,15 @@ public class ProjectManageDAO {
                 pst.setInt(1, id);
                 int effect = pst.executeUpdate();
                 if (effect > 0) {
-                    result = true;
+                    sql = "UPDATE Team "
+                            + "SET Project_id = 0 "
+                            + "WHERE Project_id = ?";
+                    pst = con.prepareStatement(sql);
+                    pst.setInt(1, id);
+                    effect = pst.executeUpdate();
+                    if(effect > 0){
+                        result = true;
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -296,12 +313,17 @@ public class ProjectManageDAO {
                 String headS = "UPDATE Projects ";
                 String setBody = "SET NameProject = '" + dto.getNameProject() + "', ";
                 String Edate = "EndDate = '" + dto.getEndDate() + "', ";
-                String remain = "TechStack = '" + dto.getTechStack() + "', Description = '" + dto.getDecs() + "' ";
+                String status = "Status_id = 2 ";
+                String remain = "TechStack = '" + dto.getTechStack() + "', Description = '" + dto.getDecs() + "', ";
                 String sql = headS + setBody;
                 if (dto.getEndDate() != null) {
                     sql += Edate;
                 }
-                sql = sql + remain + "WHERE Id = ?";
+                sql = sql + remain;
+                if (team_id != 0) {
+                    sql += status;
+                }
+                sql = sql + "WHERE Id = ?";
                 pst = con.prepareStatement(sql);
 //                pst.setString(row, dto.getNameProject());
 //                if(dto.getEndDate() != null){

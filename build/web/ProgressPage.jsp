@@ -76,7 +76,7 @@
                     <button class="btn edit-btn" style="background-color: white;box-shadow: none">
  <i class="fa-solid fa-pen-to-square text-primary"></i>
 </button>
-        <input type="submit" class="btn btn-warning" value="View progress"/>
+        <input type="submit" class="btn btn-warning btn-view" value="View progress"/>
                 `;
                                         }
                                     }
@@ -227,6 +227,7 @@
                         $(document).ready(function () {
                             var pieCtx = document.getElementById("invoice_chart"),
                                 pieConfig = {
+                                    notStart : $("input[name='notStart']").val(),
                                     colors: ['#7638ff', '#ffbc34', '#22cc62', '#ef3737'],
                                     series: [2, 2, 1, 0],
                                     chart: {
@@ -294,7 +295,7 @@
                                                         <p class="mb-2 text-truncate"><i
                                                                 class="fas fa-circle text-primary mr-1"></i> Not Start
                                                         </p>
-                                                        <input type="hidden" id="notStart" value="2">
+                                                        <input type="hidden" name="notStart" value="2">
                                                     </div>
                                                 </div>
                                                 <div class="col-3">
@@ -302,18 +303,21 @@
                                                         <p class="mb-2 text-truncate"><i
                                                                 class="fas fa-circle text-warning mr-1"></i> In Progress
                                                         </p>
+                                                        <input type="hidden" name="progress" value="2">
                                                     </div>
                                                 </div>
                                                 <div class="col-3">
                                                     <div class="mt-4">
                                                         <p class="mb-2 text-truncate"><i
                                                                 class="fas fa-circle text-success mr-1"></i> Success</p>
+                                                        <input type="hidden" name="success" value="1">
                                                     </div>
                                                 </div>
                                                 <div class="col-3">
                                                     <div class="mt-4">
                                                         <p class="mb-2 text-truncate"><i
                                                                 class="fas fa-circle text-danger mr-1"></i> Fail</p>
+                                                        <input type="hidden" name="fail" value="0">
                                                     </div>
                                                 </div>
                                             </div>

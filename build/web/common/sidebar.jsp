@@ -40,7 +40,7 @@
                             <a href="admin.jsp"><img src="assets/img/home.svg" alt="sidebar_img"> <span>Dashboard</span></a>
                         </li>
                         <li>
-                            <a href="ProjectManage.jsp"><img src="assets/img/project.png" alt="sidebar_img"><span> Projects</span></a>
+                            <a href="noStartProject.jsp"><img src="assets/img/project.png" alt="sidebar_img"><span> Projects</span></a>
                         </li>
                         <li>
                             <a href="company.html"><img src="assets/img/group.png" alt="sidebar_img"> <span> Team</span></a>
