@@ -27,31 +27,6 @@
                 background-color: #009efb
 
             }
-            .employee-head ul div{
-                padding: 10px;
-                border-radius: 6px;
-                border-color: #000;
-                background-color: #e3e3e3e6;
-                color: #00882e;
-                font-style: normal;
-                text-transform: uppercase;
-                border-bottom: solid;
-                -webkit-text-stroke: thin;
-            }
-            .decription{
-                -webkit-text-stroke: thin;
-            }
-            .viewteam{
-
-                text-align: end;
-
-            }
-            a {
-                color: #eee;
-            }
-            .customize_popup .close {
-                margin-left: auto;
-            }
         </style>
     </head>
     <body>
@@ -294,132 +269,56 @@
                                     <li><a href="employee-office.html">Offices</a></li>
                                 </ul>
                                 <div>                          
-                                    <a class="btn-add" data-toggle="modal" data-target="#addteam"><i data-feather="plus"></i> Add Team</a>
+                                    <button class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Team </button>
+
+
                                 </div>
                             </div>
                         </div>
+                        <div class="col-xl-12 col-sm-12 col-12 mb-4">
 
-                        <div class="col-xl-12 col-sm-12 col-12 ">
-                            <div class="card m-0">
-                                <div class="card-body pb-0">
-
-                                    <div class="row">
-                                        <c:set var="teams" value="${requestScope.list}"/>
-                                        <c:if test="${not empty teams}">
-                                            <c:forEach var="team" items="${teams}">    
-                                                <div class="col-xl-6">
-                                                    <div class="card">
-                                                        <div class="card-header">
-                                                            <div class="employee-head">
-
-                                                                <h2>${team.getName_Team()}</h2>
-
-
-                                                                <ul>  
-                                                                    <li><div class="edit_delete" ><c:if test= "${team.getStatus_ID() == 1}"> Processing  </c:if>
-                                                                            <c:if test= "${team.getStatus_ID() == 2}"> complete  </c:if> </div>  </li>
-                                                                        <li><a class="edit_employee" data-toggle="modal" data-target="#edit"><i data-feather="edit"></i></a></li>
-                                                                        <li><a class="edit_delete" data-toggle="modal" data-target="#delete"><i data-feather="trash-2"></i></a></li>
-
-                                                                    </ul>
+                        </div>
+                        <div class="col-xl-12 col-sm-12 col-12 mb-4">
+                            <div class="card">
+                                <div class="table-heading">
+                                    <h2>Team List</h2>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table  custom-table no-footer">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Team</th>
+                                                <th>Name Team</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:set var="teams" value="${requestScope.list}"/>
+                                            <c:if test="${not empty teams}">
+                                                <c:forEach var="team" items="${teams}">
+                                                    <tr>
+                                                        <td>${team.getID_Team()}</td>
+                                                        <td><label class="action_label">${team.getName_Team()}</label></td>
+                                                        <td>${team.getDecription()}</td>
+                                                        <td> 
+                                                            <div class="card-body">
+                                                                <div class="card_widget_header">
+                                                                    <a class="btn-add-e " href="teamcontroller?action=edit&teamId=${team.getID_Team()}">Edit</a>
+                                                                    <a class="btn-add-e btn btn-danger" href="teamcontroller?action=delete&teamId=${team.getID_Team()}">Delete</a>
+                                                                    <a class="btn-add-e" href="memberservlet?teamId=${team.getID_Team()}">View members</a>
                                                                 </div>
                                                             </div>
-                                                            <div  class="card-body">
-                                                                <div  class="employee-content">
-                                                                    <div class="col-6" class="employee-image">
-                                                                        <div class="avatar-group">
-                                                                            <div class="avatar-group" >
-                                                                                <div class="decription" >
-                                                                                    <p> ${team.getDecription()}</p>
-                                                                            </div>
+                                                        </td>
 
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:if>
 
-                                                                <div class="viewteam" class="col-6">
-                                                                    <a class="btn-addmember" href="memberservlet?teamId=${team.getID_Team()}">view Team</a>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="customize_popup">
-                                                        <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="staticBackdropLabels1" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered ">
-                                                                <div class="modal-content">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                    <div class="modal-header text-centers border-0">
-                                                                        <h5 class="modal-title text-center" id="staticBackdropLabels1">Are You Sure Want to Delete?</h5>
-                                                                    </div>
-                                                                    <div class="modal-footer text-centers">
-                                                                        <form action="teamcontroller?action=delete&teamId=${team.getID_Team()}" method="POST">
-                                                                            <button type="submit" class="btn btn-primary"> Delete</button>
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="customize_popup">
-                                                        <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="staticBackdropLa" aria-hidden="true">
-                                                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <form action="editteams" >                         
-
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="staticBackdropLa">Edit Employee</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <div class=" col-md-12 p-0">
-                                                                                <div class=" form-popup m-0">
-                                                                                    <input value="${team.getID_Team()}" name="TeamID" type="hidden" class="form-control" required placeholder="ID" >
-                                                                                </div>
-                                                                                <div class=" form-popup m-0">
-                                                                                    <input value="${team.getName_Team()}" name="TeamName" type="text" class="form-control" required placeholder="Name" readonly  >
-                                                                                </div>
-
-                                                                                <div class=" form-popup m-0">
-                                                                                    <input value="${team.getDecription()}" name="Decription" type="text" class="form-control" required  placeholder="Decription">
-                                                                                </div>
-                                                                                <div class=" form-popup m-0">
-                                                                                    <select name="statusid" class="form-control" >
-                                                                                        <c:if test= "${team.getStatus_ID() == 1}"><option value="1" selected=""> Processing</option>
-                                                                                            <option value="2" > Complete </option>       </c:if>
-                                                                                        <c:if test= "${team.getStatus_ID() == 2}"> <option value="2" selected=""> Complete </option>
-                                                                                            <option value="1" > Processing</option></c:if>
-                                                                                        </select>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div class="modal-footer">
-                                                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                            </div>
-                                                                        </form>
-
-                                                                    </div>
-
-                                                                </div>                            
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                            </c:forEach>
-                                        </c:if>  
-                                    </div>
-
-
-
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
+                                                                    <button class="btn btn-danger" onclick="window.history.back()">Back</button>
 
                         </div>
                     </div>
@@ -427,53 +326,44 @@
             </div>
         </div>
 
-
         <form class="myform" action="addteam">
-            <div class="customize_popup">
-                <div class="modal fade" id="addteam" tabindex="-1" aria-labelledby="staticBackdropLabela" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabela">New Team</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class=" col-md-12 p-0">
-                                    <div class=" form-popup m-0">
-                                        <input type="text" placeholder="TeamID" id="TeamID" name="TeamID">
-                                    </div>
-                                    <div class=" form-popup m-0">
-                                        <input type="text" placeholder="Name" id="TeamName" name="TeamName">
-                                    </div>
+            <div class="modal fade" data-backdrop='static' id="mymodal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Add New Team</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
-                                    <div class=" form-popup m-0">
-                                        <input type="text"  placeholder="Description" id="Description" name="Description"  >
-                                    </div>
-                                    <div class=" form-popup m-0">
-                                        <select name="IDstatus" >   
-                                            <option  value="" disabled selected>Status</option>
-                                            <option value="1">Processing</option>
-                                            <option value="2">Complete</option>
-                                        </select>
-                                    </div>
-                                </div>
-
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="TeamID">TeamID:</label>
+                                <input type="number"  id="TeamID" name="TeamID">
                             </div>
-
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Add</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <div class="form-group">
+                                <label for="TeamName">TeamName:</label>
+                                <input type="text"  id="TeamName" name="TeamName">
                             </div>
+                            <div class="form-group">
+                                <label for="IDexp">IDexp</label>
+                                <input type="number" class="form-control" id="IDexp" name="IDexp">
+                            </div>
+                            <div class="form-group">
+                                <label for="Description">Description</label>
+                                <input type="text" class="form-control" id="Description" name="Description">
+                            </div>                                          
+                        </div>
+
+                        <div class="modal-footer">
+                            <input type="submit" value="Add" class="btn btn-primary" />
+                            <input type="reset" value="Reset" class="btn btn-danger" />
                         </div>
                     </div>
-                </div>
+                </div> 
             </div>
         </form>
-
-
-
 
         <script src="assets/js/jquery-3.6.0.min.js"></script>
 

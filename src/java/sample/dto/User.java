@@ -21,17 +21,16 @@ public class User {
     private String Password;
     private String Address;
     private Date Birthday;
-    private String NameProject;
-    private String Team_Name;
-    private int ProjectId;
+    private int ExperienceId;
+    private int Status;
     private int Team_ID;
-    private String Role;
-    private int leaveBalances;
+    private int Role;
+    private String token;
 
     public User() {
     }
 
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, String NameProject, String Team_Name, String Role, int leaveBalances) {
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, int Role) {
         this.UserID = UserID;
         this.Name = Name;
         this.Image = Image;
@@ -41,73 +40,44 @@ public class User {
         this.Password = Password;
         this.Address = Address;
         this.Birthday = Birthday;
-        this.NameProject = NameProject;
-        this.Team_Name = Team_Name;
-        this.Role = Role;
-        this.leaveBalances = leaveBalances;
-    }
-    
-
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ProjectId, int Team_ID, String Role) {
-        this.UserID = UserID;
-        this.Name = Name;
-        this.Image = Image;
-        this.Phone = Phone;
-        this.Email = Email;
-        this.Username = Username;
-        this.Password = Password;
-        this.Address = Address;
-        this.Birthday = Birthday;
-        this.ProjectId = ProjectId;
+        this.ExperienceId = ExperienceId;
+        this.Status = Status;
         this.Team_ID = Team_ID;
         this.Role = Role;
-    }
-
-    public User(String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ProjectId, int Team_ID, String Role) {
-        this.Name = Name;
-        this.Image = Image;
-        this.Phone = Phone;
-        this.Email = Email;
-        this.Username = Username;
-        this.Password = Password;
-        this.Address = Address;
-        this.Birthday = Birthday;
-        this.ProjectId = ProjectId;
-        this.Team_ID = Team_ID;
-        this.Role = Role;
-    }
-
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Address, Date Birthday, int ProjectId, int Team_ID, String Role) {
-        this.UserID = UserID;
-        this.Name = Name;
-        this.Image = Image;
-        this.Phone = Phone;
-        this.Email = Email;
-        this.Username = Username;
-        this.Address = Address;
-        this.Birthday = Birthday;
-        this.ProjectId = ProjectId;
-        this.Team_ID = Team_ID;
-        this.Role = Role;
-    }
-
-    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ProjectId, int Team_ID, String Role, int leaveBalances) {
-        this.UserID = UserID;
-        this.Name = Name;
-        this.Image = Image;
-        this.Phone = Phone;
-        this.Email = Email;
-        this.Username = Username;
-        this.Password = Password;
-        this.Address = Address;
-        this.Birthday = Birthday;
-        this.ProjectId = ProjectId;
-        this.Team_ID = Team_ID;
-        this.Role = Role;
-        this.leaveBalances = leaveBalances;
     }
     
     
+
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, String token) {
+        this.UserID = UserID;
+        this.Name = Name;
+        this.Image = Image;
+        this.Phone = Phone;
+        this.Email = Email;
+        this.Username = Username;
+        this.Password = Password;
+        this.Address = Address;
+        this.Birthday = Birthday;
+        this.ExperienceId = ExperienceId;
+        this.Status = Status;
+        this.Team_ID = Team_ID;
+        this.token = token;
+    }
+
+    public User(String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, int ExperienceId, int Status, int Team_ID, int Role) {
+        this.Name = Name;
+        this.Image = Image;
+        this.Phone = Phone;
+        this.Email = Email;
+        this.Username = Username;
+        this.Password = Password;
+        this.Address = Address;
+        this.Birthday = Birthday;
+        this.ExperienceId = ExperienceId;
+        this.Status = Status;
+        this.Team_ID = Team_ID;
+        this.Role = Role;
+    }
     
     
 
@@ -183,36 +153,12 @@ public class User {
         this.Birthday = Birthday;
     }
 
-    public String getNameProject() {
-        return NameProject;
+    public int getExperienceId() {
+        return ExperienceId;
     }
 
-    public void setNameProject(String NameProject) {
-        this.NameProject = NameProject;
-    }
-
-    public String getTeam_Name() {
-        return Team_Name;
-    }
-
-    public void setTeam_Name(String Team_Name) {
-        this.Team_Name = Team_Name;
-    }
-
-    public String getRole() {
-        return Role;
-    }
-
-    public void setRole(String Role) {
-        this.Role = Role;
-    }
-
-    public int getProjectId() {
-        return ProjectId;
-    }
-
-    public void setProjectId(int ProjectId) {
-        this.ProjectId = ProjectId;
+    public void setExperienceId(int ExperienceId) {
+        this.ExperienceId = ExperienceId;
     }
 
     public int getTeam_ID() {
@@ -223,12 +169,20 @@ public class User {
         this.Team_ID = Team_ID;
     }
 
-    public int getLeaveBalances() {
-        return leaveBalances;
+    public int getRole() {
+        return Role;
     }
 
-    public void setLeaveBalances(int leaveBalances) {
-        this.leaveBalances = leaveBalances;
+    public void setRole(int Role) {
+        this.Role = Role;
+    }
+
+    public int getStatus() {
+        return Status;
+    }
+
+    public void setStatus(int Status) {
+        this.Status = Status;
     }
     
 }

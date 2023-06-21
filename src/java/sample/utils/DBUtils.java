@@ -23,7 +23,7 @@ public class DBUtils {
         String port="1433";
         String uid="sa";
         String pwd="123456";
-        String db="Northwind";
+        String db="HRMS";
         String driver="com.microsoft.sqlserver.jdbc.SQLServerDriver";
         String url="jdbc:sqlserver://" +IP+"\\"+ instanceName+":"+port
                  +";databasename="+db+";user="+uid+";password="+pwd;

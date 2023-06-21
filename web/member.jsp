@@ -5,7 +5,7 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Team</title>
+        <title>Employee</title>
 
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
@@ -268,16 +268,16 @@
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="card">
                                 <div class="table-heading">
-                                    <h2>Member List</h2> 
-                                    
+                                    <h2>Team List</h2>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table  custom-table no-footer">
                                         <thead>
-                                        
                                             <tr>
-                                                <th>STT</th>
+                                                <th>ID Member</th>
                                                 <th>Name</th>
+                                                <th>NumberPhone</th>
+                                                <th>Email</th>
 
                                             </tr>
                                         </thead>
@@ -286,7 +286,10 @@
                                             <c:if test="${not empty members}">
                                                 <c:forEach var="member" items="${members}">
                                                     <tr>
-                                                        <td><label class="action_label">${member.getName()}</label></td>
+                                                        <td>${member.getUserID()}</td>
+                                                        <td><label class="action_label">${team.getName()}</label></td>
+                                                        <td>${member.getPhone()}</td>
+                                                        <td>${member.getEmail()}</td>
 
                                                         <td> 
                                                             <div class="card-body">
