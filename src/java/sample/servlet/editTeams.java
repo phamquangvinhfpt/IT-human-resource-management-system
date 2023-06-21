@@ -7,8 +7,6 @@ package sample.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,8 +19,8 @@ import sample.dto.Team;
  *
  * @author MY MSI
  */
-@WebServlet(name = "editTeam", urlPatterns = {"/editteam"})
-public class editTeam extends HttpServlet {
+@WebServlet(name = "editTeams", urlPatterns = {"/editteams"})
+public class editTeams extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,18 +32,28 @@ public class editTeam extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, Exception {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int pid = Integer.parseInt(request.getParameter("TeamID"));
+        try {
+            int pid = Integer.parseInt(request.getParameter("TeamID"));
             String pname = request.getParameter("TeamName");
-            int pidexp = Integer.parseInt(request.getParameter("IDexperience"));
-            String pdescription = request.getParameter("Description");
+            int pidexp = Integer.parseInt(request.getParameter("statusid"));
+            String pdescription = request.getParameter("Decription");
             TeamDAO team = new TeamDAO();
-            Team teams = new Team(pid, pname, pidexp, pdescription);
+            Team teams = new Team();
+            teams.setName_Team(pname);
+            teams.setDecription(pdescription);
+            teams.setStatus_ID(pidexp);
+            teams.setID_Team(pid);
             team.updateTeam(teams);
             String url = "teamcontroller";
             response.sendRedirect(url);
-
+            
+        } catch (Exception e) {
+        }
+ {
+            
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -60,11 +68,7 @@ public class editTeam extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (Exception ex) {
-            Logger.getLogger(editTeam.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -78,11 +82,7 @@ public class editTeam extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (Exception ex) {
-            Logger.getLogger(editTeam.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

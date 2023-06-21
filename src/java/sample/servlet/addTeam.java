@@ -38,10 +38,14 @@ public class addTeam extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
        int pid = Integer.parseInt(request.getParameter("TeamID"));
             String pname = request.getParameter("TeamName");
-            int pidexp = Integer.parseInt(request.getParameter("IDexp"));
+            int pidstatus = Integer.parseInt(request.getParameter("IDstatus"));
             String pdescription = request.getParameter("Description");
             TeamDAO team = new TeamDAO();
-            Team teams = new Team(pid, pname, pidexp, pdescription);
+            Team teams = new Team();
+            teams.setID_Team(pid);
+            teams.setName_Team(pname);
+            teams.setDecription(pdescription);
+            teams.setStatus_ID(pid);
             team.addTeam(teams);
             response.sendRedirect("teamcontroller");
     }

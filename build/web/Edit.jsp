@@ -31,17 +31,7 @@
         </style>
     <body>
         <div class="container">
-            <div class="table-wrapper">
-                <div class="table-title">
-                    <div class="row">
-                        <div  class="col-sm-6">
-                            <h2>Edit <b>Team</b></h2>
-                        </div>
-                        <div class="col-sm-6">
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
             <div id="editEmployeeModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -73,7 +63,7 @@
 
 
                             <div class="modal-footer">
-                                <a  class="btn btn-danger" href="/teamcontroller">back</a>                          
+                                <a  class="btn btn-danger" href="teamcontroller">back</a>                          
                                 <input type="submit" class="btn btn-success" value="Edit" name="txtEdit"/>
                             </div>
                         </form></div>
