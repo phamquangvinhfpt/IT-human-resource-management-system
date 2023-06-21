@@ -23,7 +23,7 @@ public class TeamDAO {
 
     private List<TeamDTO> listTeam;
 
-    public TeamDTO GetTeamSuccessProject(int projectID) throws SQLException {
+    public TeamDTO GetTeamByID(int projectID) throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -59,6 +59,7 @@ public class TeamDAO {
         }
         return team;
     }
+
 
     public List<TeamDTO> getListTeam() {
         return listTeam;

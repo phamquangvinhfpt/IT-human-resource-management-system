@@ -145,15 +145,19 @@
                     var data = $('#example').DataTable().row($(this).parents('tr')).data();
                     //set id for button edit
                     var id = data.ProjectID;
-                    var startDate = data.startDate;
-                    var endDate = data.endDate;
+                    var startDateStr = data.startDate;
+                    var endDateStr = data.endDate;
+                    var startDate = new Date(startDateStr);
+                    var endDate = new Date(endDateStr);
+                    var isoStartDate = startDate.toISOString().slice(0, 10);
+                    var isoEndDate = endDate.toISOString().slice(0, 10);
                     $("#editmodal").modal("show");
                     //set title for modal
                     //import a input hidden to modal
                     $("#editmodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
                     $("#editmodal input[name='ProjectName']").val(data.NameProject);
                     $("#editmodal input[name='Description']").val(data.decs);
-                    $.get("getTeamValid", {startDate: startDate, endDate: endDate}, function (responseJson) {                 // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
+                    $.get("getTeamValid", {startDate: isoStartDate, endDate: isoEndDate}, function (responseJson) {                 // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
                         var $select = $("#someselect");                           // Locate HTML DOM element with ID "someselect".
                         $.each(responseJson, function (key, value) {               // Iterate over the JSON object.
                             $("<option>").val(key).text(value).appendTo($select); // Create HTML <option> element, set its value with currently iterated key and its text content with currently iterated item and finally append it to the <select>.

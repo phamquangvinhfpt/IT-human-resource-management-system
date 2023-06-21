@@ -20,12 +20,11 @@ public class ProjectManageDTO {
     private String techStack;
     private String decs;
     private int status;
-    private List<inProgress> progress;
 
     public ProjectManageDTO() {
     }
 
-    public ProjectManageDTO(int ProjectID, String NameProject, Date startDate, Date endDate, String techStack, String decs, int status, List<inProgress> progress) {
+    public ProjectManageDTO(int ProjectID, String NameProject, Date startDate, Date endDate, String techStack, String decs, int status) {
         this.ProjectID = ProjectID;
         this.NameProject = NameProject;
         this.startDate = startDate;
@@ -33,7 +32,6 @@ public class ProjectManageDTO {
         this.techStack = techStack;
         this.decs = decs;
         this.status = status;
-        this.progress = progress;
     }
 
     /**
@@ -134,21 +132,4 @@ public class ProjectManageDTO {
         this.status = status;
     }
 
-    /**
-     * @return the progress
-     */
-    public List<inProgress> getProgress() {
-        return progress;
-    }
-
-    /**
-     * @param progress the progress to set
-     */
-    public void setProgress(List<inProgress> progress) {
-        this.progress = progress;
-    }
-
-    
-
-    
 }

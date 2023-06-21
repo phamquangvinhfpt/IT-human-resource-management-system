@@ -81,7 +81,7 @@ public class AddProjectServlet extends HttpServlet {
                 //response to ajax using Gson
                 out.write(json.toJson(message));
             } else {
-                ProjectManageDTO project = new ProjectManageDTO(0, name, startDate, endDate, TechS, decs, status, null);
+                ProjectManageDTO project = new ProjectManageDTO(0, name, startDate, endDate, TechS, decs, status);
                 boolean result = dao.addProject(project);
                 if (result) {
                     message += "success";

@@ -5,6 +5,8 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
@@ -20,7 +22,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import sample.dao.ProjectManageDAO;
+import sample.dao.TeamDAO;
 import sample.dto.ProjectManageDTO;
+import sample.dto.TeamDTO;
 import sample.dto.inProgress;
 
 /**
@@ -44,34 +48,34 @@ public class ViewInProgressProjectServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 //        String url = "error.jsp";
-        try(PrintWriter out = response.getWriter()){
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            int id = Integer.parseInt(request.getParameter("ProjectId"));
-            String name = request.getParameter("ProjectName");
-            String SDate = request.getParameter("SDate");
-            Date Sdate = Date.valueOf(SDate);
-            String Edate = request.getParameter("EDate");
-            Date edate = Date.valueOf(Edate);
-            String Tech = request.getParameter("TStack");
-            String Desc = request.getParameter("PDesc");
-            ProjectManageDTO dto = new ProjectManageDTO(id, name, Sdate, edate, Tech, Desc, id, null);
+            int id = Integer.parseInt(request.getParameter("id"));
+//            int id = 3;
             ProjectManageDAO dao = new ProjectManageDAO();
-            List<inProgress> ip = dao.getProcessLine(dto);
-            if (ip != null) {
-                dto.setProgress(ip);
-                request.setAttribute("DTOProgress", dto);
-                out.print("success");
-            }else{
-                out.print("fail");
+            ProjectManageDTO dto = dao.GetProjectByID(id);
+            List<inProgress> ip = dao.getProcessLine(id);
+            TeamDAO td = new TeamDAO();
+            TeamDTO t = td.GetTeamByID(id);
+            int tasksInProgress = 0;
+            for (inProgress task : ip) {
+                if (task.getStatus_task() == 2) {
+                    tasksInProgress++;
+                }
             }
+            response.setStatus(200);
+            JsonObject jsonObject = new JsonObject();
+            Gson gson = new Gson();
+            jsonObject.add("project", gson.toJsonTree(dto));
+            jsonObject.add("team", gson.toJsonTree(t));
+            jsonObject.addProperty("tasksInProgress", tasksInProgress);
+            jsonObject.addProperty("taskCount", ip.size());
+            jsonObject.add("task", gson.toJsonTree(ip));
+            out.println(jsonObject.toString());
 
         } catch (SQLException ex) {
             Logger.getLogger(ViewInProgressProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-//        finally {
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
-//        }
+        }//            RequestDispatcher rd = request.getRequestDispatcher(url);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

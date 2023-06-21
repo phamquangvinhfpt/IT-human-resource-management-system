@@ -53,7 +53,7 @@ public class EditProjectServlet extends HttpServlet {
             String EDate = request.getParameter("EDate");
             Date endDate;
             String TechS = request.getParameter("TechS");
-            ProjectManageDTO dto = new ProjectManageDTO(id, name, null, null, TechS, decs, 0, null);
+            ProjectManageDTO dto = new ProjectManageDTO(id, name, null, null, TechS, decs, 0);
             if (!EDate.isEmpty()) {
                 endDate = Date.valueOf(EDate);
                 long millis = System.currentTimeMillis();

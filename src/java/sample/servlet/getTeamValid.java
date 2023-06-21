@@ -51,18 +51,13 @@ public class getTeamValid extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String sDate = request.getParameter("startDate");
             String eDate = request.getParameter("endDate");
-//            Date startDate = Date.valueOf(sDate);
-//            Date endDate = Date.valueOf(eDate);
-            SimpleDateFormat outputFormat = new SimpleDateFormat("MMM d, yyyy");
-            String start = outputFormat.format(sDate);
-            String end = outputFormat.format(eDate);
-            java.sql.Date start_Date = java.sql.Date.valueOf(start);
-            java.sql.Date end_Date = java.sql.Date.valueOf(end);
+            Date startDate = Date.valueOf(sDate);
+            Date endDate = Date.valueOf(eDate);
             Map<Integer, String> options = new LinkedHashMap<>();
             TeamDAO dao = new TeamDAO();
             dao.getTeamValid();
             List<TeamDTO> list = dao.getListTeam();
-//            dao.getDateValid(startDate, endDate);
+            dao.getDateValid(startDate, endDate);
             List<TeamDTO> list2 = dao.getListTeam();
             for (TeamDTO teamDTO : list) {
                 options.put(teamDTO.getTeam_Id(), teamDTO.getTeam_name());

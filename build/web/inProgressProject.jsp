@@ -69,14 +69,24 @@
                             render: function (data, type, row) {
                                 //set id for button = id of employee
                                 return `
-        <button class="btn edit-btn" style="background-color: white;box-shadow: none">
+                                <button class="btn edit-btn" style="background-color: white;box-shadow: none">
  <i class="fa-solid fa-pen-to-square text-primary"></i>
+</button>
+        <button class="btn view-btn" style="background-color: white;box-shadow: none">
+ <i class="fa-solid fa-eye text-primary"></i>
 </button>
                    `;
                             }
                         }
                     ],
                     "order": [[1, 'asc']]
+
+                });
+                $('#example tbody').on('click', '.view-btn', function () {
+                    //get data of row which is clicked
+                    var data = $('#example').DataTable().row($(this).parents('tr')).data();
+                    var id = data.ProjectID;
+                    window.location.href = "ProgressPage.jsp?id=" + id;
 
                 });
                 $('#example tbody').on('click', '.edit-btn', function () {
@@ -133,7 +143,7 @@
                             if (res === "success") {
                                 swal.fire({
                                     title: "Success!",
-                                    text: "Edit success!",
+                                    text: "Add success!",
                                     icon: "success",
                                     button: "OK"
                                 }).then((value) => {
@@ -158,6 +168,13 @@
                         }
                     });
                 });
+                $('#editmodal').on('hidden.bs.modal', function () {
+                    numTasks = 1;
+                    $('#task-container').empty();
+//                    $('#task-container').append(
+//                            $('<div class="form-group"><label for="Task">Task Description:</label><input type="text" class="form-control" id="Task1" name="TaskDesc1"></div>')
+//                            );
+                });
             });
         </script>
     </head>
@@ -181,7 +198,7 @@
                             <div class="breadcrumb-path mb-4">
                                 <ul class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="admin.jsp"><img src="assets/img/dash.png"
-                                                                                          class="mr-2" alt="breadcrumb" />Home</a>
+                                                                                         class="mr-2" alt="breadcrumb" />Home</a>
                                     </li>
                                     <li class="breadcrumb-item active"> Projects</li>
                                 </ul>
