@@ -177,10 +177,20 @@ $(document).ready(function () {
             var data = $('#example').DataTable().row($(this).parents('tr')).data();
             //set id for button edit
             var id = data.UserID;
+            //get image
+            var image = data.Image;
             //console id of employee
             console.log(id);
+            //get birthday of employee
+            var birthday = data.Birthday;
+            console.log(birthday);
+            //convert birthday to date to set value for input date
+            var date = new Date(birthday);
+            var isoDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+            console.log(isoDate);
             //show modal
             $("#editmodal").modal("show");
+            var image = data.Image;
             //set title for modal
             //import a input hidden to modal
             $("#editmodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
@@ -192,6 +202,9 @@ $(document).ready(function () {
             $("#editmodal input[name='address']").val(data.Address);
             $("#editmodal input[name='projectName']").val(data.NameProject);
             $("#editmodal input[name='teamName']").val(data.Team_Name);
+            $("#editmodal input[name='birthday']").val(isoDate);
+            //add image to div has id = "avatar"
+            $("#avatar").html("<img src='/HRManagement/images/" + image + "' width='100px' height='100px' alt=''>");
             //sent all data to server
         });
     });

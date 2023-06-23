@@ -188,6 +188,8 @@
                                                 <label for="name">Image:</label>
                                                 <input type="file" class="form-control" id="editimage" name="image">
                                             </div>
+                                            <div id="avatar">
+                                            </div>
                                             <div class="form-group">
                                                 <label for="phone">Phone:</label>
                                                 <input type="text" class="form-control" id="editphone" name="phone">

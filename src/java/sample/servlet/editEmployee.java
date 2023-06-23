@@ -73,57 +73,25 @@ public class editEmployee extends HttpServlet {
             address = new String(address.getBytes("iso-8859-1"), "UTF-8");
             //parse to date
             java.sql.Date birthdayDate = java.sql.Date.valueOf(birthday);
-            fileName = username + fileName.substring(fileName.lastIndexOf("."));
+            // fileName = username + fileName.substring(fileName.lastIndexOf(".")); 
             //create user
             Gson json = new Gson();
             String message = "";
-            if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || address.isEmpty() || birthday.isEmpty() || projectName.isEmpty() || teamName.isEmpty()) {
-                if (name.isEmpty()) {
-                    message += "Name is empty";
-                }
-                if (phone.isEmpty()) {
-                    message += "Phone is empty";
-                }
-                if (email.isEmpty()) {
-                    message += "Email is empty";
-                }
-                if (username.isEmpty()) {
-                    message += "Username is empty";
-                }
-                if (password.isEmpty()) {
-                    message += "Password is empty";
-                }
-                if (address.isEmpty()) {
-                    message += "Address is empty";
-                }
-                if (birthday.equals("")) {
-                    message += "Birthday is empty";
-                }
-                if (projectName.isEmpty()) {
-                    message += "Project is empty";
-                }
-                if (teamName.isEmpty()) {
-                    message += "Team is empty";
-                }
-                //response to ajax using Gson
-                out.write(json.toJson(message));
-            } else if (filePart.getSize() > 1024 * 1024 * 2) {
+            if (filePart.getSize() > 1024 * 1024 * 2) {
                 message += "File size must be less than 2MB";
-                out.write(json.toJson(message));
-            } else if (!filePart.getContentType().equals("image/jpeg") && !filePart.getContentType().equals("image/png")) {
-                message += "File type must be jpeg or png";
-                out.write(json.toJson(message));
-            } else if (userDAO.checkUsernameExist(username)) {
-                message += "Username already exist";
-                out.write(json.toJson(message));
-            } else if (userDAO.checkEmailExist(email)) {
-                message += "Email already exist";
                 out.write(json.toJson(message));
             }//check must input date
             else if (birthdayDate == null) {
                 message += "Please input birthday";
                 out.write(json.toJson(message));
             } else {
+                //if user not change avatar then keep old avatar
+                if (fileName.equals("")) {
+                    User userOld = userDAO.getUserByID(userID);
+                    fileName = userOld.getImage();
+                } else {
+                    fileName = username + fileName.substring(fileName.lastIndexOf("."));
+                }
                 String filePath = getServletContext().getRealPath("") + "images\\" + fileName;
                 User user = new User(userID, name, fileName, phone, email, username, password, address, birthdayDate, ProjectID, TeamID, "user");
                 // Call DAO to insert new user
