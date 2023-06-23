@@ -57,11 +57,33 @@ public class teamMemberServlet extends HttpServlet {
                 response.sendRedirect(url);
             } catch (Exception ex) {
             }
-        } else if(action.equals("add")){
-            int id = Integer.parseInt(request.getParameter("teamId"));
-           memberTeamDAO team = new memberTeamDAO();
-        }
+        } else if (action.equals("add")) {
+                        try {
 
+            int id = Integer.parseInt(request.getParameter("teamId"));
+            memberTeamDAO team = new memberTeamDAO();
+            User member = new User();
+            member.setUserID(1);
+            member.setTeam_ID(id);
+            team.addMemberTeam(member);
+            response.sendRedirect("memberservlet");
+                        }catch(Exception e){
+                            
+                        }
+
+        } else if (action.equals("profile")) {
+            try {
+                int ID_User = Integer.parseInt(request.getParameter("userid"));
+                memberTeamDAO team = new memberTeamDAO();
+                User user = team.getMemberById_User(ID_User);
+                String url = "memberservlet";
+                request.setAttribute("user", user);
+                request.getRequestDispatcher("member.jsp").forward(request, response);
+            } catch (Exception e) {
+
+            }
+
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

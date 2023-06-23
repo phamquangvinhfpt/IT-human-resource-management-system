@@ -12,24 +12,15 @@ package sample.dto;
 public class Team {
     private int ID_Team;
     private String Name_Team;
-   private int ID_Experience;
+    private int ID_Project;
+    private int Leader_ID;
+    private int status_ID;
     private String Decription;
 
-    public Team() {
+    @Override
+    public String toString() {
+        return super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
-
-    public Team(int ID_Team, String Name_Team, int ID_Experience, String Decription) {
-        this.ID_Team = ID_Team;
-        this.Name_Team = Name_Team;
-        this.ID_Experience = ID_Experience;
-        this.Decription = Decription;
-    }
-
-  
-
- 
-
-
 
     public int getID_Team() {
         return ID_Team;
@@ -37,14 +28,6 @@ public class Team {
 
     public void setID_Team(int ID_Team) {
         this.ID_Team = ID_Team;
-    }
-
-    public int getID_Experience() {
-        return ID_Experience;
-    }
-
-    public void setID_Experience(int ID_Experience) {
-        this.ID_Experience = ID_Experience;
     }
 
     public String getName_Team() {
@@ -55,6 +38,30 @@ public class Team {
         this.Name_Team = Name_Team;
     }
 
+    public int getID_Project() {
+        return ID_Project;
+    }
+
+    public void setID_Project(int ID_Project) {
+        this.ID_Project = ID_Project;
+    }
+
+    public int getLeader_ID() {
+        return Leader_ID;
+    }
+
+    public void setLeader_ID(int Leader_ID) {
+        this.Leader_ID = Leader_ID;
+    }
+
+    public int getStatus_ID() {
+        return status_ID;
+    }
+
+    public void setStatus_ID(int status_ID) {
+        this.status_ID = status_ID;
+    }
+
     public String getDecription() {
         return Decription;
     }
@@ -63,9 +70,19 @@ public class Team {
         this.Decription = Decription;
     }
 
-    @Override
-    public String toString() {
-        return "Team{" + "ID_Team=" + ID_Team + ", ID_Experience=" + ID_Experience + ", Name_Team=" + Name_Team + ", Decription=" + Decription + '}';
+    public Team(int ID_Team, String Name_Team, int ID_Project, int Leader_ID, int status_ID, String Decription) {
+        this.ID_Team = ID_Team;
+        this.Name_Team = Name_Team;
+        this.ID_Project = ID_Project;
+        this.Leader_ID = Leader_ID;
+        this.status_ID = status_ID;
+        this.Decription = Decription;
     }
-    
+
+    public Team() {
+    }
+
+
+
+   
 }

@@ -36,6 +36,8 @@ public class TeamDAO {
                 list.add(new Team(rs.getInt(1),
                         rs.getString(2),
                         rs.getInt(3),
+                        rs.getInt(6),
+                        rs.getInt(5),
                         rs.getString(4)));
             }
         } catch (Exception e) {
@@ -54,7 +56,7 @@ public class TeamDAO {
     }
 
     public void deleteTeam(int id) throws Exception {
-        String sql = "DELETE FROM Team WHERE Team_ID = ?";
+        String sql = "DELETE FROM Team WHERE [Team_ID] = ?";
         try {
             conn = DBUtils.makeConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(sql);
@@ -67,10 +69,10 @@ public class TeamDAO {
 
     public static void addTeam(Team team) throws Exception {
         try (Connection conn = DBUtils.makeConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Team (Team_ID,Team_Name,ID_Experience,Decription) values (?, ?, ?, ?)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Team (Team_ID,Team_Name,Project_id,Leader_ID,status_ID,Description) values (?,?, 0, 0,? , ?)");
             stmt.setInt(1, team.getID_Team());
             stmt.setString(2, team.getName_Team());
-            stmt.setInt(3, team.getID_Experience());
+            stmt.setInt(3, team.getStatus_ID());
             stmt.setString(4, team.getDecription());
 
             stmt.executeUpdate();
@@ -89,6 +91,8 @@ public class TeamDAO {
                 return team = new Team(rs.getInt(1),
                         rs.getString(2),
                         rs.getInt(3),
+                        rs.getInt(6),
+                        rs.getInt(5),
                         rs.getString(4));
             }
         } catch (SQLException e) {
@@ -101,17 +105,18 @@ public class TeamDAO {
 
     public void updateTeam(Team team) throws Exception {
         List<Team> list = new ArrayList<>();
-        String query = "update Team set Team_ID = ?, Team_Name =?, ID_Experience = ?,  [Decription] =? where Team_ID = ?";
+        String query = "update Team set Team_Name = ? , Description = ?, status_ID = ? where Team_ID =  ? ";
         try (Connection conn = DBUtils.makeConnection()) {
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(4, team.getDecription());
-            stmt.setString(2, team.getName_Team());
-            stmt.setInt(1, team.getID_Team());
-            stmt.setInt(3, team.getID_Experience());
-           stmt.setInt(5, team.getID_Team());
+            stmt.setString(2, team.getDecription());
+            stmt.setString(1, team.getName_Team());
+            stmt.setInt(3, team.getStatus_ID());    
+            stmt.setInt(4, team.getID_Team());
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+   
+     
 }

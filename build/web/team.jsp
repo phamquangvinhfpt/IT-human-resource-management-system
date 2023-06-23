@@ -382,7 +382,7 @@
                                                                                     <input value="${team.getID_Team()}" name="TeamID" type="hidden" class="form-control" required placeholder="ID" >
                                                                                 </div>
                                                                                 <div class=" form-popup m-0">
-                                                                                    <input value="${team.getName_Team()}" name="TeamName" type="text" class="form-control" required placeholder="Name" readonly  >
+                                                                                    <input value="${team.getName_Team()}" name="TeamName" type="text" class="form-control" required placeholder="Name"  dropzone>
                                                                                 </div>
 
                                                                                 <div class=" form-popup m-0">

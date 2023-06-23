@@ -15,6 +15,11 @@
         <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
 
         <link rel="stylesheet" href="assets/css/style.css">
+        <style>
+             .card_widget_header{
+            text-align: -webkit-right;
+             }
+        </style>
     </head>
     <body>
         <div class="main-wrapper">
@@ -266,18 +271,18 @@
 
                         </div>
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
-                            <div class="card">
+                            <div  class="card" >
                                 <div class="table-heading">
                                     <h2>Member List</h2> 
-                                    
+
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table  custom-table no-footer">
                                         <thead>
-                                        
+
                                             <tr>
-                                                <th>STT</th>
                                                 <th>Name</th>
+                                                <th>Role</th>
 
                                             </tr>
                                         </thead>
@@ -287,16 +292,37 @@
                                                 <c:forEach var="member" items="${members}">
                                                     <tr>
                                                         <td><label class="action_label">${member.getName()}</label></td>
+                                                        <td><label class="action_label" > ${member.getRole()}</label></td>
 
                                                         <td> 
                                                             <div class="card-body">
                                                                 <div class="card_widget_header">
-                                                                    <a href="memberservlet?action=delete&userid=${member.getUserID()}">Delete</a>
+                                                                    <a class="edit_delete" data-toggle="modal" data-target="#delete" ><i data-feather="trash-2"></i></a></li>
                                                                 </div>
                                                             </div>
                                                         </td>
 
                                                     </tr>
+                                                     <div class="customize_popup">
+                                                        <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="staticBackdropLabels1" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered ">
+                                                                <div class="modal-content">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">×</span>
+                                                                    </button>
+                                                                    <div class="modal-header text-centers border-0">
+                                                                        <h5 class="modal-title text-center" id="staticBackdropLabels1">Are You Sure Want to Delete?</h5>
+                                                                    </div>
+                                                                    <div class="modal-footer text-centers">
+                                                                        <form action="memberservlet?action=delete&userid=${member.getUserID()}" method="POST">
+                                                                            <button type="submit" class="btn btn-primary"> Delete</button>
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </c:forEach>
                                             </c:if>
 
@@ -304,7 +330,9 @@
                                     </table>
                                 </div>
                             </div>
+                                   
                         </div>
+                                                  
                     </div>
                     <button class="btn btn-danger" onclick="window.history.back()">Back</button>
                 </div>
