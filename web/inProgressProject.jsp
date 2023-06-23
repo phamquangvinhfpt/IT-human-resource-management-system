@@ -31,6 +31,7 @@
         <!-- Bootstrap JavaScript library -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script>
             $(document).ready(function () {
                 $('#example').DataTable({
@@ -49,11 +50,27 @@
                         }
                         ,
                         {
-                            data: 'startDate'
+                            data: 'startDate',
+                            render: function (data, type, row) {
+                                var momentDate = moment(data);
+                                if (momentDate.isValid()) {
+                                    return momentDate.format('DD-MM-YYYY');
+                                } else {
+                                    return data;
+                                }
+                            }
                         }
                         ,
                         {
-                            data: 'endDate'
+                            data: 'endDate',
+                            render: function (data, type, row) {
+                                var momentDate = moment(data);
+                                if (momentDate.isValid()) {
+                                    return momentDate.format('DD-MM-YYYY');
+                                } else {
+                                    return data;
+                                }
+                            }
                         }
                         ,
                         {

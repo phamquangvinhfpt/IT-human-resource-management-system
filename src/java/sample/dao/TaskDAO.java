@@ -6,6 +6,7 @@
 package sample.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +24,7 @@ public class TaskDAO {
     private List<TaskDTO> listTaskInSucc;
     private List<TaskDTO> listTaskInInPro;
     private List<TaskDTO> listTaskInFail;
+    private List<TaskDTO> listTask;
 
     public List<TaskDTO> getListTaskInSucc() {
         return listTaskInSucc;
@@ -36,6 +38,10 @@ public class TaskDAO {
         return listTaskInFail;
     }
 
+    public List<TaskDTO> getListTask() {
+        return listTask;
+    }
+
     public void GetTask(int ProjectID) throws SQLException {
         Connection con = null;
         PreparedStatement pst = null;
@@ -44,7 +50,7 @@ public class TaskDAO {
         try {
             con = DBUtils.makeConnection();
             if (con != null) {
-                String sql = "select Task.Task_id, Task.Description, Task.Status_id from Task "
+                String sql = "select Task.Task_id, Task.Description, EndDate, Task.Status_id from Task "
                         + "where Task.Project_id = ?";
                 pst = con.prepareStatement(sql);
                 pst.setInt(1, ProjectID);
@@ -52,8 +58,13 @@ public class TaskDAO {
                 while (rs.next()) {
                     int id = rs.getInt("Task_id");
                     String desc = rs.getString("Description");
+                    Date endate = rs.getDate("EndDate");
                     int status = rs.getInt("Status_id");
-                    dto = new TaskDTO(id, desc, ProjectID, status);
+                    dto = new TaskDTO(id, desc, endate, ProjectID, status);
+                    if (this.listTask == null) {
+                        listTask = new ArrayList<>();
+                    }
+                    this.listTask.add(dto);
                     if (status == 3) {
                         if (this.listTaskInSucc == null) {
                             listTaskInSucc = new ArrayList<>();
@@ -65,12 +76,6 @@ public class TaskDAO {
                             listTaskInInPro = new ArrayList<>();
                         }
                         this.listTaskInInPro.add(dto);
-                    }
-                    if (status == 4) {
-                        if (this.listTaskInFail == null) {
-                            listTaskInFail = new ArrayList<>();
-                        }
-                        this.listTaskInFail.add(dto);
                     }
                 }
             }
@@ -103,6 +108,50 @@ public class TaskDAO {
                 pst = con.prepareStatement(sql);
                 pst.setString(1, Desc);
                 pst.setInt(2, ProjectID);
+                int effectRow = pst.executeUpdate();
+                if (effectRow > 0) {
+                    result = true;
+                }
+            }
+        } finally {
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+
+    public int getTaskSize(List<TaskDTO> dto) {
+        int size = 0;
+        try {
+            for (TaskDTO taskDTO : dto) {
+                while (taskDTO != null) {
+                    size++;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return size;
+    }
+    
+    public boolean deleteTask(int taskID) throws SQLException, Exception {
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        boolean result = false;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+
+                String sql = "Delete from Task "
+                        + "where Task_id= ?";
+                pst = con.prepareStatement(sql);
+                pst.setInt(1, taskID);
                 int effectRow = pst.executeUpdate();
                 if (effectRow > 0) {
                     result = true;

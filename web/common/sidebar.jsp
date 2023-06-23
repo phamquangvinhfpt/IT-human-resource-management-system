@@ -46,7 +46,7 @@
                             <a href="company.html"><img src="assets/img/group.png" alt="sidebar_img"> <span> Team</span></a>
                         </li>
                         <li>
-                            <a href="ProgressPage.jsp"><img src="assets/img/progress.png" alt="sidebar_img"> <span>Progress</span></a>
+                            <a href="#"><img src="assets/img/progress.png" alt="sidebar_img"> <span>tolo</span></a>
                         </li>
                         <li>
                             <a href="leave.html"><img src="assets/img/leave.svg" alt="sidebar_img"> <span>Leave</span></a>

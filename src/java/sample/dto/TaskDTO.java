@@ -5,6 +5,8 @@
  */
 package sample.dto;
 
+import java.sql.Date;
+
 /**
  *
  * @author ADMIN
@@ -12,15 +14,17 @@ package sample.dto;
 public class TaskDTO {
     private int ID;
     private String Desc;
+    private Date EndDate;
     private int projectID;
     private int status;
 
     public TaskDTO() {
     }
 
-    public TaskDTO(int ID, String Desc, int projectID, int status) {
+    public TaskDTO(int ID, String Desc, Date EndDate, int projectID, int status) {
         this.ID = ID;
         this.Desc = Desc;
+        this.EndDate = EndDate;
         this.projectID = projectID;
         this.status = status;
     }
@@ -54,6 +58,20 @@ public class TaskDTO {
     }
 
     /**
+     * @return the EndDate
+     */
+    public Date getEndDate() {
+        return EndDate;
+    }
+
+    /**
+     * @param EndDate the EndDate to set
+     */
+    public void setEndDate(Date EndDate) {
+        this.EndDate = EndDate;
+    }
+
+    /**
      * @return the projectID
      */
     public int getProjectID() {
@@ -80,6 +98,6 @@ public class TaskDTO {
     public void setStatus(int status) {
         this.status = status;
     }
-    
+
     
 }

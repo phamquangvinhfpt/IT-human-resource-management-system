@@ -33,6 +33,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script>
             $(document).ready(function () {
                 $('#example').DataTable({
@@ -48,8 +49,26 @@
                             }
                         },
                         {data: 'NameProject'},
-                        {data: 'startDate'},
-                        {data: 'endDate'},
+                        {data: 'startDate',
+                            render: function (data, type, row) {
+                                var momentDate = moment(data);
+                                if (momentDate.isValid()) {
+                                    return momentDate.format('DD-MM-YYYY');
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
+                        {data: 'endDate',
+                            render: function (data, type, row) {
+                                var momentDate = moment(data);
+                                if (momentDate.isValid()) {
+                                    return momentDate.format('DD-MM-YYYY');
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
                         {data: 'techStack'},
                         {data: 'decs'},
                         {
@@ -149,11 +168,9 @@
                     var endDateStr = data.endDate;
                     var startDate = new Date(startDateStr);
                     var endDate = new Date(endDateStr);
-                    var isoStartDate = startDate.toISOString().slice(0, 10);
-                    var isoEndDate = endDate.toISOString().slice(0, 10);
+                    var isoStartDate = new Date(startDate.getTime() - (startDate.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+                    var isoEndDate = new Date(endDate.getTime() - (endDate.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
                     $("#editmodal").modal("show");
-                    //set title for modal
-                    //import a input hidden to modal
                     $("#editmodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
                     $("#editmodal input[name='ProjectName']").val(data.NameProject);
                     $("#editmodal input[name='Description']").val(data.decs);
@@ -163,9 +180,22 @@
                             $("<option>").val(key).text(value).appendTo($select); // Create HTML <option> element, set its value with currently iterated key and its text content with currently iterated item and finally append it to the <select>.
                         });
                     });
-                    $("#editmodal input[name='EDate']").val(data.endDate);
+                    $("#editmodal input[name='EDate']").val(isoEndDate);
                     $("#editmodal input[name='TechS']").val(data.techStack);
                     //sent all data to server
+                });
+
+                $("#editmodal .close").click(function () {
+                    //delete all options from select when click close modal
+                    $("#editmodal .modal-body #someselect").empty();
+                    var $select = $("#someselect"); 
+                    $("<option>").val(0).text(" ").appendTo($select); 
+                    //delete all input when click close modal
+                    $("#editmodal .modal-body input[name='id']").remove();
+                    $("#editmodal .modal-body input[name='ProjectName']").val("");
+                    $("#editmodal .modal-body input[name='Description']").val("");
+                    $("#editmodal .modal-body input[name='EDate']").val("");
+                    $("#editmodal .modal-body input[name='TechS']").val("");
                 });
 
             });
