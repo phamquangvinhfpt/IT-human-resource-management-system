@@ -7,25 +7,25 @@ package sample.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
+import java.util.jar.Attributes.Name;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-<<<<<<< Updated upstream
-=======
+import sample.dao.SendEmail;
+import sample.dao.UserDAO;
 import sample.dto.Change;
 import sample.dto.Reset;
->>>>>>> Stashed changes
+import sample.dto.User;
 
 /**
  *
- * @author Admin
+ * @author Administrator
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+public class ChangeServlet extends HttpServlet {
+private static final long serialVersionUID = 1L;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -38,29 +38,23 @@ public class mainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-=======
-            }if(action.equals("Send_mail")){
-                url = "ChangeServlet";
->>>>>>> Stashed changes
-=======
-            }if(action.equals("Send_mail")){
-                url = "ChangeServlet";
->>>>>>> Stashed changes
-            }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
+        String url = "error.html";
+        try {
+           String email = request.getParameter("email");
+           
+           SendEmail sm= new SendEmail();
+           String c = sm.getRandom();
+           Change change =new Change(false, email, c);
+           boolean result = sm.sendEmail(change);
+           if(result){
+               url = "change.jsp";
+           }
+           
+           
+        }finally{
+            RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }
-      
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -89,7 +83,8 @@ public class mainController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+       
+
     }
 
     /**

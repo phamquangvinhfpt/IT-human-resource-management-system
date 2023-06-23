@@ -40,7 +40,11 @@
 							</h1>
 						</div>
 						<div class="pt-3 pb-3">
+<<<<<<< Updated upstream
 							<form class="form-horizontal" action="newPassword" method="POST">
+=======
+							<form class="form-horizontal" action="NewPassword" method="POST">
+>>>>>>> Stashed changes
 								<!-- User Name Input -->
 								<div class="form-group row justify-content-center px-3">
 									<div class="col-9 px-0">

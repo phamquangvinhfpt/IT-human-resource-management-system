@@ -3,7 +3,11 @@
 <head>
 <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
+<<<<<<< Updated upstream
 <title>Snippet - BBBootstrap</title>
+=======
+<title>Forgot Password Page</title>
+>>>>>>> Stashed changes
 <link
 	href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css'
 	rel='stylesheet'>
@@ -68,7 +72,11 @@ body {
 						next page</li>
 					</ol>
 				</div>
+<<<<<<< Updated upstream
 				<form class="card mt-4" action="forgotPassword" method="POST">
+=======
+				<form class="card mt-4" action="ForgotPassword" method="POST">
+>>>>>>> Stashed changes
 					<div class="card-body">
 						<div class="form-group">
 							<label for="email-for-pass">Enter your email address</label> <input
@@ -80,8 +88,13 @@ body {
 					<div class="card-footer">
 						<button class="btn btn-success" type="submit">Get New
 							Password</button>
+<<<<<<< Updated upstream
 						<button class="btn btn-danger" type="submit">Back to
 							Login</button>
+=======
+<!--						<button class="btn btn-danger" type="submit">Back to
+							Login</button>-->
+>>>>>>> Stashed changes
 					</div>
 				</form>
 			</div>

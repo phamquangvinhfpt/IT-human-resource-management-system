@@ -1,8 +1,3 @@
-<<<<<<< Updated upstream
-package sample.servlet;
-
-import java.io.IOException;
-=======
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,39 +7,28 @@ package sample.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
->>>>>>> Stashed changes
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-
+import java.util.Properties;
+import java.util.Random;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import sample.utils.DBUtils;
 
 /**
-<<<<<<< Updated upstream
- * Servlet implementation class NewPassword
- */
-@WebServlet("/newPassword")
-=======
  *
  * @author Administrator
  */
->>>>>>> Stashed changes
-public class NewPassword extends HttpServlet {
+public class Report extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
-
-<<<<<<< Updated upstream
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-=======
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -62,10 +46,10 @@ public class NewPassword extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NewPassword</title>");
+            out.println("<title>Servlet Report</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NewPassword at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Report at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -97,40 +81,57 @@ public class NewPassword extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
->>>>>>> Stashed changes
-        HttpSession session = request.getSession();
-        String newPassword = request.getParameter("password");
-        String confPassword = request.getParameter("confPassword");
+        String fromEmail = "tuantest123abcd@gmail.com";
+        String password = "pzasugujkkdotqyh";
+        String email = request.getParameter("email");
         RequestDispatcher dispatcher = null;
-        if (newPassword != null && confPassword != null && newPassword.equals(confPassword)) {
-            Connection cn = null;
-            PreparedStatement pst = null;
-            try {
-                cn = DBUtils.makeConnection();
-                String sql = "UPDATE [dbo].[User]\n"
-                        + "SET  [Password]= ? WHERE [Email]= ?";
-                pst = cn.prepareStatement(sql);
+        int otpvalue = 0;
+        HttpSession mySession = request.getSession();
 
-                pst.setString(1, newPassword);
-                pst.setString(2, (String) session.getAttribute("email"));
+        if (email != null || !email.equals("")) {
+            // sending otp
+            Random rand = new Random();
+            otpvalue = rand.nextInt(1255650);
 
-                int rowCount = pst.executeUpdate();
-                if (rowCount > 0) {
-                    request.setAttribute("status", "resetSuccess");
-                    dispatcher = request.getRequestDispatcher("login.jsp");
-                } else {
-                    request.setAttribute("status", "resetFailed");
-                    dispatcher = request.getRequestDispatcher("login.jsp");
+            String to = email;// change accordingly
+            // Get the session object
+            Properties props = new Properties();
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.socketFactory.port", "465");
+            props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            props.setProperty("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.port", "465");
+            Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(fromEmail, password);// Put your email
+                    // id and
+                    // password here
                 }
-                dispatcher.forward(request, response);
-            } catch (Exception e) {
-                e.printStackTrace();
+            });
+            // compose message
+            try {
+                MimeMessage message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(email));// change accordingly
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+                message.setSubject("Hello");
+                message.setText("your OTP is: " + otpvalue);
+                // send message
+                Transport.send(message);
+                System.out.println("message sent successfully");
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
             }
+            dispatcher = request.getRequestDispatcher("EnterOtp.jsp");
+            request.setAttribute("message", "OTP is sent to your email id");
+            //request.setAttribute("connection", con);
+            mySession.setAttribute("otp", otpvalue);
+            mySession.setAttribute("email", email);
+            dispatcher.forward(request, response);
+            //request.setAttribute("status", "success");
         }
     }
 
-<<<<<<< Updated upstream
-=======
     /**
      * Returns a short description of the servlet.
      *
@@ -141,5 +142,4 @@ public class NewPassword extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
->>>>>>> Stashed changes
 }
