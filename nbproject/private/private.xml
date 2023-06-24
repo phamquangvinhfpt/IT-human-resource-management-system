@@ -3,8 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/IT-human-resource-management-system/src/java/sample/servlet/EditProfileServlet.java</file>
-            <file>file:/E:/IT-human-resource-management-system/src/java/sample/servlet/editEmployee.java</file>
+            <file>file:/E:/SWP/HRManagement/IT-human-resource-management-system/src/java/sample/servlet/mainController.java</file>
+            <file>file:/E:/SWP/HRManagement/IT-human-resource-management-system/src/java/sample/dao/ProjectManageDAO.java</file>
+            <file>file:/E:/SWP/HRManagement/IT-human-resource-management-system/web/noStartProject.jsp</file>
+            <file>file:/E:/SWP/HRManagement/IT-human-resource-management-system/src/java/sample/servlet/ActionProjectServlet.java</file>
+            <file>file:/E:/SWP/HRManagement/IT-human-resource-management-system/web/common/sidebar.jsp</file>
+            <file>file:/E:/SWP/HRManagement/IT-human-resource-management-system/src/java/sample/dao/TeamDAO.java</file>
+            <file>file:/E:/SWP/HRManagement/IT-human-resource-management-system/src/java/sample/dto/Team.java</file>
         </group>
     </open-files>
 </project-private>

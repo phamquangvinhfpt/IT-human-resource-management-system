@@ -182,54 +182,6 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                                <label for=\"birthday\">Birthday:</label>\r\n");
       out.write("                                                <input type=\"date\" class=\"form-control\" id=\"birthday\" name=\"birthday\">\r\n");
       out.write("                                            </div>\r\n");
-      out.write("                                            <div class=\"form-group\">\r\n");
-      out.write("                                                <label for=\"experienceId\">ExperienceId:</label>\r\n");
-      out.write("                                                ");
-      out.write("\r\n");
-      out.write("                                                <select class=\"form-control\" id=\"experienceId\" name=\"projectName\">\r\n");
-      out.write("                                                    ");
-
-                                                        List<Project> list = ProjectDAO.getAll();
-                                                        for (Project project : list) {
-                                                    
-      out.write("\r\n");
-      out.write("                                                    <option value=\"");
-      out.print(project.getNameProject());
-      out.write('"');
-      out.write('>');
-      out.print(project.getNameProject());
-      out.write("</option>\r\n");
-      out.write("                                                    ");
-
-                                                        }
-                                                    
-      out.write("\r\n");
-      out.write("                                                </select>\r\n");
-      out.write("                                            </div>\r\n");
-      out.write("                                            <div class=\"form-group\">\r\n");
-      out.write("                                                <label for=\"teamID\">Team_ID:</label>\r\n");
-      out.write("                                                ");
-      out.write("\r\n");
-      out.write("                                                <select class=\"form-control\" id=\"teamID\" name=\"teamName\">\r\n");
-      out.write("                                                    ");
-
-                                                        List<Team> listTeam = TeamDAO.getAll();
-                                                        for (Team team : listTeam) {
-                                                    
-      out.write("\r\n");
-      out.write("                                                    <option value=\"");
-      out.print(team.getTeam_Name());
-      out.write('"');
-      out.write('>');
-      out.print(team.getTeam_Name());
-      out.write("</option>\r\n");
-      out.write("                                                    ");
-
-                                                        }
-                                                    
-      out.write("\r\n");
-      out.write("                                                </select>\r\n");
-      out.write("                                            </div>\r\n");
       out.write("                                        </div>\r\n");
       out.write("\r\n");
       out.write("                                        <div class=\"modal-footer\">\r\n");
@@ -261,6 +213,8 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                                <label for=\"name\">Image:</label>\r\n");
       out.write("                                                <input type=\"file\" class=\"form-control\" id=\"editimage\" name=\"image\">\r\n");
       out.write("                                            </div>\r\n");
+      out.write("                                            <div id=\"avatar\">\r\n");
+      out.write("                                            </div>\r\n");
       out.write("                                            <div class=\"form-group\">\r\n");
       out.write("                                                <label for=\"phone\">Phone:</label>\r\n");
       out.write("                                                <input type=\"text\" class=\"form-control\" id=\"editphone\" name=\"phone\">\r\n");
@@ -284,52 +238,6 @@ public final class employee_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                            <div class=\"form-group\">\r\n");
       out.write("                                                <label for=\"birthday\">Birthday:</label>\r\n");
       out.write("                                                <input type=\"date\" class=\"form-control\" id=\"editbirthday\" name=\"birthday\">\r\n");
-      out.write("                                            </div>\r\n");
-      out.write("                                            <div class=\"form-group\">\r\n");
-      out.write("                                                <label for=\"experienceId\">Project:</label>\r\n");
-      out.write("                                                ");
-      out.write("\r\n");
-      out.write("                                                <select class=\"form-control\" id=\"editexperienceId\" name=\"projectName\">\r\n");
-      out.write("                                                    ");
-
-                                                        for (Project project : list) {
-                                                    
-      out.write("\r\n");
-      out.write("                                                    <option value=\"");
-      out.print(project.getNameProject());
-      out.write('"');
-      out.write('>');
-      out.print(project.getNameProject());
-      out.write("</option>\r\n");
-      out.write("                                                    ");
-
-                                                        }
-                                                    
-      out.write("\r\n");
-      out.write("                                                </select>\r\n");
-      out.write("                                            </div>\r\n");
-      out.write("                                            <div class=\"form-group\">\r\n");
-      out.write("                                                <label for=\"teamID\">Team:</label>\r\n");
-      out.write("                                                ");
-      out.write("\r\n");
-      out.write("                                                <select class=\"form-control\" id=\"editeamID\" name=\"teamName\">\r\n");
-      out.write("                                                    ");
-
-                                                        for (Team team : listTeam) {
-                                                    
-      out.write("\r\n");
-      out.write("                                                    <option value=\"");
-      out.print(team.getTeam_Name());
-      out.write('"');
-      out.write('>');
-      out.print(team.getTeam_Name());
-      out.write("</option>\r\n");
-      out.write("                                                    ");
-
-                                                        }
-                                                    
-      out.write("\r\n");
-      out.write("                                                </select>\r\n");
       out.write("                                            </div>\r\n");
       out.write("                                        </div>\r\n");
       out.write("\r\n");

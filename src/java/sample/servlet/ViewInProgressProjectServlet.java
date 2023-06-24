@@ -5,20 +5,35 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sample.dao.ProjectManageDAO;
+import sample.dao.TaskDAO;
+import sample.dao.TeamDAO;
+import sample.dto.ProjectManageDTO;
+import sample.dto.TaskDTO;
+import sample.dto.TeamDTO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+@MultipartConfig
+@WebServlet(name = "ViewInProgressProjectServlet", urlPatterns = {"/ViewInProgressProjectServlet"})
+public class ViewInProgressProjectServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,25 +46,35 @@ public class mainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+//        String url = "error.jsp";
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-            } else if(action.equals("addProject")){
-                url = "AddProjectServlet";
-            }else if(action.equals("viewInProgress")){
-                url = "ViewInProgressProjectServlet";
-            }else if(action.equals("EditProject")){
-                url = "EditProjectServlet";
-            }else if(action.equals("View progress")){
-                url = "ViewInProgressProjectServlet";
-            }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
-            rd.forward(request, response);
-        }
+            int id = Integer.parseInt(request.getParameter("id"));
+//            int id = 3;
+            ProjectManageDAO ProjectDao = new ProjectManageDAO();
+            ProjectManageDTO dto = ProjectDao.GetProjectByID(id);
+            TeamDAO teamDao = new TeamDAO();
+            TaskDAO taskDAO = new TaskDAO();
+            taskDAO.GetTask(id);
+            TeamDAO td = new TeamDAO();
+            TeamDTO t = td.GetTeamByID(id);
+            List<TaskDTO> tasks = taskDAO.getListTask();
+            List<TaskDTO> tasksInProgress = taskDAO.getListTaskInInPro();
+            int progressSize = taskDAO.getTaskSize(tasksInProgress);
+            List<TaskDTO> tasksInSucc = taskDAO.getListTaskInSucc();
+            int succSize = taskDAO.getTaskSize(tasksInSucc);
+            response.setStatus(200);
+            JsonObject jsonObject = new JsonObject();
+            Gson gson = new Gson();
+            jsonObject.add("project", gson.toJsonTree(dto));
+            jsonObject.add("team", gson.toJsonTree(t));
+            jsonObject.addProperty("tasksInProgress", progressSize);
+            jsonObject.addProperty("tasksInSucc", succSize);
+            jsonObject.add("task", gson.toJsonTree(tasks));
+            out.println(jsonObject.toString());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewInProgressProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }//            RequestDispatcher rd = request.getRequestDispatcher(url);//            RequestDispatcher rd = request.getRequestDispatcher(url);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

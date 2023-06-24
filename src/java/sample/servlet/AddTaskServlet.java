@@ -5,20 +5,27 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sample.dao.TaskDAO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+@MultipartConfig
+@WebServlet(name = "AddTaskServlet", urlPatterns = {"/AddTaskServlet"})
+public class AddTaskServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,22 +40,32 @@ public class mainController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-            } else if(action.equals("addProject")){
-                url = "AddProjectServlet";
-            }else if(action.equals("viewInProgress")){
-                url = "ViewInProgressProjectServlet";
-            }else if(action.equals("EditProject")){
-                url = "EditProjectServlet";
-            }else if(action.equals("View progress")){
-                url = "ViewInProgressProjectServlet";
+            int projectID = Integer.parseInt(request.getParameter("ProjectID"));
+            String[] descriptions = request.getParameterValues("descriptions");
+
+            boolean result = false;
+            TaskDAO dao = new TaskDAO();
+            Gson json = new Gson();
+            String message = "";
+            if (descriptions == null) {
+                message += "Description is empty";
+                out.write(json.toJson(message));
             }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            for (String description : descriptions) {
+                result = dao.addTask(projectID, description);
+                if (result == false) {
+                    break;
+                }
+            }
+            if (result) {
+                message += "success";
+                out.write(json.toJson(message));
+            } else {
+                message += "fail";
+                out.write(json.toJson(message));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(AddTaskServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

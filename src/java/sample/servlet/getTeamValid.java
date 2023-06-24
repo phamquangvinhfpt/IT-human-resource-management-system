@@ -5,20 +5,37 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sample.dao.TeamDAO;
+import sample.dto.TeamDTO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+@MultipartConfig
+@WebServlet(name = "getTeamValid", urlPatterns = {"/getTeamValid"})
+public class getTeamValid extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -32,23 +49,28 @@ public class mainController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-            } else if(action.equals("addProject")){
-                url = "AddProjectServlet";
-            }else if(action.equals("viewInProgress")){
-                url = "ViewInProgressProjectServlet";
-            }else if(action.equals("EditProject")){
-                url = "EditProjectServlet";
-            }else if(action.equals("View progress")){
-                url = "ViewInProgressProjectServlet";
+            String sDate = request.getParameter("startDate");
+            String eDate = request.getParameter("endDate");
+            Date startDate = Date.valueOf(sDate);
+            Date endDate = Date.valueOf(eDate);
+            Map<Integer, String> options = new LinkedHashMap<>();
+            TeamDAO dao = new TeamDAO();
+            dao.getTeamValid();
+            List<TeamDTO> list = dao.getListTeam();
+            dao.getDateValid(startDate, endDate);
+            List<TeamDTO> list2 = dao.getListTeam();
+            for (TeamDTO teamDTO : list) {
+                options.put(teamDTO.getTeam_Id(), teamDTO.getTeam_name());
             }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            for (TeamDTO teamDTO : list2) {
+                options.put(teamDTO.getTeam_Id(), teamDTO.getTeam_name());
+            }
+            String json = new Gson().toJson(options);
+            response.setContentType("application/json");
+            response.setStatus(200);
+            response.getWriter().write(json);
+        } catch (SQLException ex) {
+            Logger.getLogger(getTeamValid.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

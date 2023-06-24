@@ -5,20 +5,31 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sample.dao.ProjectManageDAO;
+import sample.dto.ProjectManageDTO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+@WebServlet(name = "DeleteProjectServlet", urlPatterns = {"/DeleteProjectServlet"})
+public class ActionProjectServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,24 +42,19 @@ public class mainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        int id = Integer.parseInt(request.getParameter("id"));
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-            } else if(action.equals("addProject")){
-                url = "AddProjectServlet";
-            }else if(action.equals("viewInProgress")){
-                url = "ViewInProgressProjectServlet";
-            }else if(action.equals("EditProject")){
-                url = "EditProjectServlet";
-            }else if(action.equals("View progress")){
-                url = "ViewInProgressProjectServlet";
+            //get data from form delete
+            //delete employee
+            ProjectManageDAO dao = new ProjectManageDAO();
+            boolean result = dao.DeleteProject(id);
+            if (result) {
+                out.print("success");
+            } else {
+                out.print("fail");
             }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
-            rd.forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ActionProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

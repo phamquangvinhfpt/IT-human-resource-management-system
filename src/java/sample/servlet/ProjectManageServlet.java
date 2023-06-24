@@ -5,20 +5,29 @@
  */
 package sample.servlet;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sample.dao.ProjectManageDAO;
+import sample.dto.ProjectManageDTO;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class mainController extends HttpServlet {
-    private String url = "";
+@WebServlet(name = "ProjectManageServlet", urlPatterns = {"/ProjectManageServlet"})
+public class ProjectManageServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -31,25 +40,25 @@ public class mainController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String action=request.getParameter("btAction");
-            if(action.equals("Sign in")){
-                url="loginServlet";
-            } else if(action.equals("Logout")) {
-                url="logoutServlet";
-            } else if(action.equals("addProject")){
-                url = "AddProjectServlet";
-            }else if(action.equals("viewInProgress")){
-                url = "ViewInProgressProjectServlet";
-            }else if(action.equals("EditProject")){
-                url = "EditProjectServlet";
-            }else if(action.equals("View progress")){
-                url = "ViewInProgressProjectServlet";
-            }
-            RequestDispatcher rd=request.getRequestDispatcher(url);
-            rd.forward(request, response);
-        }
+//        try(PrintWriter out = response.getWriter()) {
+//            /* TODO output your page here. You may use following sample code. */
+//            ProjectManageDAO dao = new ProjectManageDAO();
+//            dao.GetProject();
+//            List<ProjectManageDTO> listProject = dao.getListProject();
+////            if(listProject != null){
+////                int size = listProject.size();
+////                request.setAttribute("AmountOfProject", size);
+////                request.setAttribute("projectList", listProject);
+////                Result = "ProjectManage.jsp";
+////            }
+//            response.setContentType("application/json");
+//            response.setStatus(200);
+//            Gson gson = new Gson();
+//            String json = gson.toJson(listProject);
+//            out.println(json);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ProjectManageServlet.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

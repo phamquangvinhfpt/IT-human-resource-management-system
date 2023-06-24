@@ -62,7 +62,7 @@
                                     <a href="company.html"><img src="assets/img/group.png" alt="sidebar_img"> <span> Team</span></a>
                                 </li>
                                 <li>
-                                    <a href="calendar.html"><img src="assets/img/calendar.svg" alt="sidebar_img"> <span>Calendar</span></a>
+                                    <a href="noStartProject.jsp"><img src="assets/img/calendar.svg" alt="sidebar_img"> <span>Project</span></a>
                                 </li>
                                 <li>
                                     <a href="leave_request.jsp"><img src="assets/img/leave.svg" alt="sidebar_img"> <span>Leave</span></a>
