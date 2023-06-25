@@ -188,9 +188,6 @@
                 $('#editmodal').on('hidden.bs.modal', function () {
                     numTasks = 1;
                     $('#task-container').empty();
-//                    $('#task-container').append(
-//                            $('<div class="form-group"><label for="Task">Task Description:</label><input type="text" class="form-control" id="Task1" name="TaskDesc1"></div>')
-//                            );
                 });
             });
         </script>

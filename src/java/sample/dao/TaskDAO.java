@@ -10,8 +10,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import sample.dto.ProjectManageDTO;
 import sample.dto.TaskDTO;
 import sample.utils.DBUtils;
 
@@ -103,11 +106,21 @@ public class TaskDAO {
             con = DBUtils.makeConnection();
             if (con != null) {
 
-                String sql = "Insert into Task (Description, Project_id, Status_id) "
-                        + "values(?, ?, 2)";
+                String sql = "Insert into Task (Description, EndDate, Project_id, Status_id) "
+                        + "values(?, ?, ?, 2)";
                 pst = con.prepareStatement(sql);
                 pst.setString(1, Desc);
-                pst.setInt(2, ProjectID);
+                ProjectManageDAO dao = new ProjectManageDAO();
+                ProjectManageDTO dto = dao.GetProjectByID(ProjectID);
+                LocalDate startLocalDate = dto.getStartDate().toLocalDate();
+                LocalDate endLocalDate = dto.getEndDate().toLocalDate();
+                long daysBetween = ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
+                int daysBetweenInt = (int) daysBetween;
+                int dateValid = (int) (daysBetweenInt * 0.8);
+                LocalDate endDateForTask = startLocalDate.plusDays(dateValid);
+                Date sqlEndDateForTask = java.sql.Date.valueOf(endDateForTask);
+                pst.setDate(2, sqlEndDateForTask);
+                pst.setInt(3, ProjectID);
                 int effectRow = pst.executeUpdate();
                 if (effectRow > 0) {
                     result = true;
@@ -138,7 +151,7 @@ public class TaskDAO {
         }
         return size;
     }
-    
+
     public boolean deleteTask(int taskID) throws SQLException, Exception {
         Connection con = null;
         PreparedStatement pst = null;
@@ -155,6 +168,75 @@ public class TaskDAO {
                 int effectRow = pst.executeUpdate();
                 if (effectRow > 0) {
                     result = true;
+                }
+            }
+        } finally {
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+
+    public boolean updateTask(TaskDTO dto) throws SQLException, Exception {
+        Connection con = null;
+        PreparedStatement pst = null;
+        boolean result = false;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+
+                String sql = "update Task "
+                        + "set Description = ?, EndDate = ?, Status_id = ? "
+                        + "where Task.Task_id = ?";
+                pst = con.prepareStatement(sql);
+                pst.setString(1, dto.getDesc());
+                pst.setDate(2, dto.getEndDate());
+                pst.setInt(3, dto.getStatus());
+                pst.setInt(4, dto.getID());
+                int effectRow = pst.executeUpdate();
+                if (effectRow > 0) {
+                    result = true;
+                }
+            }
+        } finally {
+            if (pst != null) {
+                pst.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
+    }
+
+    public boolean setFinshedTask(int projectID, TaskDTO dto) throws SQLException, Exception {
+        Connection con = null;
+        PreparedStatement pst = null;
+        boolean result = false;
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+
+                String sql = "update Task "
+                        + "set  Status_id = ? "
+                        + "where Task.Task_id = ?";
+                pst = con.prepareStatement(sql);
+                pst.setInt(1, dto.getStatus());
+                pst.setInt(2, dto.getID());
+                int effectRow = pst.executeUpdate();
+                if (effectRow > 0) {
+                    GetTask(projectID);
+                    if(getListTaskInInPro().isEmpty()){
+                        ProjectManageDAO dao = new ProjectManageDAO();
+                        boolean setStatusProject = dao.setProjectInSucc(projectID);
+                        if(setStatusProject){
+                            result = true;
+                        }
+                    }
                 }
             }
         } finally {

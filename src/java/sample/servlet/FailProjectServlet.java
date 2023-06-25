@@ -6,9 +6,11 @@
 package sample.servlet;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import sample.dao.ProjectManageDAO;
-import sample.dto.successProject;
+import sample.dao.TeamDAO;
+import sample.dto.ExperienedProject;
+import sample.dto.InforProjectOut;
+import sample.dto.TeamDTO;
 
 /**
  *
@@ -43,11 +48,18 @@ public class FailProjectServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             ProjectManageDAO dao = new ProjectManageDAO();
             dao.GetFailProject();
-            List<successProject> listProject = dao.getListSuccessProject();
+            List<ExperienedProject> listProject = dao.getListExperiencedProject();
+            List<InforProjectOut> infor = new ArrayList<>();
+            TeamDAO teamDao = new TeamDAO();
+            for (ExperienedProject project : listProject) {
+                TeamDTO teamdto = teamDao.GetTeamByID(project.getTeam_id());
+                InforProjectOut ipo = new InforProjectOut(project, teamdto);
+                infor.add(ipo);
+            }
             response.setContentType("application/json");
             response.setStatus(200);
             Gson gson = new Gson();
-            String json = gson.toJson(listProject);
+            String json = gson.toJson(infor);
             out.println(json);
         } catch (SQLException ex) {
             Logger.getLogger(FailProjectServlet.class.getName()).log(Level.SEVERE, null, ex);

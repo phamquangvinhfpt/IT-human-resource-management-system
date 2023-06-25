@@ -6,31 +6,30 @@
 package sample.servlet;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import sample.dao.ProjectManageDAO;
-import sample.dao.TeamDAO;
-import sample.dto.ExperienedProject;
-import sample.dto.InforProjectOut;
+import sample.dao.TaskDAO;
+import sample.dto.ProjectManageDTO;
+import sample.dto.TaskDTO;
 import sample.dto.TeamDTO;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "successProjectServlet", urlPatterns = {"/successProjectServlet"})
-public class successProjectServlet extends HttpServlet {
+@MultipartConfig
+@WebServlet(name = "FinishTaskServlet", urlPatterns = {"/FinishTaskServlet"})
+public class FinishTaskServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,23 +45,21 @@ public class successProjectServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            ProjectManageDAO dao = new ProjectManageDAO();
-            dao.GetSuccessProject();
-            List<ExperienedProject> listProject = dao.getListExperiencedProject();
-            List<InforProjectOut> infor = new ArrayList<>();
-            TeamDAO teamDao = new TeamDAO();
-            for (ExperienedProject project : listProject) {
-                TeamDTO teamdto = teamDao.GetTeamByID(project.getTeam_id());
-                InforProjectOut ipo = new InforProjectOut(project, teamdto);
-                infor.add(ipo);
+            int TaskID = Integer.parseInt(request.getParameter("taskId"));
+            int ProjectID = Integer.parseInt(request.getParameter("projectId"));
+            int status = Integer.parseInt(request.getParameter("isChecked"));
+            TaskDAO dao = new TaskDAO();
+            TaskDTO task = new TaskDTO(TaskID, null, null, ProjectID, status);
+            boolean result = dao.setFinshedTask(ProjectID, task);
+            if (result) {
+                if (result) {
+                    out.print("success");
+                } else {
+                    out.print("Fail");
+                }
             }
-            response.setContentType("application/json");
-            response.setStatus(200);
-            Gson gson = new Gson();
-            String json = gson.toJson(infor);
-            out.println(json);
-        } catch (SQLException ex) {
-            Logger.getLogger(successProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(FinishTaskServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

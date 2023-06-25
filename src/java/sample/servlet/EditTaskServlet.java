@@ -6,31 +6,32 @@
 package sample.servlet;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import sample.dao.ProjectManageDAO;
-import sample.dao.TeamDAO;
-import sample.dto.ExperienedProject;
-import sample.dto.InforProjectOut;
-import sample.dto.TeamDTO;
+import sample.dao.TaskDAO;
+import sample.dto.ProjectManageDTO;
+import sample.dto.TaskDTO;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "successProjectServlet", urlPatterns = {"/successProjectServlet"})
-public class successProjectServlet extends HttpServlet {
+@MultipartConfig
+@WebServlet(name = "EditTaskServlet", urlPatterns = {"/EditTaskServlet"})
+public class EditTaskServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,27 +43,46 @@ public class successProjectServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException{
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            ProjectManageDAO dao = new ProjectManageDAO();
-            dao.GetSuccessProject();
-            List<ExperienedProject> listProject = dao.getListExperiencedProject();
-            List<InforProjectOut> infor = new ArrayList<>();
-            TeamDAO teamDao = new TeamDAO();
-            for (ExperienedProject project : listProject) {
-                TeamDTO teamdto = teamDao.GetTeamByID(project.getTeam_id());
-                InforProjectOut ipo = new InforProjectOut(project, teamdto);
-                infor.add(ipo);
+            Gson json = new Gson();
+            String message = "";
+            int id = Integer.parseInt(request.getParameter("id"));
+            int projectId = Integer.parseInt(request.getParameter("ProjectId"));
+            String decs = request.getParameter("TaskDesc");
+            String EDate = request.getParameter("NewEndDate");
+            Date endDate;
+            if (!EDate.isEmpty()) {
+                endDate = Date.valueOf(EDate);
+                ProjectManageDAO dao = new ProjectManageDAO();
+                ProjectManageDTO dto = dao.GetProjectByID(projectId);
+                LocalDate startLocalDate = dto.getStartDate().toLocalDate();
+                LocalDate endLocalDate = dto.getEndDate().toLocalDate();
+                long daysBetween = ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
+                int daysBetweenInt = (int) daysBetween;
+                int dateValid = (int) (daysBetweenInt * 0.8);
+                LocalDate endDateForTask = startLocalDate.plusDays(dateValid);
+                Date sqlEndDateForTask = java.sql.Date.valueOf(endDateForTask);
+                if (endDate.before(sqlEndDateForTask)) {
+                    TaskDAO taskDao = new TaskDAO();
+                    TaskDTO task = new TaskDTO(id, decs, endDate, projectId, 2);
+                    boolean update = taskDao.updateTask(task);
+                    if (update) {
+                        out.print("success");
+                    } else {
+                        out.print("Fail");
+                    }
+                } else {
+                    message += "The endDate is not valid";
+                    out.write(json.toJson(message));
+                }
             }
-            response.setContentType("application/json");
-            response.setStatus(200);
-            Gson gson = new Gson();
-            String json = gson.toJson(infor);
-            out.println(json);
         } catch (SQLException ex) {
-            Logger.getLogger(successProjectServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EditTaskServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EditTaskServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

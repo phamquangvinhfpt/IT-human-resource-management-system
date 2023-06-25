@@ -25,7 +25,6 @@ import sample.dao.TeamDAO;
 import sample.dto.ProjectManageDTO;
 import sample.dto.TaskDTO;
 import sample.dto.TeamDTO;
-import sample.dto.inProgress;
 
 /**
  *
@@ -57,7 +56,7 @@ public class ViewInProgressProjectServlet extends HttpServlet {
             TaskDAO taskDAO = new TaskDAO();
             taskDAO.GetTask(id);
             TeamDAO td = new TeamDAO();
-            TeamDTO t = td.GetTeamByID(id);
+            TeamDTO t = td.GetTeamByProjectID(id);
             List<TaskDTO> tasks = taskDAO.getListTask();
             List<TaskDTO> tasksInProgress = taskDAO.getListTaskInInPro();
             int progressSize = taskDAO.getTaskSize(tasksInProgress);

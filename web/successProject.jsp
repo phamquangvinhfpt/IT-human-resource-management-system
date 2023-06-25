@@ -8,12 +8,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
         <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
-
         <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
         <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-
         <link rel="stylesheet" href="assets/css/style.css">
 
         <script src="https://kit.fontawesome.com/b3fa33d056.js" crossorigin="anonymous"></script>
@@ -44,20 +41,11 @@
                         '<td>' +
                         d.team.decs +
                         '</td>' +
-//                        '</tr>' +
-//                        '<tr>' +
-//                        '<td>Project:</td>' +
-//                        '<td>' + d.NameProject + '</td>' +
-//                        '</tr>' +
-//                        '<tr>' +
-//                        '<td>Team:</td>' +
-//                        '<td>' + d.Team_Name + '</td>' +
                         '</tr>' +
                         '</table>'
                         );
             }
             $(document).ready(function () {
-
                 var table = $('#example').DataTable({
                     ajax: {
                         url: '/HRManagement/successProjectServlet',
@@ -78,23 +66,23 @@
                             }
                         },
                         {
-                            data: 'project.NameProject'
+                            data: 'ep.NameProject'
                         }
                         ,
                         {
-                            data: 'project.startDate'
+                            data: 'ep.startDate'
                         }
                         ,
                         {
-                            data: 'project.endDate'
+                            data: 'ep.endDate'
                         }
                         ,
                         {
-                            data: 'project.techStack'
+                            data: 'ep.techStack'
                         }
                         ,
                         {
-                            data: 'project.decs'
+                            data: 'ep.decs'
                         }
                     ],
                     "order": [[1, 'asc']]

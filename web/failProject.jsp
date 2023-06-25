@@ -32,6 +32,7 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script>
             function format(d) {
                 return (
@@ -47,14 +48,6 @@
                         '<td>' +
                         d.team.decs +
                         '</td>' +
-//                        '</tr>' +
-//                        '<tr>' +
-//                        '<td>Project:</td>' +
-//                        '<td>' + d.NameProject + '</td>' +
-//                        '</tr>' +
-//                        '<tr>' +
-//                        '<td>Team:</td>' +
-//                        '<td>' + d.Team_Name + '</td>' +
                         '</tr>' +
                         '</table>'
                         );
@@ -81,27 +74,127 @@
                             }
                         },
                         {
-                            data: 'project.NameProject'
+                            data: 'ep.NameProject'
                         }
                         ,
                         {
-                            data: 'project.startDate'
+                            data: 'ep.startDate',
+                            render: function (data, type, row) {
+                                var momentDate = moment(data);
+                                if (momentDate.isValid()) {
+                                    return momentDate.format('DD-MM-YYYY');
+                                } else {
+                                    return data;
+                                }
+                            }
                         }
                         ,
                         {
-                            data: 'project.endDate'
+                            data: 'ep.endDate',
+                            render: function (data, type, row) {
+                                var momentDate = moment(data);
+                                if (momentDate.isValid()) {
+                                    return momentDate.format('DD-MM-YYYY');
+                                } else {
+                                    return data;
+                                }
+                            }
                         }
                         ,
                         {
-                            data: 'project.techStack'
+                            data: 'ep.techStack'
                         }
                         ,
                         {
-                            data: 'project.decs'
+                            data: 'ep.decs'
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                //set id for button = id of employee
+                                return `
+                                <button class="btn delete-btn" style="background-color: white;box-shadow: none">
+    <i class="fa-solid fa-trash text-danger"></i>
+</button>
+                       <button class="btn edit-btn" style="background-color: white;box-shadow: none">
+    <i class="fa-solid fa-pen-to-square text-primary"></i>
+</button>
+                   `;
+                            }
                         }
                     ],
                     "order": [[1, 'asc']]
 
+                });
+                $('#example tbody').on('click', '.delete-btn', function () {
+                    //get data of row which is clicked
+                    var data = $('#example').DataTable().row($(this).parents('tr')).data();
+                    //set id for button delete
+                    var id = data.ProjectID;
+                    //console id of employee
+                    console.log(id);
+                    //use method post to send id to server
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success',
+                            cancelButton: 'btn btn-danger'
+                        },
+                        buttonsStyling: false
+                    });
+                    swalWithBootstrapButtons.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Delete',
+                        cancelButtonText: 'Cancel!',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            swalWithBootstrapButtons.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                    );
+                            $.ajax({
+                                method: "POST",
+                                action: "DELETE",
+                                url: "/HRManagement/DeleteProjectServlet?id=" + id + "",
+                                success: function (res) {
+                                    console.log(res);
+                                    //remove "" from string
+                                    if (res === "success") {
+                                        swal.fire({
+                                            title: "Success!",
+                                            text: "Delete success!",
+                                            icon: "success",
+                                            button: "OK"
+                                        }).then((value) => {
+                                            //click oke will hide modal and reload datatable
+                                            $("#mymodal").modal("hide");
+                                            $('#example').DataTable().ajax.reload();
+                                        });
+                                    } else {
+                                        swal.fire({
+                                            title: "Error!",
+                                            //remove "" from string
+                                            text: res.replace(/"/g, ""),
+                                            icon: "error",
+                                            button: "OK!"
+                                        });
+                                    }
+                                },
+                                error: function (error) {
+                                    console.log(error);
+                                    sweetAlert("Oops...", "Something went wrong!", "error");
+                                }
+                            });
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons.fire(
+                                    'Cancelled'
+                                    );
+                        }
+                    });
                 });
                 $('#example tbody').on('click', 'td.dt-control', function () {
                     var tr = $(this).closest('tr');
@@ -116,6 +209,85 @@
                         row.child(format(row.data())).show();
                         tr.addClass('shown');
                     }
+                });
+                $('#example tbody').on('click', '.edit-btn', function () {
+                    //get data of row which is clicked
+
+                    var data = $('#example').DataTable().row($(this).parents('tr')).data();
+                    //set id for button edit
+                    var id = data.ep.ProjectID;
+                    var startDateStr = data.ep.startDate;
+                    var endDateStr = data.ep.endDate;
+                    var startDate = new Date(startDateStr);
+                    var endDate = new Date(endDateStr);
+                    var isoStartDate = new Date(startDate.getTime() - (startDate.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+                    var isoEndDate = new Date(endDate.getTime() - (endDate.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+                    $("#editmodal").modal("show");
+                    $("#editmodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
+                    $("#editmodal input[name='ProjectName']").val(data.ep.NameProject);
+                    $("#editmodal input[name='Description']").val(data.ep.decs);
+                    $.get("getTeamValid", {startDate: isoStartDate, endDate: isoEndDate}, function (responseJson) {                 // Execute Ajax GET request on URL of "someservlet" and execute the following function with Ajax response JSON...
+                        var $select = $("#someselect");                           // Locate HTML DOM element with ID "someselect".
+                        $.each(responseJson, function (key, value) {               // Iterate over the JSON object.
+                            $("<option>").val(key).text(value).appendTo($select); // Create HTML <option> element, set its value with currently iterated key and its text content with currently iterated item and finally append it to the <select>.
+                        });
+                    });
+//                    $("#editmodal input[name='EDate']").val(isoEndDate);
+                    $("#editmodal input[name='TechS']").val(data.ep.techStack);
+                    //sent all data to server
+                });
+
+                $("#editmodal .close").click(function () {
+                    //delete all options from select when click close modal
+                    $("#editmodal .modal-body #someselect").empty();
+                    var $select = $("#someselect");
+                    $("<option>").val(0).text(" ").appendTo($select);
+                    //delete all input when click close modal
+                    $("#editmodal .modal-body input[name='id']").remove();
+                    $("#editmodal .modal-body input[name='ProjectName']").val("");
+                    $("#editmodal .modal-body input[name='Description']").val("");
+                    $("#editmodal .modal-body input[name='EDate']").val("");
+                    $("#editmodal .modal-body input[name='TechS']").val("");
+                });
+            });
+            $(document).ready(function () {
+                $(".editform").on("submit", function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        method: "POST",
+                        url: "/HRManagement/EditProjectServlet",
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            console.log(res);
+                            //remove "" from string
+                            if (res === "success") {
+                                swal.fire({
+                                    title: "Success!",
+                                    text: "Edit success!",
+                                    icon: "success",
+                                    button: "OK"
+                                }).then((value) => {
+                                    //click oke will hide modal and reload datatable
+                                    $("#editmodal").modal("hide");
+                                    $('#example').DataTable().ajax.reload();
+                                });
+                            } else {
+                                swal.fire({
+                                    title: "Error!",
+                                    //remove "" from string
+                                    text: res.replace(/"/g, ""),
+                                    icon: "error",
+                                    button: "OK!"
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            sweetAlert("Oops...", "Something went wrong!", "error");
+                        }
+                    });
                 });
             });
             //delete employee
@@ -150,7 +322,7 @@
                             <div class="breadcrumb-path mb-4">
                                 <ul class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="admin.jsp"><img src="assets/img/dash.png"
-                                                                                          class="mr-2" alt="breadcrumb" />Home</a>
+                                                                                         class="mr-2" alt="breadcrumb" />Home</a>
                                     </li>
                                     <li class="breadcrumb-item active"> Projects</li>
                                 </ul>
@@ -166,6 +338,50 @@
                                     <li><a class="active" href="failProject.jsp">Fail</a></li>
                                 </ul>
                             </div>
+                            <form class="editform">
+                                <div class="modal fade" data-backdrop='static' id="editmodal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title">Project</h3>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="ProjectName">Project Name:</label>
+                                                    <input type="text" class="form-control" id="ProjectName" name="ProjectName">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Description">Description:</label>
+                                                    <input type="text" class="form-control" id="Description" name="Description">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Team">Team: </label>
+                                                    <select id="someselect" name="team_id">
+                                                        <option value="0" selected=""> </option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="EDate">End Date</label>
+                                                    <input type="date" class="form-control" id="EDate" name="EDate">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="TechS">Tech Stack</label>
+                                                    <input type="text" class="form-control" id="TechS" name="TechS">
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <input type="submit" value="Save" class="btn btn-warning" />
+                                                <input type="reset" value="Reset" class="btn btn-danger" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="col-xl-12 col-sm-12 col-12 mb-4">
                             <div class="card">
@@ -183,6 +399,7 @@
                                                 <th>End Date</th>
                                                 <th>Tech Stack</th>
                                                 <th>Description</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>

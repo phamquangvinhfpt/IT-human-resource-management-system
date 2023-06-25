@@ -30,6 +30,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
         <script>
             $(document).ready(function () {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -64,15 +65,64 @@
                                     }
                                 },
                                 {data: 'Desc'},
-                                {data: 'EndDate'},
+                                {data: 'EndDate',
+                                    render: function (data, type, row) {
+                                        var momentDate = moment(data);
+                                        if (momentDate.isValid()) {
+                                            return momentDate.format('DD-MM-YYYY');
+                                        } else {
+                                            return data;
+                                        }
+                                    }
+                                },
                                 {data: 'status',
                                     render: function (data, type, row) {
                                         if (data === 2) {
-                                            return '<span class="tab-select in-progress">In Progress</span>';
+                                            return '<input type="checkbox" style="text-align:center; vertical-align:middle" value="3">';
                                         } else if (data === 3) {
-                                            return '<span class="tab-select success">Success</span>';
-                                        } else {
-                                            return '<span class="tab-select">' + data + '</span>';
+                                            return '<span class="tab-select success">Success <i class="fa-solid fa-check text-success"></i></span>';
+                                        }
+                                    },
+                                    createdCell: function (td, cellData, rowData, row, col) {
+                                        if (cellData === 2) {
+                                            $('input', td).on('change', function () {
+                                                var taskId = rowData.ID;
+                                                var projectId = rowData.Project_id;
+                                                var isChecked = $(this).is(':checked');
+                                                $.ajax({
+                                                    method: 'POST',
+                                                    url: '/HRManagement/FinishTaskServlet',
+                                                    data: {
+                                                        taskId: taskId,
+                                                        projectId: projectId,
+                                                        isChecked: isChecked
+                                                    },
+                                                    success: function (res) {
+                                                        if (res === "success") {
+                                                            swal.fire({
+                                                                title: "Success!",
+                                                                text: "Add success!",
+                                                                icon: "success",
+                                                                button: "OK"
+                                                            }).then((value) => {
+                                                                $('#example').DataTable().ajax.reload();
+                                                            });
+                                                        } else {
+                                                            swal.fire({
+                                                                title: "Error!",
+                                                                //remove "" from string
+                                                                text: res.replace(/"/g, ""),
+                                                                icon: "error",
+                                                                button: "OK!"
+                                                            });
+                                                        }
+                                                    },
+                                                    error: function (error) {
+                                                        console.log(error);
+
+                                                    }
+                                                });
+                                            });
                                         }
                                     }
                                 },
@@ -80,9 +130,6 @@
                                     render: function (data, type, row) {
                                         //set id for button = id of employee
                                         return `
-                       <button class="btn delete-btn" style="background-color: white;box-shadow: none">
-    <i class="fa-solid fa-trash text-danger"></i>
-</button>
                        <button class="btn edit-btn" style="background-color: white;box-shadow: none">
     <i class="fa-solid fa-pen-to-square text-primary"></i>
 </button>
@@ -120,71 +167,58 @@
                         // handle error response
                     }
                 });
-                
-                $('#example tbody').on('click', '.delete-btn', function () {
+                $('#example tbody').on('click', '.edit-btn', function () {
                     //get data of row which is clicked
                     var data = $('#example').DataTable().row($(this).parents('tr')).data();
-                    //set id for button delete
+                    //set id for button edit
                     var id = data.ID;
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger'
-                        },
-                        buttonsStyling: false
-                    });
-                    swalWithBootstrapButtons.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Delete',
-                        cancelButtonText: 'Cancel!',
-                        reverseButtons: true
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            swalWithBootstrapButtons.fire(
-                                    'Deleted!',
-                                    'Your file has been deleted.',
-                                    'success'
-                                    );
-                            $.ajax({
-                                method: "POST",
-                                action: "DELETE",
-                                url: "/HRManagement/DeleteTaskServlet?id=" + id + "",
-                                success: function (res) {
-                                    console.log(res);
+                    var projectId = data.Project_id;
+                    $("#editmodal").modal("show");
+                    //set title for modal
+                    $("#Task").val(data.Desc);
+                    $("#ED").val(moment(data.EndDate).format('YYYY-MM-DD'));
+                    //import a input hidden to modal
+                    $("#editmodal .modal-body").append("<input type='hidden' name='id' value='" + id + "'>");
+                    $("#editmodal .modal-body").append("<input type='hidden' name='ProjectId' value='" + projectId + "'>");
+                    //sent all data to server
+                });
+            });
+            $(document).ready(function () {
+                $(".editform").on("submit", function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        method: "POST",
+                        url: "/HRManagement/EditTaskServlet",
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            console.log(res);
+                            //remove "" from string
+                            if (res === "success") {
+                                swal.fire({
+                                    title: "Success!",
+                                    text: "Edit success!",
+                                    icon: "success",
+                                    button: "OK"
+                                }).then((value) => {
+                                    //click oke will hide modal and reload datatable
+                                    $("#editmodal").modal("hide");
+                                    $('#example').DataTable().ajax.reload();
+                                });
+                            } else {
+                                swal.fire({
+                                    title: "Error!",
                                     //remove "" from string
-                                    if (res === "success") {
-                                        swal.fire({
-                                            title: "Success!",
-                                            text: "Delete success!",
-                                            icon: "success",
-                                            button: "OK"
-                                        }).then((value) => {
-                                            //click oke will hide modal and reload datatable
-                                            $("#mymodal").modal("hide");
-                                            $('#example').DataTable().ajax.reload();
-                                        });
-                                    } else {
-                                        swal.fire({
-                                            title: "Error!",
-                                            //remove "" from string
-                                            text: res.replace(/"/g, ""),
-                                            icon: "error",
-                                            button: "OK!"
-                                        });
-                                    }
-                                },
-                                error: function (error) {
-                                    console.log(error);
-                                    sweetAlert("Oops...", "Something went wrong!", "error");
-                                }
-                            });
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            swalWithBootstrapButtons.fire(
-                                    'Cancelled'
-                                    );
+                                    text: res.replace(/"/g, ""),
+                                    icon: "error",
+                                    button: "OK!"
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            sweetAlert("Oops...", "Something went wrong!", "error");
                         }
                     });
                 });
@@ -218,6 +252,35 @@
                                     <li class="breadcrumb-item active"> Progress</li>
                                 </ul>
                             </div>
+                            <form class="editform">
+                                <div class="modal fade" data-backdrop='static' id="editmodal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title">Add Task</h3>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="Task">Task Description:</label>
+                                                    <input type="text" class="form-control" id="Task" name="TaskDesc">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Date">End Date:</label>
+                                                    <input type="date" class="form-control" id="ED" name="NewEndDate">
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <input type="submit" value="Save" class="btn btn-warning" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="row">
@@ -228,6 +291,7 @@
                                     <h5 class="card-title">Projects</h5>
                                 </div>
                             </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-6" style="border-style: inset; border-radius: 10px;">
@@ -258,7 +322,7 @@
                                                             Success</p>
                                                     </div>
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                     </div>

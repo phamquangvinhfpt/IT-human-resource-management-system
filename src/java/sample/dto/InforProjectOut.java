@@ -9,30 +9,30 @@ package sample.dto;
  *
  * @author ADMIN
  */
-public class successProject {
-    private ProjectManageDTO project;
+public class InforProjectOut {
+    private ExperienedProject ep;
     private TeamDTO team;
 
-    public successProject() {
+    public InforProjectOut() {
     }
 
-    public successProject(ProjectManageDTO project, TeamDTO team) {
-        this.project = project;
+    public InforProjectOut(ExperienedProject ep, TeamDTO team) {
+        this.ep = ep;
         this.team = team;
     }
 
     /**
-     * @return the project
+     * @return the ep
      */
-    public ProjectManageDTO getProject() {
-        return project;
+    public ExperienedProject getEp() {
+        return ep;
     }
 
     /**
-     * @param project the project to set
+     * @param ep the ep to set
      */
-    public void setProject(ProjectManageDTO project) {
-        this.project = project;
+    public void setEp(ExperienedProject ep) {
+        this.ep = ep;
     }
 
     /**
@@ -48,5 +48,6 @@ public class successProject {
     public void setTeam(TeamDTO team) {
         this.team = team;
     }
-
+    
+    
 }
