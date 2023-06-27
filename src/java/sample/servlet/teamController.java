@@ -50,12 +50,6 @@ public class teamController extends HttpServlet {
             } catch (Exception ex) {
 
             }
-        }  else if (action.equals("edit")) {
-            int id = Integer.parseInt(request.getParameter("teamId"));
-            TeamDAO team = new TeamDAO();      
-            Team listTeam = team.getTeamById(id);         
-            request.setAttribute("team", listTeam);
-            request.getRequestDispatcher("Edit.jsp").forward(request, response);
         } else if (action.equals("delete")) {
             try {
                 int id = Integer.parseInt(request.getParameter("teamId"));

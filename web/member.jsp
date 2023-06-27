@@ -5,8 +5,11 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Team</title>
-
+        <title>Member</title>
+        <link rel="shortcut icon" type="image/png" href="https://img.icons8.com/android/24/remove-user-male.png">
+        <!-- Add these lines to your <head> element -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
         <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
@@ -16,372 +19,274 @@
 
         <link rel="stylesheet" href="assets/css/style.css">
         <style>
-             .card_widget_header{
-            text-align: -webkit-right;
-             }
+            .card_widget_header{
+                text-align: -webkit-right;
+            }
+            .btn-add-e{
+                color: #000;
+                display: inline-block;
+                margin: 15px 0;
+                text-align: center;
+                padding: 12px;
+                font-size: 14px;
+                border-radius: 10px;
+                background-color: #009efb
+
+            }
+            .employee-head ul div{
+                padding: 10px;
+                border-radius: 6px;
+                border-color: #000;
+                background-color: #e3e3e3e6;
+                color: #00882e;
+                font-style: normal;
+                text-transform: uppercase;
+                border-bottom: solid;
+                -webkit-text-stroke: thin;
+            }
+            .decription{
+                -webkit-text-stroke: thin;
+            }
+            .viewteam{
+
+                text-align: end;
+
+            }
+            a {
+                color: #eee;
+            }
+            .customize_popup .close {
+                margin-left: auto;
+            }
         </style>
     </head>
+
     <body>
+
+        <%
+            String Team_ID = request.getParameter("teamid");
+            request.setAttribute("Team_ID", Team_ID);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("addmember");
+        %>
         <div class="main-wrapper">
 
-            <div class="header">
+            <div class="main-wrapper">
 
-                <div class="header-left">
-                    <a href="index.html" class="logo">
-                        <span>HR Management</span>
-                    </a>
-                    <a href="index.html" class="logo logo-small">
-                        <span>HRMS</span>
-                    </a>
-                    <a href="javascript:void(0);" id="toggle_btn">
-                        <span class="bar-icon">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </span>
-                    </a>
+                <div class="header">
+                    <jsp:include page="common/navbar.jsp" />  
                 </div>
 
 
-
-
-                <div class="top-nav-search">
-                    <form>
-                        <input type="text" class="form-control" placeholder="">
-                        <button class="btn" type="submit"><i class="fas fa-search"></i></button>
-                    </form>
+                <div class="sidebar" id="sidebar">
+                    <jsp:include page="common/sidebar.jsp" />
                 </div>
 
 
-                <a class="mobile_btn" id="mobile_btn">
-                    <i class="fas fa-bars"></i>
-                </a>
-
-
-                <ul class="nav user-menu">
-
-                    <li class="nav-item dropdown">
-                        <a href="#" class="dropdown-toggle nav-link pr-0" data-toggle="dropdown">
-                            <i data-feather="bell"></i> <span class="badge badge-pill"></span>
-                        </a>
-                        <div class="dropdown-menu notifications">
-                            <div class="topnav-dropdown-header">
-                                <span class="notification-title">Notifications</span>
-                                <a href="javascript:void(0)" class="clear-noti"> Clear All</a>
-                            </div>
-                            <div class="noti-content">
-                                <ul class="notification-list">
-                                    <li class="notification-message">
-                                        <a href="activities.html">
-                                            <div class="media">
-                                                <span class="avatar avatar-sm">
-                                                    <img class="avatar-img rounded-circle" alt="" src="assets/img/profiles/avatar-02.jpg">
-                                                </span>
-                                                <div class="media-body">
-                                                    <p class="noti-details"><span class="noti-title">Brian Johnson</span> paid the invoice <span class="noti-title">#DF65485</span></p>
-                                                    <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="notification-message">
-                                        <a href="activities.html">
-                                            <div class="media">
-                                                <span class="avatar avatar-sm">
-                                                    <img class="avatar-img rounded-circle" alt="" src="assets/img/profiles/avatar-03.jpg">
-                                                </span>
-                                                <div class="media-body">
-                                                    <p class="noti-details"><span class="noti-title">Marie Canales</span> has accepted your estimate <span class="noti-title">#GTR458789</span></p>
-                                                    <p class="noti-time"><span class="notification-time">6 mins ago</span></p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="notification-message">
-                                        <a href="activities.html">
-                                            <div class="media">
-                                                <div class="avatar avatar-sm">
-                                                    <span class="avatar-title rounded-circle bg-primary-light"><i class="far fa-user"></i></span>
-                                                </div>
-                                                <div class="media-body">
-                                                    <p class="noti-details"><span class="noti-title">New user registered</span></p>
-                                                    <p class="noti-time"><span class="notification-time">8 mins ago</span></p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="notification-message">
-                                        <a href="activities.html">
-                                            <div class="media">
-                                                <span class="avatar avatar-sm">
-                                                    <img class="avatar-img rounded-circle" alt="" src="assets/img/profiles/avatar-04.jpg">
-                                                </span>
-                                                <div class="media-body">
-                                                    <p class="noti-details"><span class="noti-title">Barbara Moore</span> declined the invoice <span class="noti-title">#RDW026896</span></p>
-                                                    <p class="noti-time"><span class="notification-time">12 mins ago</span></p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="notification-message">
-                                        <a href="activities.html">
-                                            <div class="media">
-                                                <div class="avatar avatar-sm">
-                                                    <span class="avatar-title rounded-circle bg-info-light"><i class="far fa-comment"></i></span>
-                                                </div>
-                                                <div class="media-body">
-                                                    <p class="noti-details"><span class="noti-title">You have received a new message</span></p>
-                                                    <p class="noti-time"><span class="notification-time">2 days ago</span></p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="topnav-dropdown-footer">
-                                <a href="activities.html">View all Notifications</a>
-                            </div>
-                        </div>
-                    </li>
-
-
-                    <li class="nav-item dropdown has-arrow main-drop">
-                        <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                            <span class="user-img">
-                                <img src="assets/img/profile.jpg" alt="">
-                                <span class="status online"></span>
-                            </span>
-                            <span>VinhPQ</span>
-                        </a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="profile.html"><i data-feather="user" class="mr-1"></i> Profile</a>
-                            <a class="dropdown-item" href="settings.html"><i data-feather="settings" class="mr-1"></i> Settings</a>
-                            <a class="dropdown-item" href="login.html"><i data-feather="log-out" class="mr-1"></i> Logout</a>
-                        </div>
-                    </li>
-
-                </ul>
-                <div class="dropdown mobile-user-menu show">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                    <div class="dropdown-menu dropdown-menu-right ">
-                        <a class="dropdown-item" href="profile.html">My Profile</a>
-                        <a class="dropdown-item" href="settings.html">Settings</a>
-                        <a class="dropdown-item" href="login.html">Logout</a>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-inner slimscroll">
-                    <div class="sidebar-contents">
-                        <div id="sidebar-menu" class="sidebar-menu">
-                            <div class="mobile-show">
-                                <div class="offcanvas-menu">
-                                    <div class="user-info align-center bg-theme text-center">
-                                        <span class="lnr lnr-cross  text-white" id="mobile_btn_close">X</span>
-                                        <a href="javascript:void(0)" class="d-block menu-style text-white">
-                                            <div class="user-avatar d-inline-block mr-3">
-                                                <img src="assets/img/profiles/avatar-18.jpg" alt="user avatar" class="rounded-circle" width="50">
-                                            </div>
-                                        </a>
-                                    </div>
+                <div class="page-wrapper">
+                    <div class="content container-fluid">
+                        <div class="row">
+                            <div class="col-xl-12 col-sm-12 col-12">
+                                <div class="breadcrumb-path mb-4">
+                                    <ul class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/dash.png" class="mr-2" alt="breadcrumb" />Home</a>
+                                        </li>
+                                        <li class="breadcrumb-item active"> Employees/ Teams</li>
+                                    </ul>
+                                    <h3>Team</h3>
                                 </div>
-                                <div class="sidebar-input">
-                                    <div class="top-nav-search">
-                                        <form>
-                                            <input type="text" class="form-control" placeholder="Search here">
-                                            <button class="btn" type="submit"><i class="fas fa-search"></i></button>
-                                        </form>
+                            </div>
+                            <div class="col-xl-12 col-sm-12 col-12 mb-4">
+                                <div class="head-link-set">
+                                    <ul>
+                                        <li><a href="#">All</a></li>
+                                        <li><a class="active" href="employee-team.html">Teams</a></li>
+                                        <li><a href="employee-office.html">Offices</a></li>
+                                    </ul>
+                                    <div>                          
+                                        <button class="btn-add" data-toggle="modal" data-target="#addteam"><i data-feather="plus"></i> Add Member </button>
+
+
                                     </div>
                                 </div>
                             </div>
-                            <ul>
-                                <li>
-                                    <a href="admin.jsp"><img src="assets/img/home.svg" alt="sidebar_img"> <span>Dashboard</span></a>
-                                </li>
-                                <li class="active">
-                                    <a href="employee.jsp"><img src="assets/img/employee.svg" alt="sidebar_img"><span> Employees</span></a>
-                                </li>
-                                <li>
-                                    <a href="company.html"><img src="assets/img/group.png" alt="sidebar_img"> <span> Team</span></a>
-                                </li>
-                                <li>
-                                    <a href="calendar.html"><img src="assets/img/calendar.svg" alt="sidebar_img"> <span>Calendar</span></a>
-                                </li>
-                                <li>
-                                    <a href="leave.html"><img src="assets/img/leave.svg" alt="sidebar_img"> <span>Leave</span></a>
-                                </li>
-                                <li>
-                                    <a href="review.html"><img src="assets/img/review.svg" alt="sidebar_img"><span>Review</span></a>
-                                </li>
-                                <li>
-                                    <a href="report.html"><img src="assets/img/report.svg" alt="sidebar_img"><span>Report</span></a>
-                                </li>
-                                <li>
-                                    <a href="manage.html"><img src="assets/img/manage.svg" alt="sidebar_img"> <span>Manage</span></a>
-                                </li>
-                                <li>
-                                    <a href="settings.html"><img src="assets/img/settings.svg" alt="sidebar_img"><span>Settings</span></a>
-                                </li>
-                                <li>
-                                    <a href="profile.html"><img src="assets/img/profile.svg" alt="sidebar_img"> <span>Profile</span></a>
-                                </li>
-                            </ul>
-                            <ul class="logout">
-                                <li>
-                                    <a href="profile.html"><img src="assets/img/logout.svg" alt="sidebar_img"><span>Log out</span></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <div class="col-xl-12 col-sm-12 col-12 mb-4">
 
-
-            <div class="page-wrapper">
-                <div class="content container-fluid">
-                    <div class="row">
-                        <div class="col-xl-12 col-sm-12 col-12">
-                            <div class="breadcrumb-path mb-4">
-                                <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/dash.png" class="mr-2" alt="breadcrumb" />Home</a>
-                                    </li>
-                                    <li class="breadcrumb-item active"> Employees/ Teams</li>
-                                </ul>
-                                <h3>Team</h3>
                             </div>
-                        </div>
-                        <div class="col-xl-12 col-sm-12 col-12 mb-4">
-                            <div class="head-link-set">
-                                <ul>
-                                    <li><a href="#">All</a></li>
-                                    <li><a class="active" href="employee-team.html">Teams</a></li>
-                                    <li><a href="employee-office.html">Offices</a></li>
-                                </ul>
-                                <div>                          
-                                    <button class="btn-add" onclick="$('#mymodal').modal('show')"><i data-feather="plus"></i> Add Member </button>
+                            <div class="col-xl-12 col-sm-12 col-12 mb-4">
+                                <div  class="card" >
+                                    <div class="table-heading">
+                                        <h2>Member List</h2> 
 
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table  custom-table no-footer">
+                                            <thead>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-12 col-sm-12 col-12 mb-4">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th></th>
+                                                    <th>Name</th>
+                                                    <th>Role</th>
 
-                        </div>
-                        <div class="col-xl-12 col-sm-12 col-12 mb-4">
-                            <div  class="card" >
-                                <div class="table-heading">
-                                    <h2>Member List</h2> 
-
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table  custom-table no-footer">
-                                        <thead>
-
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Role</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:set var="members" value="${requestScope.list}"/>
-                                            <c:if test="${not empty members}">
-                                                <c:forEach var="member" items="${members}">
-                                                    <tr>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <c:set var="members" value="${requestScope.list}"/>
+                                                <c:forEach var="member" items="${members}" varStatus="i">
+                                                    <tr> 
+                                                        <td><span class="ordinal_number">${i.index + 1}</span></td>
+                                                        <td><a class="edit_employee" data-toggle="modal" data-target="#edit${team.getUserID()}"><i data-feather="edit"></i></a></td>
                                                         <td><label class="action_label">${member.getName()}</label></td>
                                                         <td><label class="action_label" > ${member.getRole()}</label></td>
 
                                                         <td> 
                                                             <div class="card-body">
                                                                 <div class="card_widget_header">
-                                                                    <a class="edit_delete" data-toggle="modal" data-target="#delete" ><i data-feather="trash-2"></i></a></li>
+                                                                    <a class="edit_delete" data-toggle="modal" data-target="#delete${team.getUserID()}" ><i data-feather="trash-2"></i></a></li>
                                                                 </div>
                                                             </div>
                                                         </td>
 
                                                     </tr>
-                                                     <div class="customize_popup">
-                                                        <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="staticBackdropLabels1" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered ">
-                                                                <div class="modal-content">
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                    <div class="modal-header text-centers border-0">
-                                                                        <h5 class="modal-title text-center" id="staticBackdropLabels1">Are You Sure Want to Delete?</h5>
-                                                                    </div>
-                                                                    <div class="modal-footer text-centers">
-                                                                        <form action="memberservlet?action=delete&userid=${member.getUserID()}" method="POST">
-                                                                            <button type="submit" class="btn btn-primary"> Delete</button>
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                                        </form>
-                                                                    </div>
+                                                <div class="customize_popup">
+                                                    <div class="modal fade" id="delete" tabindex="-1" aria-labelledby="staticBackdropLabels1" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered ">
+                                                            <div class="modal-content">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                                <div class="modal-header text-centers border-0">
+                                                                    <h5 class="modal-title text-center" id="staticBackdropLabels1">Are You Sure Want to Delete?</h5>
+                                                                </div>
+                                                                <div class="modal-footer text-centers">
+
+                                                                    <form action="memberservlet?action=delete&userid=${member.getUserID()}" >
+                                                                        <input name="teamid" value="${Team_ID}" type="hidden" >
+                                                                        <button type="submit" class="btn btn-primary"> Delete</button>
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                    </form>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </c:forEach>
-                                            </c:if>
+                                                </div>   
 
-                                        </tbody>
-                                    </table>
+                                                <div class="customize_popup">
+                                                    <div class="modal" id="edit" tabindex="-1" aria-labelledby="staticBackdropLa" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg ">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="staticBackdropLa">Profile member</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">×</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="teamname">Team Name</label>
+                                                                                <input type="text" class="form-control" value="${member.getName()}" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="teamname">Phone</label>
+                                                                                <input type="text" class="form-control" value="${member.getPhone()}" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="teamname">Email</label>
+                                                                                <input type="text" class="form-control" value="${member.getEmail()}" readonly>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="teamname">Address</label>
+                                                                                <input type="text" class="form-control" value="${member.getAddress()}" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="teamname">Birthday</label>
+                                                                                <input type="text" class="form-control" value="${member.getBirthday()}" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label for="teamname">Role</label>
+                                                                                <input type="text" class="form-control" value="${member.getRole()}" readonly>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
+
                             </div>
-                                   
+
                         </div>
-                                                  
+                        <button class="btn btn-danger" onclick="window.location.href = 'teamcontroller';">Back</button>
                     </div>
-                    <button class="btn btn-danger" onclick="window.history.back()">Back</button>
                 </div>
-            </div>
-        </div>  
+            </div>  
 
-        <form class="myform" action="addteam">
-            <div class="modal fade" data-backdrop='static' id="mymodal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title">Add New member</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+            <c:set var="users" value="${requestScope.user}"/>
+            <c:forEach var="users" items="${users}"  varStatus="i">
+                <form class="myform" action="addmember">
+                    <div class="customize_popup">
+                        <div class="modal fade" id="addteam" tabindex="-1" aria-labelledby="staticBackdropLabela" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabela">New Member</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
 
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="TeamID">ID_Member:</label>
-                                <input type="number"  id="TeamID" name="TeamID">
-                            </div>
-                            <div class="form-group">
-                                <label for="TeamName">NameMember</label>
-                                <input type="text"  id="TeamName" name="TeamName">
-                            </div>
+                                    <div class="modal-body">
 
-                        </div>
+                                        <div class=" form-popup m-0" style="border: ;" >
+                                            <span class="ordinal_number">${i.index + 1}</span>
+                                            <input name="teamid" value="${Team_ID}" type="hidden" >
+                                            <input name="userid" value="${users.getUserID()}" type="hidden">
+                                            <span style="border: outset; padding: 5px;margin: 30px;">${users.getName()}</span>
+                                            <button type="submit" style="float: right; color: white; background-color: transparent; border: none;">
+                                                <img src="https://img.icons8.com/color/48/add-user-male--v1.png" alt="Remove Icon" style="width: 1.5rem; height: 1.5rem;">
+                                            </button>                                          
+                                        </div>
 
-                        <div class="modal-footer">
-                            <input type="submit" value="Add" class="btn btn-primary" />
-                            <input type="reset" value="Reset" class="btn btn-danger" />
+                                    </div>
+
+                                </div>
+                            </div> 
                         </div>
                     </div>
-                </div> 
-            </div>
-        </form>
+                </form>
+            </c:forEach>
+            <script src="assets/js/jquery-3.6.0.min.js"></script>
 
-        <script src="assets/js/jquery-3.6.0.min.js"></script>
+            <script src="assets/js/popper.min.js"></script>
+            <script src="assets/js/bootstrap.min.js"></script>
 
-        <script src="assets/js/popper.min.js"></script>
-        <script src="assets/js/bootstrap.min.js"></script>
+            <script src="assets/js/feather.min.js"></script>
 
-        <script src="assets/js/feather.min.js"></script>
+            <!--<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>-->
 
-        <!--<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>-->
-
-        <script src="assets/plugins/select2/js/select2.min.js"></script>
-        <script src="assets/js/script.js"></script>
+            <script src="assets/plugins/select2/js/select2.min.js"></script>
+            <script src="assets/js/script.js"></script>
     </body>
 
 </html>

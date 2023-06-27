@@ -162,5 +162,26 @@ public class User {
     public void setLeaveBalances(int leaveBalances) {
         this.leaveBalances = leaveBalances;
     }
+
+    public User(int UserID, String Name, String Image, String Phone, String Email, String Username, String Password, String Address, Date Birthday, String NameProject, String Team_Name, String Role) {
+        this.UserID = UserID;
+        this.Name = Name;
+        this.Image = Image;
+        this.Phone = Phone;
+        this.Email = Email;
+        this.Username = Username;
+        this.Password = Password;
+        this.Address = Address;
+        this.Birthday = Birthday;
+        this.NameProject = NameProject;
+        this.Team_Name = Team_Name;
+        this.Role = Role;
+    }
+
+    public User(int UserID, String Name, int Team_ID) {
+        this.UserID = UserID;
+        this.Name = Name;
+        this.Team_ID = Team_ID;
+    }
     
 }

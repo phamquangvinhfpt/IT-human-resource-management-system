@@ -6,8 +6,6 @@
 package sample.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +21,6 @@ import sample.dto.User;
  *
  * @author MY MSI
  */
-@WebServlet(name = "teamMemberServlet", urlPatterns = {"/memberservlet"})
 public class teamMemberServlet extends HttpServlet {
 
     /**
@@ -39,51 +36,32 @@ public class teamMemberServlet extends HttpServlet {
             throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
-
+    try{
         if (action == null) {
 
             memberTeamDAO member = new memberTeamDAO();
-            int id = Integer.parseInt(request.getParameter("teamId"));
+            int id = Integer.parseInt(request.getParameter("teamid"));
             List<User> list = member.getMemberById_Team(id);
+            List<User> user = member.getUser();
             request.setAttribute("list", list);
+            request.setAttribute("user", user);
             request.getRequestDispatcher("member.jsp").forward(request, response);
 
         } else if (action.equals("delete")) {
             try {
+            int id_team = Integer.parseInt(request.getParameter("teamid"));
                 int id = Integer.parseInt(request.getParameter("userid"));
                 memberTeamDAO team = new memberTeamDAO();
                 team.delete(id);
-                String url = "memberservlet";
-                response.sendRedirect(url);
+               String url = "teammemberservlet?teamid=" + id_team;
+        response.sendRedirect(url);
             } catch (Exception ex) {
             }
-        } else if (action.equals("add")) {
-                        try {
-
-            int id = Integer.parseInt(request.getParameter("teamId"));
-            memberTeamDAO team = new memberTeamDAO();
-            User member = new User();
-            member.setUserID(1);
-            member.setTeam_ID(id);
-            team.addMemberTeam(member);
-            response.sendRedirect("memberservlet");
-                        }catch(Exception e){
-                            
-                        }
-
-        } else if (action.equals("profile")) {
-            try {
-                int ID_User = Integer.parseInt(request.getParameter("userid"));
-                memberTeamDAO team = new memberTeamDAO();
-                User user = team.getMemberById_User(ID_User);
-                String url = "memberservlet";
-                request.setAttribute("user", user);
-                request.getRequestDispatcher("member.jsp").forward(request, response);
-            } catch (Exception e) {
-
-            }
-
         }
+
+    }catch(Exception e){
+        
+    } 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

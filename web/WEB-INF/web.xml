@@ -12,6 +12,14 @@
         <servlet-name>addEmployee</servlet-name>
         <servlet-class>sample.servlet.addEmployee</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>addMember</servlet-name>
+        <servlet-class>sample.servlet.addMember</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>teamMemberServlet</servlet-name>
+        <servlet-class>sample.servlet.teamMemberServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>mainController</servlet-name>
         <url-pattern>/mainController</url-pattern>
@@ -23,6 +31,14 @@
     <servlet-mapping>
         <servlet-name>addEmployee</servlet-name>
         <url-pattern>/addEmployee</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addMember</servlet-name>
+        <url-pattern>/addmember</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>teamMemberServlet</servlet-name>
+        <url-pattern>/teammemberservlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

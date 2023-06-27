@@ -37,13 +37,11 @@ public class editTeams extends HttpServlet {
         try {
             int pid = Integer.parseInt(request.getParameter("TeamID"));
             String pname = request.getParameter("TeamName");
-            int pidexp = Integer.parseInt(request.getParameter("statusid"));
             String pdescription = request.getParameter("Decription");
             TeamDAO team = new TeamDAO();
             Team teams = new Team();
             teams.setName_Team(pname);
             teams.setDecription(pdescription);
-            teams.setStatus_ID(pidexp);
             teams.setID_Team(pid);
             team.updateTeam(teams);
             String url = "teamcontroller";

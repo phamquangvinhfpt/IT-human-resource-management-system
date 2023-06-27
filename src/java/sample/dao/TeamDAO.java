@@ -36,8 +36,6 @@ public class TeamDAO {
                 list.add(new Team(rs.getInt(1),
                         rs.getString(2),
                         rs.getInt(3),
-                        rs.getInt(6),
-                        rs.getInt(5),
                         rs.getString(4)));
             }
         } catch (Exception e) {
@@ -56,11 +54,13 @@ public class TeamDAO {
     }
 
     public void deleteTeam(int id) throws Exception {
-        String sql = "DELETE FROM Team WHERE [Team_ID] = ?";
+        String sql = "update [User] set Team_ID = 0 where [Team_ID] = ? \n"
+                + "DELETE FROM Team WHERE [Team_ID] = ?";
         try {
             conn = DBUtils.makeConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
+            ps.setInt(2, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -69,11 +69,10 @@ public class TeamDAO {
 
     public static void addTeam(Team team) throws Exception {
         try (Connection conn = DBUtils.makeConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Team (Team_ID,Team_Name,Project_id,Leader_ID,status_ID,Description) values (?,?, 0, 0,? , ?)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Team (Team_ID,Team_Name,Project_id,Description) values (?, ?, 0, ? )");
             stmt.setInt(1, team.getID_Team());
             stmt.setString(2, team.getName_Team());
-            stmt.setInt(3, team.getStatus_ID());
-            stmt.setString(4, team.getDecription());
+            stmt.setString(3, team.getDecription());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -87,12 +86,10 @@ public class TeamDAO {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             Team team = new Team();
-            if (rs.next()) {
+            while (rs.next()) {
                 return team = new Team(rs.getInt(1),
                         rs.getString(2),
                         rs.getInt(3),
-                        rs.getInt(6),
-                        rs.getInt(5),
                         rs.getString(4));
             }
         } catch (SQLException e) {
@@ -105,18 +102,16 @@ public class TeamDAO {
 
     public void updateTeam(Team team) throws Exception {
         List<Team> list = new ArrayList<>();
-        String query = "update Team set Team_Name = ? , Description = ?, status_ID = ? where Team_ID =  ? ";
+        String query = "update Team set Team_Name = ? , Description = ?  where Team_ID =  ? ";
         try (Connection conn = DBUtils.makeConnection()) {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(2, team.getDecription());
             stmt.setString(1, team.getName_Team());
-            stmt.setInt(3, team.getStatus_ID());    
-            stmt.setInt(4, team.getID_Team());
+            stmt.setInt(3, team.getID_Team());
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
-   
-     
+
 }

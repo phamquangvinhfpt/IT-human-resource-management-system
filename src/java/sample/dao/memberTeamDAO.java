@@ -28,18 +28,16 @@ public class memberTeamDAO {
         try {
             cn = DBUtils.makeConnection();
             if (cn != null) {
-                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role]\n" +
-"                        from [dbo].[User], [dbo].[Projects],[dbo].[Team] \n" +
-"                        where [User].[Team_ID] = ?  and [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] \n" +
-"                        and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID]";
+                String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role]\n"
+                        + "from [dbo].[User], [dbo].[Projects],[dbo].[Team] \n"
+                        + "where [User].[UserID] = ?  and [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] \n"
+                        + "and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID]";
                 pst = cn.prepareStatement(sql);
                 pst.setInt(1, ID_User);
                 rs = pst.executeQuery();
                 if (rs.next()) {
-                    user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Image"),
-                            rs.getString("Phone"), rs.getString("Email"), rs.getString("Username"),
-                            rs.getString("Password"), rs.getString("Address"), rs.getDate("Birthday"),
-                            rs.getString("NameProject"), rs.getString("Team_Name"), rs.getString("Role"), rs.getInt("leaveBalances"));
+                    user = new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Phone"), rs.getString("Email"), rs.getString("Address"), rs.getDate("BirthDay"), rs.getString("Team_Name"), rs.getInt(4), rs.getString("Role"));
+
                 }
             }
         } catch (Exception e) {
@@ -58,23 +56,54 @@ public class memberTeamDAO {
         return user;
     }
 
+    public static List<User> getUser() throws Exception {
+        List<User> list = new ArrayList<>();
+        Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        User user = null;
+        String sql = "SELECT [UserID],[Name], [Team_ID]\n"
+                + "from [dbo].[User] ";
+        try {
+            cn = DBUtils.makeConnection();
+            pst = cn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                list.add(new User(rs.getInt("UserID"), rs.getString("Name"), rs.getInt("Team_ID")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pst != null) {
+                pst.close();
+            }
+            if (cn != null) {
+                cn.close();
+            }
+        }
+        return list;
+    }
+
     public static List<User> getMemberById_Team(int Team_ID) throws Exception {
         List<User> list = new ArrayList<>();
         Connection cn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         User user = null;
-        String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email], [Username], [Password], [Address], [BirthDay], [NameProject], [Team_Name], [Role]\n" +
-"                        from [dbo].[User], [dbo].[Projects],[dbo].[Team] \n" +
-"                        where [User].[Team_ID] = ?  and [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] \n" +
-"                        and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID]";
+        String sql = "SELECT [UserID],[Name], [Image], [Phone], [Email],  [Address], [BirthDay], [NameProject], [Team_Name], [Role]\n"
+                + "                        from [dbo].[User], [dbo].[Projects],[dbo].[Team] \n"
+                + "                        where [User].[Team_ID] = ?  and [dbo].[User].[ProjectId]=[dbo].[Projects].[Id] \n"
+                + "                        and [dbo].[User].[Team_ID]=[dbo].[Team].[Team_ID]";
         try {
             cn = DBUtils.makeConnection();
             pst = cn.prepareStatement(sql);
             pst.setInt(1, Team_ID);
             rs = pst.executeQuery();
             while (rs.next()) {
-              list.add (new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Phone"), rs.getString("Email"), rs.getString("Address"), rs.getDate("BirthDay"),  rs.getString("Team_Name"), rs.getInt(4), rs.getString("Role")));
+                list.add(new User(rs.getInt("UserID"), rs.getString("Name"), rs.getString("Phone"), rs.getString("Email"), rs.getString("Address"), rs.getDate("BirthDay"), rs.getString("Team_Name"), rs.getInt(4), rs.getString("Role")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,16 +133,20 @@ public class memberTeamDAO {
         }
     }
 
-    public void addMemberTeam(User member) throws Exception {
+    public void addMemberTeam( int Team_ID, int UserID) throws Exception {
         try (Connection conn = DBUtils.makeConnection()) {
             PreparedStatement stmt = conn.prepareStatement("update [User] set Team_ID = ? where UserID = ?");
-            stmt.setInt(1, member.getTeam_ID());
-            stmt.setInt(2, member.getUserID());
+            stmt.setInt(1,Team_ID);
+            stmt.setInt(2, UserID);
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-  
+    public static void main(String[] args) throws Exception {
+        memberTeamDAO member = new memberTeamDAO();
+        member.addMemberTeam(1, 1);
+    }
+
 }
