@@ -5,8 +5,8 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-         <title>Team</title>
-	<link rel="shortcut icon" type="image/png" href="assets/img/group.png">
+        <title>Team</title>
+        <link rel="shortcut icon" type="image/png" href="assets/img/group.png">
 
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
@@ -54,11 +54,35 @@
                 margin-left: auto;
             }
         </style>
-    </head>
-    <body>
-        <div class="main-wrapper">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-            <div class="main-wrapper">
+        <!-- Define the modal dialog -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p>Product inserted successfully!</p>
+        </div>
+    </div>
+
+    <!-- Add a script to handle the button click and show the modal dialog -->
+    <script>
+        $(document).ready(function () {
+            $("#myBtn").click(function () {
+                // Show the modal dialog
+                $("#myModal").show();
+                // Hide the modal dialog after 3 seconds
+                setTimeout(function () {
+                    $("#myModal").hide();
+                }, 3000);
+            });
+        });
+        // When the form is submitted and the team is successfully added
+              $('#success').modal('show');
+    </script>
+</head>
+<body>
+    <div class="main-wrapper">
+
+        <div class="main-wrapper">
 
             <div class="header">
                 <jsp:include page="common/navbar.jsp" />  
@@ -125,13 +149,13 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-6 viewteam"> 
-                                                                <a class="btn-addmember" href="teammemberservlet?teamid=${team.getID_Team()}">view Team</a>               
+                                                                <a  class="btn-addmember" href="teammemberservlet?teamid=${team.getID_Team()}">view Team</a> 
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                                            
+
                                             <div class="customize_popup">
                                                 <div class="modal fade" id="delete${team.getID_Team()}" tabindex="-1" aria-labelledby="staticBackdropLabels1" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered ">
@@ -152,50 +176,51 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                           <div class="customize_popup">
-                                                        <div class="modal fade" id="edit${team.getID_Team()}" tabindex="-1" aria-labelledby="staticBackdropLa" aria-hidden="true">
-                                                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <form action="editteams" >                         
+                                            <div class="customize_popup">
+                                                <div class="modal fade" id="edit${team.getID_Team()}" tabindex="-1" aria-labelledby="staticBackdropLa" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <form action="editteams" >                         
 
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="staticBackdropLa">Edit Team</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">×</span>
-                                                                            </button>
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="staticBackdropLa">Edit Team</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">×</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class=" col-md-12 p-0">
+                                                                        <div class=" form-popup m-0">
+                                                                            <input value="${team.getID_Team()}" name="TeamID" type="hidden" class="form-control" required placeholder="ID" >
                                                                         </div>
-                                                                        <div class="modal-body">
-                                                                            <div class=" col-md-12 p-0">
-                                                                                <div class=" form-popup m-0">
-                                                                                    <input value="${team.getID_Team()}" name="TeamID" type="hidden" class="form-control" required placeholder="ID" >
-                                                                                </div>
-                                                                                <div class=" form-popup m-0">
-                                                                                    <input value="${team.getName_Team()}" name="TeamName" type="text" class="form-control" required placeholder="Name"  dropzone>
-                                                                                </div>
-
-                                                                                <div class=" form-popup m-0">
-                                                                                    <input value="${team.getDecription()}" name="Decription" type="text" class="form-control" required  placeholder="Decription">
-                                                                                </div>
-
-                                                                            </div>
+                                                                        <div class=" form-popup m-0">
+                                                                            <input value="${team.getName_Team()}" name="TeamName" type="text" class="form-control" required placeholder="Name"  dropzone>
                                                                         </div>
 
-                                                                        <div class="modal-footer">
-                                                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                        <div class=" form-popup m-0">
+                                                                            <input value="${team.getDecription()}" name="Decription" type="text" class="form-control" required  placeholder="Decription">
                                                                         </div>
-                                                                    </form>
 
+                                                                    </div>
                                                                 </div>
 
-                                                            </div>                            
+                                                                <div class="modal-footer">
+
+                                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                </div>
+                                                            </form>
+
                                                         </div>
-                                                    </div>
-                                                                    
-                                                                    
-                                                                    
-                                                                    
-                                                         
+
+                                                    </div>                            
+                                                </div>
+                                            </div>
+
+
+
+
+
                                         </c:forEach>
                                     </div>
                                 </div>
@@ -217,24 +242,19 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class=" col-md-12 p-0">
-                                        <div class=" form-popup m-0">
-                                            <input type="text" placeholder="TeamID" id="TeamID" name="TeamID">
+                                    <div class="col-md-12 p-0">
+                                        <div class="form-popup m-0">
+                                            <input type="text" id="inputEmail" placeholder="TeamID" id="TeamID" name="TeamID">
                                         </div>
-                                        <div class=" form-popup m-0">
-                                            <input type="text" placeholder="Name" id="TeamName" name="TeamName">
+                                        <div class="form-popup m-0">
+                                            <input type="text" id="inputEmail" placeholder="Name" id="TeamName" name="TeamName">
                                         </div>
-
-                                        <div class=" form-popup m-0">
-                                            <input type="text"  placeholder="Description" id="Description" name="Description"  >
-                                        </div>
-                                        <div class=" form-popup m-0">
-
+                                        <div class="form-popup m-0">
+                                            <input type="text" id="inputEmail" placeholder="Description" id="Description" name="Description">
                                         </div>
                                     </div>
-
                                 </div>
-
+                                
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Add</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -244,6 +264,8 @@
                     </div>
                 </div>
             </form>
+          
+          
 
 
 
@@ -259,6 +281,6 @@
 
             <script src="assets/plugins/select2/js/select2.min.js"></script>
             <script src="assets/js/script.js"></script>
-    </body>
+            </body>
 
-</html>
+            </html>

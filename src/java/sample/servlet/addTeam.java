@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,16 +37,44 @@ public class addTeam extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
-       int pid = Integer.parseInt(request.getParameter("TeamID"));
-            String pname = request.getParameter("TeamName");
-            String pdescription = request.getParameter("Description");
-            TeamDAO team = new TeamDAO();
-            Team teams = new Team();
-            teams.setID_Team(pid);
-            teams.setName_Team(pname);
-            teams.setDecription(pdescription);
-            team.addTeam(teams);
-            response.sendRedirect("teamcontroller");
+      String pidString = request.getParameter("TeamID");
+String pname = request.getParameter("TeamName");
+String pdescription = request.getParameter("Description");
+
+// Check if any of the parameters are null or empty
+if (pidString == null || pidString.trim().isEmpty() ||
+    pname == null || pname.trim().isEmpty() ||
+    pdescription == null || pdescription.trim().isEmpty()) {
+
+    // Set an error message
+    String message = "Error: Please fill in all the fields.";
+    request.setAttribute("errorMessage", message);
+
+    // Forward the request to the previous page
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/teamcontroller");
+    dispatcher.forward(request, response);
+
+} else {
+    // Convert the TeamID parameter to an integer
+    int pid = Integer.parseInt(pidString);
+
+    // Create a new Team object and set its properties
+    TeamDAO team = new TeamDAO();
+    Team teams = new Team();
+    teams.setID_Team(pid);
+    teams.setName_Team(pname);
+    teams.setDecription(pdescription);
+
+    // Add the Team to the database
+    team.addTeam(teams);
+
+    // Set a success message
+    String message = "Team added successfully!";
+    request.setAttribute("successMessage", message);
+
+    // Redirect the user to the team controller servlet
+    response.sendRedirect("teamcontroller");
+}
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
